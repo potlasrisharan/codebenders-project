@@ -2,7 +2,6 @@ import { useState } from "react";
 import type { ReactNode } from "react";
 import { NavLink } from "react-router-dom";
 import {
-  ShieldCheck,
   ExternalLink,
   Menu,
   X,
@@ -15,17 +14,19 @@ import {
   Languages,
 } from "lucide-react";
 import { useLanguage } from "../../core/i18n/LanguageContext";
+import { TRANSLATIONS } from "../../core/i18n/translations";
+import { useCitizenProfile } from "../../core/profile/ProfileContext";
 
 export function AppLayout({ children }: { children: ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { language, setLanguage, languages, t } = useLanguage();
+  const { hasCompletedIntake, activePersonaName, profile } = useCitizenProfile();
 
   const navItems = [
-    { to: "/intake", label: t("nav.intake"), icon: FileText },
-    { to: "/matches", label: t("nav.matches"), icon: Search },
-    { to: "/checklist", label: t("nav.checklist"), icon: ListChecks },
-    { to: "/tracker", label: t("nav.tracker"), icon: Activity },
-    { to: "/admin-review", label: t("nav.admin"), icon: Shield },
+    { to: "/intake", key: "nav.intake", icon: FileText },
+    { to: "/matches", key: "nav.matches", icon: Search },
+    { to: "/checklist", key: "nav.checklist", icon: ListChecks },
+    { to: "/tracker", key: "nav.tracker", icon: Activity },
   ] as const;
 
   return (
@@ -35,10 +36,17 @@ export function AppLayout({ children }: { children: ReactNode }) {
       </a>
 
       {/* Top Banner Notice */}
-      <div className="bg-zinc-950 text-white text-[11px] py-1.5 px-3 sm:px-4 text-center tracking-wide font-medium flex items-center justify-center gap-2">
-        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-        <span>{t("banner.top")}</span>
-        <span className="hidden md:inline text-zinc-400">• {t("banner.free")}</span>
+      <div className="bg-zinc-950 text-white text-[11px] py-1.5 px-3 sm:px-4 text-center tracking-wide font-medium flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2">
+        <div className="flex items-center gap-1.5">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span>{t("banner.top")}</span>
+          <span className="hidden md:inline text-zinc-400">• {t("banner.free")}</span>
+        </div>
+        {language !== 'en' && (
+          <div className="text-[10px] text-zinc-400 font-normal sm:border-l sm:border-zinc-800 sm:pl-2">
+            {TRANSLATIONS.en["banner.top"]}
+          </div>
+        )}
       </div>
 
       {/* Main Glassmorphic Header */}
@@ -49,17 +57,23 @@ export function AppLayout({ children }: { children: ReactNode }) {
             className="brand flex items-center gap-2.5 group"
             onClick={() => setMobileMenuOpen(false)}
           >
-            <div className="w-8 h-8 rounded-lg bg-zinc-900 flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform">
-              <ShieldCheck className="w-5 h-5 text-emerald-400" />
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
+              <img src="/logo.png" alt="LabhSaathi logo" className="w-8 h-8 object-contain" />
             </div>
             <div className="flex flex-col">
               <span className="font-extrabold text-lg tracking-tight text-zinc-950 leading-none flex items-center gap-1">
                 {t("brand.name")}
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
               </span>
+              {language !== 'en' && (
+                <span className="text-[10px] text-zinc-500 font-medium leading-tight">LabhSaathi</span>
+              )}
               <span className="text-[10px] text-zinc-500 tracking-wider uppercase font-bold mt-0.5">
                 {t("brand.tagline")}
               </span>
+              {language !== 'en' && (
+                <span className="text-[9px] text-zinc-400 font-normal leading-tight">Claim What's Yours</span>
+              )}
             </div>
           </NavLink>
 
@@ -72,19 +86,34 @@ export function AppLayout({ children }: { children: ReactNode }) {
                     <NavLink
                       to={item.to}
                       className={({ isActive }) =>
-                        `px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
+                        `px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex flex-col items-center justify-center ${
                           isActive
-                            ? "bg-zinc-900 text-white shadow-xs"
+                            ? "bg-zinc-900 !text-white text-white shadow-xs"
                             : "text-zinc-600 hover:text-zinc-950 hover:bg-zinc-100"
                         }`
                       }
                     >
-                      {item.label}
+                      <span className="leading-tight">{t(item.key)}</span>
+                      {language !== 'en' && (
+                        <span className="text-[9px] font-normal opacity-75 mt-0.5 leading-tight">
+                          {TRANSLATIONS.en[item.key]}
+                        </span>
+                      )}
                     </NavLink>
                   </li>
                 ))}
               </ul>
             </nav>
+
+            {/* Active Citizen Session Pill if intake taken or persona selected */}
+            {hasCompletedIntake && (
+              <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs text-emerald-800">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
+                <span className="font-semibold capitalize truncate max-w-[140px]">
+                  {activePersonaName ? activePersonaName.split(' (')[0] : profile.occupation?.replace('_', ' ') || 'Active Session'}
+                </span>
+              </div>
+            )}
 
             {/* Language Switcher Pill */}
             <div className="flex items-center gap-1 bg-zinc-100 p-1 rounded-full border border-zinc-200">
@@ -155,7 +184,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
                     onClick={() => setMobileMenuOpen(false)}
                     className={({ isActive }) =>
                       `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold transition-colors ${
-                        isActive ? "bg-zinc-900 text-white" : "text-zinc-700 hover:bg-zinc-100"
+                        isActive ? "bg-zinc-900 !text-white text-white" : "text-zinc-700 hover:bg-zinc-100"
                       }`
                     }
                   >
@@ -172,12 +201,19 @@ export function AppLayout({ children }: { children: ReactNode }) {
                         onClick={() => setMobileMenuOpen(false)}
                         className={({ isActive }) =>
                           `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold transition-colors ${
-                            isActive ? "bg-zinc-900 text-white" : "text-zinc-700 hover:bg-zinc-100"
+                            isActive ? "bg-zinc-900 !text-white text-white" : "text-zinc-700 hover:bg-zinc-100"
                           }`
                         }
                       >
-                        <Icon className="w-4 h-4" />
-                        <span>{item.label}</span>
+                        <Icon className="w-4 h-4 flex-shrink-0" />
+                        <div className="flex flex-col">
+                          <span>{t(item.key)}</span>
+                          {language !== 'en' && (
+                            <span className="text-[10px] font-normal text-zinc-400">
+                              {TRANSLATIONS.en[item.key]}
+                            </span>
+                          )}
+                        </div>
                       </NavLink>
                     </li>
                   );
@@ -198,24 +234,25 @@ export function AppLayout({ children }: { children: ReactNode }) {
         <div className="max-w-6xl mx-auto px-4 py-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="flex flex-col gap-1.5 max-w-md">
             <div className="flex items-center gap-2">
+              <img src="/logo.png" alt="LabhSaathi logo" className="w-5 h-5 object-contain" />
               <span className="font-bold text-zinc-900 text-sm">LabhSaathi</span>
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600 font-mono">
                 v1.0.0 (PS5 Pilot)
               </span>
             </div>
             <p className="text-[11px] text-zinc-600 leading-relaxed">
-              Independent civic-tech platform empowering college students in Telangana and India to discover public schemes, understand rules, and prepare documents.
+              Independent civic-tech platform empowering citizens across all 28 States &amp; 8 Union Territories of India to discover public schemes, understand rules, and prepare documents.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-zinc-600">
             <a
-              href="https://telanganaepass.cgg.gov.in"
+              href="https://www.myscheme.gov.in"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-zinc-950 inline-flex items-center gap-1 transition-colors"
             >
-              Telangana ePASS <ExternalLink className="w-3 h-3 text-zinc-500" />
+              MyScheme Portal <ExternalLink className="w-3 h-3 text-zinc-500" />
             </a>
             <a
               href="https://scholarships.gov.in"
@@ -226,13 +263,29 @@ export function AppLayout({ children }: { children: ReactNode }) {
               National Scholarship Portal <ExternalLink className="w-3 h-3 text-zinc-500" />
             </a>
             <a
-              href="https://ts.meeseva.telangana.gov.in"
+              href="https://www.india.gov.in"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-zinc-950 inline-flex items-center gap-1 transition-colors"
             >
-              MeeSeva Portal <ExternalLink className="w-3 h-3 text-zinc-500" />
+              National Portal of India <ExternalLink className="w-3 h-3 text-zinc-500" />
             </a>
+            <a
+              href="https://digitalseva.csc.gov.in"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-zinc-950 inline-flex items-center gap-1 transition-colors"
+            >
+              CSC Common Service Centres <ExternalLink className="w-3 h-3 text-zinc-500" />
+            </a>
+            <span className="text-zinc-300">•</span>
+            <NavLink
+              to="/admin-review"
+              className="hover:text-zinc-950 inline-flex items-center gap-1 transition-colors text-zinc-500"
+            >
+              <Shield className="w-3.5 h-3.5 text-zinc-400" />
+              <span>Admin Gazette Review</span>
+            </NavLink>
           </div>
         </div>
 

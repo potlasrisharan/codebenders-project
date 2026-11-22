@@ -1,44 +1,46 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-body {
-  margin: 0;
-  font-family: var(--font-sans);
-  font-size: 1rem;
-  line-height: 1.6;
-  color: var(--color-text);
-  background: var(--color-surface);
-}
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-text);
+    background: var(--color-surface);
+  }
 
-h1 {
-  font-size: 2.25rem;
-  font-weight: 700;
-  line-height: 1.15;
-  margin: 0 0 var(--space-3);
-}
+  h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1.15;
+    margin: 0 0 var(--space-3);
+  }
 
-h2 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0 0 var(--space-2);
-}
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 var(--space-2);
+  }
 
-img,
-svg {
-  max-width: 100%;
-  height: auto;
-}
+  img,
+  svg {
+    max-width: 100%;
+    height: auto;
+  }
 
-a {
-  color: var(--color-accent);
-}
+  a {
+    color: var(--color-accent);
+  }
 
-:focus-visible {
-  outline: 2px solid var(--color-focus);
-  outline-offset: 2px;
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
 }
 
 .sr-only {

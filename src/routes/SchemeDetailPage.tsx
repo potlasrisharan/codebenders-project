@@ -22,7 +22,7 @@ import { defaultWhatIfService, WhatIfSimulationResult } from '../core/simulator/
 import { StatusChip } from '../components/ui/StatusChip';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
-import { useLanguage } from '../core/i18n/LanguageContext';
+import { useLanguage, T } from '../core/i18n/LanguageContext';
 import { MiddlemanShieldCard } from '../components/scheme/MiddlemanShieldCard';
 import { SchemeChatDrawer } from '../components/scheme/SchemeChatDrawer';
 import { UnifiedActionGraph } from '../components/graph/UnifiedActionGraph';
@@ -120,14 +120,14 @@ export function SchemeDetailPage() {
           to="/matches"
           className="text-xs text-zinc-500 hover:text-zinc-900 inline-flex items-center gap-1 font-medium transition-colors"
         >
-          <ChevronLeft className="w-3.5 h-3.5" /> {t('detail.back')}
+          <ChevronLeft className="w-3.5 h-3.5" /> <T id="detail.back" />
         </Link>
 
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-zinc-100 text-zinc-700">
-                {scheme.jurisdiction === 'central' ? t('detail.central') : `${scheme.state} ${t('detail.state')}`}
+                {scheme.jurisdiction === 'central' ? <T id="detail.central" /> : `${scheme.state} Scheme`}
               </span>
               <span className="text-[11px] text-zinc-500 flex items-center gap-1">
                 <Building2 className="w-3.5 h-3.5 text-zinc-400" />
@@ -161,7 +161,7 @@ export function SchemeDetailPage() {
               }`}
             >
               {isSaved ? <BookmarkCheck className="w-4 h-4 text-emerald-600" /> : <Bookmark className="w-4 h-4" />}
-              {isSaved ? t('detail.saved') : t('detail.save')}
+              <T id={isSaved ? 'detail.saved' : 'detail.save'} />
             </Button>
 
             <button
@@ -241,11 +241,11 @@ export function SchemeDetailPage() {
             <FileText className="w-5 h-5 text-zinc-800" />
             <div>
               <h3 className="font-bold text-zinc-900 text-sm">
-                {t('detail.checklist.title')}
+                <T id="detail.checklist.title" />
               </h3>
-              <p className="text-[11px] text-zinc-500">
-                {t('detail.checklist.sub')}
-              </p>
+              <div className="text-[11px] text-zinc-500">
+                <T id="detail.checklist.sub" />
+              </div>
             </div>
           </div>
           <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-zinc-100 text-zinc-800 w-fit">
@@ -321,11 +321,11 @@ export function SchemeDetailPage() {
           <Layers className="w-5 h-5 text-zinc-800" />
           <div>
             <h3 className="font-bold text-zinc-900 text-sm">
-              Step-by-Step Official Application Process
+              <T id="detail.steps.title" />
             </h3>
-            <p className="text-[11px] text-zinc-500">
-              Verified from official government departmental guidelines. Follow in order.
-            </p>
+            <div className="text-[11px] text-zinc-500">
+              <T id="detail.steps.sub" />
+            </div>
           </div>
         </div>
 
@@ -362,10 +362,10 @@ export function SchemeDetailPage() {
         <div className="flex items-center gap-2 border-b border-zinc-200/70 pb-3">
           <Sparkles className="w-5 h-5 text-zinc-800" />
           <div>
-            <h3 className="font-bold text-zinc-900 text-sm">{t('detail.whatif.title')}</h3>
-            <p className="text-[11px] text-zinc-500">
-              {t('detail.whatif.sub')}
-            </p>
+            <h3 className="font-bold text-zinc-900 text-sm"><T id="detail.whatif.title" /></h3>
+            <div className="text-[11px] text-zinc-500">
+              <T id="detail.whatif.sub" />
+            </div>
           </div>
         </div>
 

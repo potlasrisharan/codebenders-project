@@ -20,8 +20,6 @@ export const MiddlemanShieldCard: React.FC<MiddlemanShieldCardProps> = ({
   departmentName,
   lastVerifiedDate,
 }) => {
-  const isTelangana = officialPortalUrl.includes('telangana') || officialPortalUrl.includes('cgg.gov.in');
-
   return (
     <Card className="middleman-shield-card border-blue-200 bg-blue-50/40">
       <div className="flex flex-col gap-4">
@@ -68,39 +66,37 @@ export const MiddlemanShieldCard: React.FC<MiddlemanShieldCardProps> = ({
         </div>
 
         {/* Direct Official Deep-Links */}
-        {isTelangana && (
-          <div className="p-3 bg-white/90 rounded-xl border border-blue-100 space-y-2">
-            <span className="text-xs font-bold text-zinc-900 block">Direct Official Sub-Portal Links:</span>
-            <div className="flex flex-wrap gap-2 text-xs">
-              <a
-                href="https://telanganaepass.cgg.gov.in/PostmatricFresh.do"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-800 font-medium transition-colors"
-              >
-                ePASS Fresh Application <ExternalLink className="w-3 h-3 text-zinc-500" />
-              </a>
-              <a
-                href="https://telanganaepass.cgg.gov.in/PostmatricRenewals.do"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-800 font-medium transition-colors"
-              >
-                ePASS Renewal <ExternalLink className="w-3 h-3 text-zinc-500" />
-              </a>
-              <a
-                href="https://ts.meeseva.telangana.gov.in/CertificateVerification"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-800 font-medium transition-colors"
-              >
-                MeeSeva Certificate Check <ExternalLink className="w-3 h-3 text-zinc-500" />
-              </a>
-            </div>
+        <div className="p-3 bg-white/90 rounded-xl border border-blue-100 space-y-2">
+          <span className="text-xs font-bold text-zinc-900 block">Official Application &amp; Verification Portals:</span>
+          <div className="flex flex-wrap gap-2 text-xs">
+            <a
+              href={officialPortalUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-blue-50 hover:bg-blue-100 text-blue-900 font-medium transition-colors border border-blue-200"
+            >
+              Direct Scheme Portal <ExternalLink className="w-3 h-3 text-blue-600" />
+            </a>
+            <a
+              href="https://digitalseva.csc.gov.in"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-800 font-medium transition-colors"
+            >
+              Locate Nearest CSC Kiosk <ExternalLink className="w-3 h-3 text-zinc-500" />
+            </a>
+            <a
+              href="https://www.myscheme.gov.in"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-800 font-medium transition-colors"
+            >
+              MyScheme India Portal <ExternalLink className="w-3 h-3 text-zinc-500" />
+            </a>
           </div>
-        )}
+        </div>
 
-        {/* Emergency Helplines Directory */}
+        {/* Emergency Helplines Directory (All-India Citizen Protection) */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] p-2.5 bg-blue-100/50 rounded-xl border border-blue-200/80">
           <div className="flex items-center gap-1.5 text-zinc-800">
             <PhoneCall className="w-3.5 h-3.5 text-blue-700 flex-shrink-0" />
@@ -108,11 +104,11 @@ export const MiddlemanShieldCard: React.FC<MiddlemanShieldCardProps> = ({
           </div>
           <div className="flex items-center gap-1.5 text-zinc-800">
             <PhoneCall className="w-3.5 h-3.5 text-blue-700 flex-shrink-0" />
-            <span>ePASS CGG: <strong>040-23390228</strong></span>
+            <span>National Consumer: <strong>1915</strong></span>
           </div>
           <div className="flex items-center gap-1.5 text-zinc-800">
             <PhoneCall className="w-3.5 h-3.5 text-blue-700 flex-shrink-0" />
-            <span>MeeSeva: <strong>1100</strong></span>
+            <span>CSC Helpdesk: <strong>14599</strong></span>
           </div>
           <div className="flex items-center gap-1.5 text-zinc-800">
             <PhoneCall className="w-3.5 h-3.5 text-blue-700 flex-shrink-0" />

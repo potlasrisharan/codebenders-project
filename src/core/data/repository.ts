@@ -103,6 +103,15 @@ export class SchemeRepository {
   }
 
   getByState(state: string): SchemeRecord[] {
+    if (
+      !state ||
+      state === 'All India' ||
+      state === 'All' ||
+      state.toLowerCase() === 'all states' ||
+      state.toLowerCase().includes('all india')
+    ) {
+      return this.getAll();
+    }
     return this.schemes.filter(
       (s) =>
         (s.verificationStatus === 'verified' || !s.verificationStatus) &&

@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Mic, Square, Loader2, Languages, CheckCircle2, AlertCircle, X } from 'lucide-react';
 import { CitizenProfile } from '../../core/profile/citizen-profile';
 import { Button } from '../ui/Button';
+import { useLanguage } from '../../core/i18n/LanguageContext';
 
 interface VoiceIntakeModalProps {
   isOpen: boolean;
@@ -10,16 +11,22 @@ interface VoiceIntakeModalProps {
 }
 
 const VOICE_LANGUAGES = [
-  { code: 'te-IN', label: 'తెలుగు (Telugu)' },
-  { code: 'hi-IN', label: 'हिन्दी (Hindi)' },
   { code: 'en-IN', label: 'English (Indian)' },
+  { code: 'hi-IN', label: 'हिन्दी (Hindi)' },
+  { code: 'te-IN', label: 'తెలుగు (Telugu)' },
   { code: 'ta-IN', label: 'தமிழ் (Tamil)' },
   { code: 'kn-IN', label: 'ಕನ್ನಡ (Kannada)' },
   { code: 'mr-IN', label: 'मराठी (Marathi)' },
 ];
 
 export function VoiceIntakeModal({ isOpen, onClose, onTranscriptSuccess }: VoiceIntakeModalProps) {
-  const [selectedLanguage, setSelectedLanguage] = useState('te-IN');
+  const { language } = useLanguage();
+  const defaultLang = language === 'hi' ? 'hi-IN' : language === 'te' ? 'te-IN' : 'en-IN';
+  const [selectedLanguage, setSelectedLanguage] = useState(defaultLang);
+
+  useEffect(() => {
+    setSelectedLanguage(language === 'hi' ? 'hi-IN' : language === 'te' ? 'te-IN' : 'en-IN');
+  }, [language]);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingSeconds, setRecordingSeconds] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -280,10 +287,31 @@ export function VoiceIntakeModal({ isOpen, onClose, onTranscriptSuccess }: Voice
               <p className="text-[11px] text-zinc-500">Powering multilingual STT through Sarvam AI</p>
             ) : (
               <div className="space-y-1">
-                <p className="text-xs font-bold text-zinc-800">Tap the microphone to speak</p>
-                <p className="text-[11px] text-zinc-500 max-w-xs">
-                  Say your state, occupation, land, and family income in Telugu, Hindi, or English.
+                <p className="text-xs font-bold text-zinc-800">
+                  {language === 'te'
+                    ? 'మాట్లాడటానికి మైక్రోఫోన్‌ను నొక్కండి'
+                    : language === 'hi'
+                    ? 'बोलने के लिए माइक्रोफ़ोन पर टैप करें'
+                    : 'Tap the microphone to speak'}
                 </p>
+                {language !== 'en' && (
+                  <p className="text-[10px] text-zinc-400 font-normal">Tap the microphone to speak</p>
+                )}
+                <div className="text-[11px] text-zinc-500 max-w-xs">
+                  {language === 'te' ? (
+                    <>
+                      <span className="block">మీ రాష్ట్రం, వృత్తి, భూమి మరియు కుటుంబ ఆదాయాన్ని చెప్పండి.</span>
+                      <span className="block text-[10px] text-zinc-400 mt-0.5">Say your state, occupation, land, and family income.</span>
+                    </>
+                  ) : language === 'hi' ? (
+                    <>
+                      <span className="block">अपना राज्य, व्यवसाय, भूमि और पारिवारिक आय बताएं।</span>
+                      <span className="block text-[10px] text-zinc-400 mt-0.5">Say your state, occupation, land, and family income.</span>
+                    </>
+                  ) : (
+                    <span>Say your state, occupation, land, and family income in English.</span>
+                  )}
+                </div>
               </div>
             )}
           </div>

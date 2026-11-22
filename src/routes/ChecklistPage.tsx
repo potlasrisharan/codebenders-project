@@ -15,43 +15,48 @@ import { defaultSchemeRepository } from '../core/data/repository';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { WhatsAppShareModal } from '../components/share/WhatsAppShareModal';
-import { useLanguage } from '../core/i18n/LanguageContext';
+import { T } from '../core/i18n/LanguageContext';
 
 export function ChecklistPage() {
-  const { t } = useLanguage();
   const [claims] = useState(() => defaultClaimTrackerService.getClaims());
   const allSchemes = defaultSchemeRepository.getAll();
 
   const [selectedSchemeId, setSelectedSchemeId] = useState<string>(() => {
-    return claims.length > 0 ? claims[0].schemeId : allSchemes[0]?.id || 'ts-epass-rtf-2026';
+    return claims.length > 0 ? claims[0].schemeId : '';
   });
 
-  // If user hasn't saved a scheme yet, default to showing the pilot ePASS scheme checklist for demo readiness
-  const activeScheme =
-    allSchemes.find((s) => s.id === selectedSchemeId) ||
-    allSchemes[0];
+  const activeScheme = claims.length > 0
+    ? allSchemes.find((s) => s.id === selectedSchemeId) ||
+      allSchemes.find((s) => s.id === claims[0].schemeId) ||
+      allSchemes[0]
+    : null;
 
   const [completedDocIds, setCompletedDocIds] = useState<string[]>(() => {
-    return defaultClaimTrackerService.getClaim(activeScheme.id)?.completedDocumentIds || [];
+    return activeScheme ? defaultClaimTrackerService.getClaim(activeScheme.id)?.completedDocumentIds || [] : [];
   });
 
   useEffect(() => {
-    setCompletedDocIds(defaultClaimTrackerService.getClaim(activeScheme.id)?.completedDocumentIds || []);
-  }, [activeScheme.id]);
+    if (activeScheme) {
+      setCompletedDocIds(defaultClaimTrackerService.getClaim(activeScheme.id)?.completedDocumentIds || []);
+    }
+  }, [activeScheme?.id]);
 
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const sharePayload = defaultClaimTrackerService.generateWhatsAppShareUrl(activeScheme);
+  const sharePayload = activeScheme
+    ? defaultClaimTrackerService.generateWhatsAppShareUrl(activeScheme)
+    : { url: '', text: '' };
 
   const handleToggleDoc = (docId: string) => {
+    if (!activeScheme) return;
     defaultClaimTrackerService.toggleDocumentCompletion(activeScheme.id, docId);
     setCompletedDocIds((prev) =>
       prev.includes(docId) ? prev.filter((id) => id !== docId) : [...prev, docId]
     );
   };
 
-  const totalDocs = activeScheme.documents.length;
+  const totalDocs = activeScheme ? activeScheme.documents.length : 0;
   const readyDocs = completedDocIds.length;
-  const progressPercent = Math.round((readyDocs / totalDocs) * 100);
+  const progressPercent = totalDocs > 0 ? Math.round((readyDocs / totalDocs) * 100) : 0;
 
   return (
     <div className="stack checklist-page max-w-4xl mx-auto py-6 px-3 sm:px-4 space-y-6">
@@ -69,61 +74,99 @@ export function ChecklistPage() {
           </div>
           <h1 className="text-3xl font-extrabold text-zinc-900 tracking-tight flex items-center gap-2.5">
             <ListChecks className="w-7 h-7 text-zinc-900" aria-hidden="true" />
-            {t('nav.checklist')}
+            <T id="checklist.title" />
           </h1>
-          <p className="text-sm text-zinc-600 mt-1 max-w-xl">
-            Personalised document readiness for <strong className="text-zinc-900 font-semibold">{activeScheme.name}</strong>. Check off documents as you gather them from MeeSeva, college, or bank.
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <Button
-            variant="secondary"
-            onClick={() => setIsShareModalOpen(true)}
-            className="text-xs px-3.5 py-2 flex items-center gap-1.5 btn-tactile border-zinc-300 hover:border-zinc-400"
-          >
-            <MessageSquare className="w-3.5 h-3.5 text-emerald-600" /> Share via WhatsApp
-          </Button>
-
-          <Link
-            to={`/scheme/${activeScheme.id}`}
-            className="text-xs px-3.5 py-2 bg-zinc-900 hover:bg-zinc-800 text-white font-semibold rounded-lg shadow-xs inline-flex items-center gap-1.5 btn-tactile transition-colors"
-          >
-            <span>View Scheme Details</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
-      </div>
-
-      {/* Multi-Scheme Selection Tabs (When multiple claims are tracked) */}
-      {claims.length > 1 && (
-        <div className="flex flex-wrap items-center gap-2 p-2.5 bg-zinc-50 rounded-xl border border-zinc-200">
-          <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider pl-1">
-            Tracked Schemes:
-          </span>
-          <div className="flex flex-wrap gap-1.5">
-            {claims.map((claim) => {
-              const s = allSchemes.find((item) => item.id === claim.schemeId);
-              const name = s ? s.name : claim.schemeName;
-              const isSelected = claim.schemeId === activeScheme.id;
-              return (
-                <button
-                  key={claim.schemeId}
-                  type="button"
-                  onClick={() => setSelectedSchemeId(claim.schemeId)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                    isSelected
-                      ? 'bg-zinc-900 text-white shadow-xs'
-                      : 'bg-white text-zinc-700 hover:bg-zinc-200 border border-zinc-200'
-                  }`}
-                >
-                  {name}
-                </button>
-              );
-            })}
+          <div className="text-sm text-zinc-600 mt-1 max-w-xl">
+            {activeScheme ? (
+              <>
+                Personalised document readiness for <strong className="text-zinc-900 font-semibold">{activeScheme.name}</strong>. Check off documents as you gather them from MeeSeva/CSC/e-District, college, or bank.
+              </>
+            ) : (
+              <T id="checklist.sub" />
+            )}
           </div>
         </div>
-      )}
+
+        {activeScheme && (
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              variant="secondary"
+              onClick={() => setIsShareModalOpen(true)}
+              className="text-xs px-3.5 py-2 flex items-center gap-1.5 btn-tactile border-zinc-300 hover:border-zinc-400"
+            >
+              <MessageSquare className="w-3.5 h-3.5 text-emerald-600" /> Share via WhatsApp
+            </Button>
+
+            <Link
+              to={`/scheme/${activeScheme.id}`}
+              className="text-xs px-3.5 py-2 bg-zinc-900 hover:bg-zinc-800 text-white !text-white font-semibold rounded-lg shadow-xs inline-flex items-center gap-1.5 btn-tactile transition-colors"
+            >
+              <span className="!text-white">View Scheme Details</span>
+              <ArrowRight className="w-3.5 h-3.5 text-white" />
+            </Link>
+          </div>
+        )}
+      </div>
+
+      {/* Empty State when no schemes are tracked */}
+      {!activeScheme || claims.length === 0 ? (
+        <Card className="p-8 sm:p-12 text-center bg-white border border-zinc-200/90 rounded-2xl shadow-xs space-y-4 max-w-xl mx-auto my-6 animate-scale-in">
+          <div className="w-14 h-14 rounded-2xl bg-zinc-100 flex items-center justify-center mx-auto text-zinc-600">
+            <ListChecks className="w-7 h-7" />
+          </div>
+          <div className="space-y-1.5">
+            <h2 className="text-lg font-bold text-zinc-900">No Schemes in Your Document Checklist</h2>
+            <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed max-w-md mx-auto">
+              Document checklists show issuing authorities (MeeSeva Tahsildar, college registrar, bank) for specific schemes you want to apply for. Complete your intake or browse the public catalog to track a scheme.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <Link
+              to="/intake"
+              className="text-xs font-bold px-4 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white !text-white rounded-xl shadow-xs btn-tactile inline-flex items-center gap-1.5"
+            >
+              <span className="!text-white">Start Citizen Intake</span>
+              <ArrowRight className="w-3.5 h-3.5 text-white" />
+            </Link>
+            <Link
+              to="/matches"
+              className="text-xs font-semibold px-4 py-2.5 border border-zinc-300 text-zinc-800 hover:bg-zinc-50 rounded-xl btn-tactile inline-flex items-center gap-1.5"
+            >
+              <span>Browse 219 Schemes Catalog</span>
+            </Link>
+          </div>
+        </Card>
+      ) : (
+        <>
+          {/* Multi-Scheme Selection Tabs (When multiple claims are tracked) */}
+          {claims.length > 1 && (
+            <div className="flex flex-wrap items-center gap-2 p-2.5 bg-zinc-50 rounded-xl border border-zinc-200">
+              <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider pl-1">
+                Tracked Schemes:
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {claims.map((claim) => {
+                  const s = allSchemes.find((item) => item.id === claim.schemeId);
+                  const name = s ? s.name : claim.schemeName;
+                  const isSelected = claim.schemeId === activeScheme.id;
+                  return (
+                    <button
+                      key={claim.schemeId}
+                      type="button"
+                      onClick={() => setSelectedSchemeId(claim.schemeId)}
+                      className={`text-xs px-3 py-1.5 rounded-lg border font-medium transition-all ${
+                        isSelected
+                          ? 'bg-zinc-900 text-white border-zinc-900 shadow-2xs'
+                          : 'bg-white text-zinc-700 border-zinc-300 hover:bg-zinc-100'
+                      }`}
+                    >
+                      {name}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
       {/* Readiness Progress Bar Card */}
       <Card className="p-5 bg-white border-zinc-200/90 shadow-xs space-y-3">
@@ -245,7 +288,7 @@ export function ChecklistPage() {
         </div>
         <ul className="list-disc pl-5 space-y-1 text-zinc-600 leading-relaxed">
           <li>
-            <strong>Income &amp; Caste Certificates:</strong> Can be applied online via <a href="https://ts.meeseva.telangana.gov.in" target="_blank" rel="noopener noreferrer" className="underline text-zinc-900 font-medium">MeeSeva Telangana</a> or at any certified MeeSeva kiosk. Government fee is ₹45. Do not pay any agent hundreds of rupees.
+            <strong>Income &amp; Caste Certificates:</strong> Apply online via your designated State Portal (<a href="https://digitalseva.csc.gov.in" target="_blank" rel="noopener noreferrer" className="underline text-zinc-900 font-medium">CSC Digital Seva</a>, MeeSeva, e-District, MahaOnline, e-Mitra, or Seva Sindhu) or at any authorized Gram Panchayat kiosk. Official statutory fees are ₹30–₹50. Do not pay private middlemen inflated charges.
           </li>
           <li>
             <strong>Bank Account:</strong> Ensure your bank account is seeded with Aadhaar and NPCI mapping is active to receive Direct Benefit Transfer (DBT).
@@ -255,15 +298,19 @@ export function ChecklistPage() {
           </li>
         </ul>
       </Card>
+        </>
+      )}
 
       {/* WhatsApp Share Modal */}
-      <WhatsAppShareModal
-        isOpen={isShareModalOpen}
-        onClose={() => setIsShareModalOpen(false)}
-        shareUrl={sharePayload.url}
-        previewText={sharePayload.text}
-        schemeName={activeScheme.name}
-      />
+      {activeScheme && (
+        <WhatsAppShareModal
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
+          shareUrl={sharePayload.url}
+          previewText={sharePayload.text}
+          schemeName={activeScheme.name}
+        />
+      )}
     </div>
   );
 }

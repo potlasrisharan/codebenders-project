@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
+import { useLanguage } from '../../core/i18n/LanguageContext';
 
 interface ChatMessage {
   id: string;
@@ -28,12 +29,13 @@ interface SchemeChatDrawerProps {
 }
 
 export function SchemeChatDrawer({ schemeId, schemeName, portalUrl }: SchemeChatDrawerProps) {
+  const { language } = useLanguage();
   const [isOpen, setIsOpen] = useState(true);
   const [messages, setMessages] = useState<ChatMessage[]>(() => [
     {
       id: 'welcome',
       role: 'assistant',
-      content: `Hello! I am your **LabhSaathi Civic Assistant**. Ask me any question about **${schemeName}**—such as eligibility rules, MeeSeva documents, income caps, or application steps. All answers are strictly grounded in published government gazettes.`,
+      content: `Hello! I am your **LabhSaathi Civic Assistant**. Ask me any question about **${schemeName}**—such as eligibility rules, required documents (MeeSeva/CSC/e-District), income caps, or application steps. All answers are strictly grounded in published government gazettes.`,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       model: 'Grounded Assistant',
     },
@@ -43,7 +45,7 @@ export function SchemeChatDrawer({ schemeId, schemeName, portalUrl }: SchemeChat
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const suggestedQuestions = [
-    'What documents do I need from MeeSeva?',
+    'What documents do I need from MeeSeva/CSC?',
     'Is there any application fee or agent fee?',
     'Can I apply if my family income is ₹2 Lakhs?',
     'How do I apply on the official portal?',
@@ -260,7 +262,13 @@ export function SchemeChatDrawer({ schemeId, schemeName, portalUrl }: SchemeChat
               type="text"
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
-              placeholder="Ask anything about this scheme in English, Telugu, or Hindi..."
+              placeholder={
+                language === 'te'
+                  ? 'ఈ పథకం గురించి ఏదైనా అడగండి...'
+                  : language === 'hi'
+                  ? 'इस योजना के बारे में कुछ भी पूछें...'
+                  : 'Ask anything about this scheme in English...'
+              }
               disabled={isLoading}
               className="flex-1 text-xs p-2.5 border border-zinc-300 rounded-lg bg-zinc-50/70 focus:bg-white focus:ring-1 focus:ring-zinc-900 focus:outline-none transition-colors"
             />

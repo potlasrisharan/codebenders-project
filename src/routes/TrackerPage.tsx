@@ -16,25 +16,10 @@ import { defaultSchemeRepository } from '../core/data/repository';
 import { defaultWhatIfService } from '../core/simulator/what-if-service';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
-import { useLanguage } from '../core/i18n/LanguageContext';
+import { T } from '../core/i18n/LanguageContext';
 
 export function TrackerPage() {
-  const { t } = useLanguage();
-  const [claims, setClaims] = useState(() => {
-    const list = defaultClaimTrackerService.getClaims();
-    const isInitialized = typeof window !== 'undefined' && localStorage.getItem('labhsaathi_tracker_initialized');
-    if (!isInitialized && list.length === 0) {
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('labhsaathi_tracker_initialized', 'true');
-      }
-      const defaultScheme = defaultSchemeRepository.getById('ts-epass-rtf-2026');
-      if (defaultScheme) {
-        defaultClaimTrackerService.saveScheme(defaultScheme);
-        return defaultClaimTrackerService.getClaims();
-      }
-    }
-    return list;
-  });
+  const [claims, setClaims] = useState(() => defaultClaimTrackerService.getClaims());
 
   const allSchemes = defaultSchemeRepository.getAll();
   const renewalEvents = defaultClaimTrackerService.getRenewalCalendarEvents(allSchemes);
@@ -86,18 +71,18 @@ export function TrackerPage() {
           </div>
           <h1 className="text-3xl font-extrabold text-zinc-900 tracking-tight flex items-center gap-2.5">
             <Activity className="w-7 h-7 text-zinc-900" aria-hidden="true" />
-            {t('nav.tracker')}
+            <T id="tracker.title" />
           </h1>
-          <p className="text-sm text-zinc-600 mt-1 max-w-xl">
-            Track application verification milestones, prevent missed deadlines, and monitor recurring academic renewal cycles.
-          </p>
+          <div className="text-sm text-zinc-600 mt-1 max-w-xl">
+            <T id="tracker.sub" />
+          </div>
         </div>
 
         <Link
           to="/matches"
-          className="text-xs px-3.5 py-2 bg-zinc-900 hover:bg-zinc-800 text-white font-semibold rounded-lg shadow-xs inline-flex items-center gap-1.5 btn-tactile transition-colors"
+          className="text-xs px-3.5 py-2 bg-zinc-900 hover:bg-zinc-800 text-white !text-white font-semibold rounded-lg shadow-xs inline-flex items-center gap-1.5 btn-tactile transition-colors"
         >
-          <Plus className="w-3.5 h-3.5" /> Track Another Scheme
+          <Plus className="w-3.5 h-3.5 text-white" /> <span className="!text-white">Track Another Scheme</span>
         </Link>
       </div>
 
@@ -133,14 +118,20 @@ export function TrackerPage() {
             <Activity className="w-8 h-8 text-zinc-400 mx-auto" />
             <h3 className="text-base font-bold text-zinc-800">No active claims tracked yet</h3>
             <p className="text-xs text-zinc-500 max-w-sm mx-auto">
-              Save any eligible scholarship or benefit from the Matches page to monitor application deadlines, status milestones, and renewal alerts.
+              Save any eligible scholarship or benefit from the Matches catalog to monitor application deadlines, status milestones, and renewal alerts.
             </p>
-            <div className="pt-2">
+            <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+              <Link
+                to="/intake"
+                className="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white !text-white font-semibold rounded-lg text-xs inline-flex items-center gap-1.5 btn-tactile shadow-xs"
+              >
+                <span className="!text-white">Start Citizen Intake</span> <ExternalLink className="w-3.5 h-3.5 text-white" />
+              </Link>
               <Link
                 to="/matches"
-                className="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white font-semibold rounded-lg text-xs inline-flex items-center gap-1.5 btn-tactile shadow-xs"
+                className="px-4 py-2 border border-zinc-300 bg-white hover:bg-zinc-50 text-zinc-800 font-semibold rounded-lg text-xs inline-flex items-center gap-1.5 btn-tactile shadow-xs"
               >
-                Find Likely Schemes <ExternalLink className="w-3.5 h-3.5" />
+                Browse Schemes Catalog
               </Link>
             </div>
           </Card>

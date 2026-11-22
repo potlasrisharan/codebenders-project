@@ -3,14 +3,14 @@ import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AppRoutes } from "../../src/routes/Routes";
 
-const cases: { path: string; heading: string }[] = [
-  { path: "/", heading: "LabhSaathi" },
-  { path: "/intake", heading: "Intake" },
-  { path: "/matches", heading: "Matches" },
-  { path: "/scheme/test", heading: "Scheme detail" },
-  { path: "/checklist", heading: "Checklist" },
-  { path: "/tracker", heading: "Tracker" },
-  { path: "/admin-review", heading: "Admin review" },
+const cases: { path: string; name: RegExp }[] = [
+  { path: "/", name: /LabhSaathi/i },
+  { path: "/intake", name: /Intake/i },
+  { path: "/matches", name: /Matches|Schemes/i },
+  { path: "/scheme/test", name: /Scheme detail/i },
+  { path: "/checklist", name: /Checklist/i },
+  { path: "/tracker", name: /Tracker/i },
+  { path: "/admin-review", name: /Admin review/i },
 ];
 
 describe("AppRoutes", () => {
@@ -24,13 +24,13 @@ describe("AppRoutes", () => {
     errorSpy.mockRestore();
   });
 
-  it.each(cases)("renders the $heading placeholder at $path", ({ path, heading }) => {
+  it.each(cases)("renders the header for $path", ({ path, name }) => {
     render(
       <MemoryRouter initialEntries={[path]}>
         <AppRoutes />
       </MemoryRouter>,
     );
-    expect(screen.getByRole("heading", { level: 1, name: heading })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name })).toBeInTheDocument();
     expect(errorSpy).not.toHaveBeenCalled();
   });
 });

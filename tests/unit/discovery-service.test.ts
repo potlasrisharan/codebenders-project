@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { defaultDiscoveryService } from '../../src/core/discovery/discovery-service';
-import { GOLDEN_PERSONAS, CitizenProfile } from '../../src/core/profile/citizen-profile';
+import { GOLDEN_PERSONAS, CitizenProfile, EMPTY_CITIZEN_PROFILE } from '../../src/core/profile/citizen-profile';
 
 describe('Scheme Discovery, Fixed Labels & Near-Match (P6)', () => {
   it('discovers schemes filtered by state jurisdiction and ranks Likely Eligible highest', () => {
@@ -45,5 +45,16 @@ describe('Scheme Discovery, Fixed Labels & Near-Match (P6)', () => {
 
     expect(result.coverageNotice).toBeDefined();
     expect(result.coverageNotice).toContain('partially verified');
+  });
+
+  it('treats all states equally when All India is selected and discovers pan-Indian schemes', () => {
+    const neutralProfile: CitizenProfile = {
+      ...EMPTY_CITIZEN_PROFILE,
+      domicileState: 'All India',
+      familyIncome: 100000,
+    };
+    const result = defaultDiscoveryService.discover(neutralProfile, { state: 'All India' });
+    expect(result.items.length).toBeGreaterThan(1);
+    expect(result.totalSchemesConsidered).toBeGreaterThanOrEqual(8);
   });
 });

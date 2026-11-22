@@ -1,10 +1,17 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
+import type { ReactNode, ElementType } from 'react';
 import { SupportedLanguage, SUPPORTED_LANGUAGES, TRANSLATIONS, LanguageOption } from './translations';
+
+export interface DualTextResult {
+  primary: string;
+  secondary?: string;
+}
 
 interface LanguageContextType {
   language: SupportedLanguage;
   setLanguage: (lang: SupportedLanguage) => void;
   t: (key: string, fallback?: string) => string;
+  tDual: (key: string, fallback?: string) => DualTextResult;
   languages: LanguageOption[];
 }
 
@@ -53,12 +60,23 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return fallback || key;
   };
 
+  const tDual = (key: string, fallback?: string): DualTextResult => {
+    const primary = t(key, fallback);
+    const english = TRANSLATIONS.en[key] || fallback || key;
+
+    if (language === 'en' || primary === english) {
+      return { primary };
+    }
+    return { primary, secondary: english };
+  };
+
   return (
     <LanguageContext.Provider
       value={{
         language,
         setLanguage,
         t,
+        tDual,
         languages: SUPPORTED_LANGUAGES,
       }}
     >
@@ -73,4 +91,50 @@ export function useLanguage(): LanguageContextType {
     throw new Error('useLanguage must be used within a LanguageProvider');
   }
   return context;
+}
+
+export function T({
+  id,
+  fallback,
+  className = '',
+  primaryClassName = '',
+  secondaryClassName = '',
+  inline = false,
+  as: Component = 'span',
+}: {
+  id: string;
+  fallback?: string;
+  className?: string;
+  primaryClassName?: string;
+  secondaryClassName?: string;
+  inline?: boolean;
+  as?: ElementType;
+}) {
+  const { language, t } = useLanguage();
+  const primary = t(id, fallback);
+  const english = TRANSLATIONS.en[id] || fallback || id;
+
+  if (language === 'en' || primary === english) {
+    return <Component className={className}>{primary}</Component>;
+  }
+
+  if (inline) {
+    return (
+      <Component className={className}>
+        <span className={primaryClassName}>{primary}</span>{' '}
+        <span className={`text-[0.82em] font-normal text-zinc-500 opacity-85 ${secondaryClassName}`}>
+          ({english})
+        </span>
+      </Component>
+    );
+  }
+
+  return (
+    <Component className={className}>
+      <span className={`block ${primaryClassName}`}>{primary}</span>
+      <span className={`block text-[0.8em] font-normal text-zinc-500 tracking-normal opacity-85 mt-0.5 ${secondaryClassName}`}>
+        {english}
+      </span>
+    </Component>
+  );
 }

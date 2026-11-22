@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { ButtonLink } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
-import { useLanguage } from '../core/i18n/LanguageContext';
+import { T } from '../core/i18n/LanguageContext';
 
 const SCHEME_SECTORS = [
   {
@@ -22,7 +22,7 @@ const SCHEME_SECTORS = [
     count: '60+ Schemes',
     description: 'Post-matric tuition reimbursements, girl child technical grants, and national merit fellowships.',
     criteriaMeasured: 'Attendance (75%+), Board Percentile, Income Ceiling (<₹2L–₹8L), Category (SC/ST/BC/EBC).',
-    examples: 'Telangana ePASS (RTF), AICTE Pragati, NSP Central Sector (CSSS), Saksham.',
+    examples: 'NSP Central Sector (CSSS), AICTE Pragati, State Post-Matric Scholarships (UP, MH, KA, TS, KL), Saksham.',
   },
   {
     icon: Wheat,
@@ -77,13 +77,11 @@ const SCHEME_SECTORS = [
 
 
 export function LandingPage() {
-  const { t } = useLanguage();
-
   const platformStats = [
-    { value: '219', label: t('landing.stats.schemes'), sub: t('landing.stats.schemes.sub') },
-    { value: '100% Free', label: t('landing.stats.free'), sub: t('landing.stats.free.sub') },
-    { value: '0 PII', label: t('landing.stats.privacy'), sub: t('landing.stats.privacy.sub') },
-    { value: '3-Valued', label: t('landing.stats.logic'), sub: t('landing.stats.logic.sub') },
+    { value: '219', labelKey: 'landing.stats.schemes', subKey: 'landing.stats.schemes.sub' },
+    { value: '100% Free', labelKey: 'landing.stats.free', subKey: 'landing.stats.free.sub' },
+    { value: '0 PII', labelKey: 'landing.stats.privacy', subKey: 'landing.stats.privacy.sub' },
+    { value: '3-Valued', labelKey: 'landing.stats.logic', subKey: 'landing.stats.logic.sub' },
   ];
 
   return (
@@ -97,35 +95,33 @@ export function LandingPage() {
 
         <div className="relative z-10 flex flex-col items-start gap-4 max-w-3xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/95 backdrop-blur-md border border-zinc-200/90 shadow-2xs">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-xs font-bold text-zinc-800 tracking-tight">
-              {t('landing.eyebrow')}
-            </span>
+            <img src="/logo.png" alt="LabhSaathi logo" className="w-4 h-4 object-contain" />
+            <T id="landing.eyebrow" className="text-xs font-bold text-zinc-800 tracking-tight" />
           </div>
 
           <h1
             id="landing-title"
             className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-zinc-950 tracking-tight leading-[1.12]"
           >
-            {t('landing.title')}
+            <T id="landing.title" />
           </h1>
 
-          <p className="text-base sm:text-xl font-semibold text-zinc-800 leading-snug">
-            {t('landing.subtitle')}{' '}
-            <span className="text-indigo-600 font-bold">{t('landing.highlight')}</span>
-          </p>
+          <div className="text-base sm:text-xl font-semibold text-zinc-800 leading-snug">
+            <T id="landing.subtitle" />{' '}
+            <span className="text-indigo-600 font-bold"><T id="landing.highlight" inline /></span>
+          </div>
 
           <p className="text-xs sm:text-sm md:text-base text-zinc-600 leading-relaxed">
-            {t('landing.lead')}
+            <T id="landing.lead" />
           </p>
 
           <div className="flex flex-wrap items-center gap-3 pt-2 w-full sm:w-auto">
             <ButtonLink
-              to="/intake"
+              to="/intake?fresh=1"
               variant="primary"
               className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-zinc-950 hover:bg-zinc-800 text-white rounded-xl font-bold text-sm shadow-sm transition-all btn-tactile min-h-[48px]"
             >
-              <span>{t('landing.cta.start')}</span>
+              <T id="landing.cta.start" />
               <ArrowRight className="w-4 h-4" />
             </ButtonLink>
 
@@ -134,12 +130,12 @@ export function LandingPage() {
               variant="secondary"
               className="inline-flex items-center justify-center gap-2 px-5 py-3.5 border border-zinc-300 text-zinc-800 rounded-xl font-semibold text-sm hover:bg-zinc-100/70 transition-colors btn-tactile min-h-[48px]"
             >
-              <span>{t('landing.cta.browse')}</span>
+              <T id="landing.cta.browse" />
             </ButtonLink>
           </div>
 
           <p className="text-[11px] text-zinc-500 italic mt-1">
-            {t('landing.note')}
+            <T id="landing.note" />
           </p>
         </div>
       </section>
@@ -149,8 +145,8 @@ export function LandingPage() {
         {platformStats.map((stat) => (
           <Card key={stat.value} className="p-4 rounded-2xl bg-white border border-zinc-200/90 shadow-2xs space-y-1">
             <span className="text-2xl font-extrabold text-zinc-950 tracking-tight block">{stat.value}</span>
-            <span className="text-xs font-bold text-zinc-800 block">{stat.label}</span>
-            <p className="text-[11px] text-zinc-500 leading-tight">{stat.sub}</p>
+            <T id={stat.labelKey} className="text-xs font-bold text-zinc-800 block" />
+            <T id={stat.subKey} className="text-[11px] text-zinc-500 leading-tight block" />
           </Card>
         ))}
       </section>
@@ -161,33 +157,31 @@ export function LandingPage() {
           <div className="space-y-2 max-w-2xl">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
-              <span className="text-xs font-bold uppercase tracking-wider text-indigo-300">
-                {t('landing.ai.badge')}
-              </span>
+              <T id="landing.ai.badge" className="text-xs font-bold uppercase tracking-wider text-indigo-300" />
             </div>
             <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-white">
-              {t('landing.ai.title')}
+              <T id="landing.ai.title" secondaryClassName="text-zinc-400" />
             </h2>
             <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
-              {t('landing.ai.desc')}
+              <T id="landing.ai.desc" secondaryClassName="text-zinc-400" />
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-shrink-0 lg:w-96">
             <div className="p-3.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/15 space-y-1">
               <div className="flex items-center gap-1.5 text-emerald-400 text-xs font-bold">
-                <Mic className="w-4 h-4" /> {t('landing.ai.sarvam.title')}
+                <Mic className="w-4 h-4" /> <T id="landing.ai.sarvam.title" />
               </div>
               <p className="text-[11px] text-zinc-300">
-                {t('landing.ai.sarvam.desc')}
+                <T id="landing.ai.sarvam.desc" secondaryClassName="text-zinc-400" />
               </p>
             </div>
             <div className="p-3.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/15 space-y-1">
               <div className="flex items-center gap-1.5 text-indigo-300 text-xs font-bold">
-                <Bot className="w-4 h-4" /> {t('landing.ai.groq.title')}
+                <Bot className="w-4 h-4" /> <T id="landing.ai.groq.title" />
               </div>
               <p className="text-[11px] text-zinc-300">
-                {t('landing.ai.groq.desc')}
+                <T id="landing.ai.groq.desc" secondaryClassName="text-zinc-400" />
               </p>
             </div>
           </div>
@@ -198,15 +192,13 @@ export function LandingPage() {
       <section className="space-y-4" aria-labelledby="sectors-heading">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-1 border-b border-zinc-200 pb-3">
           <div>
-            <span className="text-xs font-bold uppercase tracking-widest text-indigo-600">
-              {t('landing.sectors.eyebrow')}
-            </span>
+            <T id="landing.sectors.eyebrow" className="text-xs font-bold uppercase tracking-widest text-indigo-600 block" />
             <h2 id="sectors-heading" className="text-xl font-extrabold text-zinc-900 tracking-tight">
-              {t('landing.sectors.title')}
+              <T id="landing.sectors.title" />
             </h2>
           </div>
           <span className="text-xs text-zinc-500 font-medium">
-            {t('landing.sectors.jurisdiction')}
+            <T id="landing.sectors.jurisdiction" />
           </span>
         </div>
 
@@ -250,14 +242,12 @@ export function LandingPage() {
       {/* 5-Step Connected User Journey for Judges & Citizens */}
       <section className="space-y-4" aria-labelledby="journey-heading">
         <div className="border-b border-zinc-200 pb-3">
-          <span className="text-xs font-bold uppercase tracking-widest text-indigo-600">
-            {t('landing.journey.eyebrow')}
-          </span>
+          <T id="landing.journey.eyebrow" className="text-xs font-bold uppercase tracking-widest text-indigo-600 block" />
           <h2 id="journey-heading" className="text-xl font-extrabold text-zinc-900 tracking-tight">
-            {t('landing.journey.title')}
+            <T id="landing.journey.title" />
           </h2>
           <p className="text-xs text-zinc-500 mt-0.5">
-            {t('landing.journey.desc')}
+            <T id="landing.journey.desc" />
           </p>
         </div>
 
@@ -266,9 +256,9 @@ export function LandingPage() {
             <span className="w-6 h-6 rounded-full bg-zinc-900 text-white font-mono font-bold text-xs flex items-center justify-center">
               1
             </span>
-            <h3 className="font-bold text-xs text-zinc-900">{t('landing.step1.title')}</h3>
+            <h3 className="font-bold text-xs text-zinc-900"><T id="landing.step1.title" /></h3>
             <p className="text-[11px] text-zinc-600 leading-relaxed">
-              {t('landing.step1.desc')}
+              <T id="landing.step1.desc" />
             </p>
           </Card>
 
@@ -276,9 +266,9 @@ export function LandingPage() {
             <span className="w-6 h-6 rounded-full bg-zinc-900 text-white font-mono font-bold text-xs flex items-center justify-center">
               2
             </span>
-            <h3 className="font-bold text-xs text-zinc-900">{t('landing.step2.title')}</h3>
+            <h3 className="font-bold text-xs text-zinc-900"><T id="landing.step2.title" /></h3>
             <p className="text-[11px] text-zinc-600 leading-relaxed">
-              {t('landing.step2.desc')}
+              <T id="landing.step2.desc" />
             </p>
           </Card>
 
@@ -286,9 +276,9 @@ export function LandingPage() {
             <span className="w-6 h-6 rounded-full bg-zinc-900 text-white font-mono font-bold text-xs flex items-center justify-center">
               3
             </span>
-            <h3 className="font-bold text-xs text-zinc-900">{t('landing.step3.title')}</h3>
+            <h3 className="font-bold text-xs text-zinc-900"><T id="landing.step3.title" /></h3>
             <p className="text-[11px] text-zinc-600 leading-relaxed">
-              {t('landing.step3.desc')}
+              <T id="landing.step3.desc" />
             </p>
           </Card>
 
@@ -296,9 +286,9 @@ export function LandingPage() {
             <span className="w-6 h-6 rounded-full bg-zinc-900 text-white font-mono font-bold text-xs flex items-center justify-center">
               4
             </span>
-            <h3 className="font-bold text-xs text-zinc-900">{t('landing.step4.title')}</h3>
+            <h3 className="font-bold text-xs text-zinc-900"><T id="landing.step4.title" /></h3>
             <p className="text-[11px] text-zinc-600 leading-relaxed">
-              {t('landing.step4.desc')}
+              <T id="landing.step4.desc" />
             </p>
           </Card>
 
@@ -306,9 +296,9 @@ export function LandingPage() {
             <span className="w-6 h-6 rounded-full bg-zinc-900 text-white font-mono font-bold text-xs flex items-center justify-center">
               5
             </span>
-            <h3 className="font-bold text-xs text-zinc-900">{t('landing.step5.title')}</h3>
+            <h3 className="font-bold text-xs text-zinc-900"><T id="landing.step5.title" /></h3>
             <p className="text-[11px] text-zinc-600 leading-relaxed">
-              {t('landing.step5.desc')}
+              <T id="landing.step5.desc" />
             </p>
           </Card>
         </div>
@@ -320,25 +310,25 @@ export function LandingPage() {
           <div className="space-y-2 max-w-2xl">
             <div className="flex items-center gap-2 text-indigo-700 font-bold text-xs uppercase tracking-wider">
               <ShieldCheck className="w-5 h-5 text-indigo-600" />
-              <span>{t('landing.shield.badge')}</span>
+              <T id="landing.shield.badge" />
             </div>
             <h2 className="text-lg font-extrabold text-zinc-900">
-              {t('landing.shield.title')}
+              <T id="landing.shield.title" />
             </h2>
             <ul className="text-xs text-zinc-700 space-y-1 list-disc pl-4 leading-relaxed">
-              <li>{t('landing.shield.point1')}</li>
-              <li>{t('landing.shield.point2')}</li>
-              <li>{t('landing.shield.point3')}</li>
+              <li><T id="landing.shield.point1" /></li>
+              <li><T id="landing.shield.point2" /></li>
+              <li><T id="landing.shield.point3" /></li>
             </ul>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center gap-2 flex-shrink-0 w-full sm:w-auto">
             <ButtonLink
-              to="/intake"
+              to="/intake?fresh=1"
               variant="primary"
               className="w-full sm:w-auto px-5 py-3.5 bg-zinc-950 hover:bg-zinc-800 text-white rounded-xl font-bold text-xs shadow-sm flex items-center justify-center gap-1.5 btn-tactile min-h-[48px]"
             >
-              <span>{t('landing.shield.cta')}</span>
+              <T id="landing.shield.cta" />
               <ArrowRight className="w-4 h-4" />
             </ButtonLink>
           </div>

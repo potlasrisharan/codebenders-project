@@ -31,7 +31,7 @@ export const SUPPORTED_SARVAM_LANGUAGES: Record<string, string> = {
 voiceRouter.post('/transcribe', async (c) => {
   const apiKey = c.env?.SARVAM_API_KEY || (typeof process !== 'undefined' ? process.env?.SARVAM_API_KEY : undefined);
   let audioBuffer: ArrayBuffer | null = null;
-  let languageCode = 'te-IN'; // default to Telugu
+  let languageCode = 'en-IN'; // Neutral default to Indian English / pan-India
   let originalFilename = 'audio.webm';
   let mimeType = 'audio/webm';
   let mockTranscriptHint: string | undefined;

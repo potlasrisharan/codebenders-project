@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { GOLDEN_PERSONAS, extractProfileFromText } from '../src/core/profile/citizen-profile';
+import {
+  GOLDEN_PERSONAS,
+  extractProfileFromText,
+  getActiveQuestions,
+  EMPTY_CITIZEN_PROFILE,
+} from '../src/core/profile/citizen-profile';
 import { resolveProfileParameter, evaluatePredicate } from '../src/core/engine/eligibility-engine';
 import { RulePredicate } from '../src/core/data/schema';
 
@@ -63,5 +68,63 @@ describe('Role-Adaptive Profile & Semantic Alias Suite', () => {
     const trace = evaluatePredicate(pmKisanFarmerPredicate, farmerPersona);
     expect(trace.result).toBe('true');
     expect(trace.explanation).toContain('Condition met');
+  });
+
+  it('branches questions dynamically based on occupation and education level', () => {
+    // 1. Undergraduate College Student
+    const ugProfile = { ...EMPTY_CITIZEN_PROFILE, occupation: 'student' as const, educationLevel: 'undergraduate' as const };
+    const ugQuestions = getActiveQuestions(ugProfile);
+    const ugQuestionIds = ugQuestions.map((q) => q.id);
+
+    expect(ugQuestionIds).toContain('educationLevel');
+    expect(ugQuestionIds).toContain('courseStream');
+    expect(ugQuestionIds).toContain('attendancePercentage');
+    expect(ugQuestionIds).toContain('twelfthPercentile');
+    expect(ugQuestionIds).not.toContain('isAgriculturalLandholder');
+
+    // 2. School Student (Class 1-10) - must NOT be asked courseStream, attendance, or 12th percentile
+    const schoolProfile = { ...EMPTY_CITIZEN_PROFILE, occupation: 'student' as const, educationLevel: 'school' as const };
+    const schoolQuestions = getActiveQuestions(schoolProfile);
+    const schoolQuestionIds = schoolQuestions.map((q) => q.id);
+
+    expect(schoolQuestionIds).toContain('educationLevel');
+    expect(schoolQuestionIds).not.toContain('courseStream');
+    expect(schoolQuestionIds).not.toContain('attendancePercentage');
+    expect(schoolQuestionIds).not.toContain('twelfthPercentile');
+
+    // 3. Intermediate (+2 / Class 11-12) Student - asks intermediate groups, NOT 12th percentile
+    const interProfile = { ...EMPTY_CITIZEN_PROFILE, occupation: 'student' as const, educationLevel: 'intermediate' as const };
+    const interQuestions = getActiveQuestions(interProfile);
+    const interQuestionIds = interQuestions.map((q) => q.id);
+
+    expect(interQuestionIds).toContain('educationLevel');
+    expect(interQuestionIds).toContain('courseStream');
+    expect(interQuestionIds).toContain('attendancePercentage');
+    expect(interQuestionIds).not.toContain('twelfthPercentile');
+
+    // 4. Farmer profile with landholding
+    const farmerProfile = {
+      ...EMPTY_CITIZEN_PROFILE,
+      occupation: 'farmer' as const,
+      isAgriculturalLandholder: true,
+    };
+    const farmerQuestions = getActiveQuestions(farmerProfile);
+    const farmerQuestionIds = farmerQuestions.map((q) => q.id);
+
+    expect(farmerQuestionIds).toContain('isAgriculturalLandholder');
+    expect(farmerQuestionIds).toContain('landholdingHectares');
+    expect(farmerQuestionIds).not.toContain('educationLevel');
+    expect(farmerQuestionIds).not.toContain('attendancePercentage');
+
+    // 5. Street vendor profile (general non-student, non-farmer)
+    const vendorProfile = { ...EMPTY_CITIZEN_PROFILE, occupation: 'street_vendor' as const };
+    const vendorQuestions = getActiveQuestions(vendorProfile);
+    const vendorQuestionIds = vendorQuestions.map((q) => q.id);
+
+    expect(vendorQuestionIds).not.toContain('educationLevel');
+    expect(vendorQuestionIds).not.toContain('courseStream');
+    expect(vendorQuestionIds).not.toContain('isAgriculturalLandholder');
+    expect(vendorQuestionIds).toContain('familyIncome');
+    expect(vendorQuestionIds).toContain('socialCategory');
   });
 });

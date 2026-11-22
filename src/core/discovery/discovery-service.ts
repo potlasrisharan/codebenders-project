@@ -41,10 +41,10 @@ export class DiscoveryService {
     coverageNotice?: string;
     totalSchemesConsidered: number;
   } {
-    const targetState = query.state || profile.domicileState || 'Telangana';
+    const targetState = query.state || profile.domicileState || 'All India';
     const stateCoverage = this.repo.getStateCoverage(targetState);
 
-    // Get candidate schemes filtered by state/central jurisdiction
+    // Get candidate schemes filtered by state/central jurisdiction (or All India nationwide)
     let candidates = this.repo.getByState(targetState);
 
     // Apply category filter if requested
