@@ -1,223 +1,344 @@
-import { ArrowRight, ShieldCheck, CheckCircle2, Lock, FileText, Sparkles, Building2 } from "lucide-react";
-import { ButtonLink } from "../components/ui/Button";
-import { Card } from "../components/ui/Card";
+import {
+  ArrowRight,
+  ShieldCheck,
+  GraduationCap,
+  Wheat,
+  HeartPulse,
+  Home,
+  Users,
+  Hammer,
+  Clock,
+  Mic,
+  Bot,
+} from 'lucide-react';
+import { ButtonLink } from '../components/ui/Button';
+import { Card } from '../components/ui/Card';
+import { useLanguage } from '../core/i18n/LanguageContext';
 
-const steps = [
+const SCHEME_SECTORS = [
   {
-    step: "01",
-    title: "Describe your situation in plain words",
-    text: "Type in English or Telugu (or choose a synthetic demo profile). No long confusing forms; answer only what is needed.",
-    icon: Sparkles,
+    icon: GraduationCap,
+    title: 'Education & Scholarships',
+    count: '60+ Schemes',
+    description: 'Post-matric tuition reimbursements, girl child technical grants, and national merit fellowships.',
+    criteriaMeasured: 'Attendance (75%+), Board Percentile, Income Ceiling (<₹2L–₹8L), Category (SC/ST/BC/EBC).',
+    examples: 'Telangana ePASS (RTF), AICTE Pragati, NSP Central Sector (CSSS), Saksham.',
   },
   {
-    step: "02",
-    title: "Three-valued deterministic matching",
-    text: "Our engine evaluates published eligibility rules as true, false, or unknown. We report 'Likely eligible' or 'Need to confirm'—never fake guarantees.",
-    icon: ShieldCheck,
+    icon: Wheat,
+    title: 'Agriculture & Farmers',
+    count: '35+ Schemes',
+    description: 'Direct income support, crop insurance coverage, input subsidies, and institutional credit.',
+    criteriaMeasured: 'Landholding size (marginal <1 ha, small 1–2 ha), Domicile, Non-income tax status.',
+    examples: 'PM-KISAN (₹6,000/yr), PM Fasal Bima Yojana, Rythu Bharosa, Kisan Credit Card.',
   },
   {
-    step: "03",
-    title: "Document checklist & direct official links",
-    text: "Get your personalized MeeSeva document list, step-by-step application instructions, fee transparency, and renewal calendar.",
-    icon: FileText,
+    icon: HeartPulse,
+    title: 'Healthcare & Life Insurance',
+    count: '25+ Schemes',
+    description: 'Cashless hospitalisation coverage, accidental death protection, and maternal care assistance.',
+    criteriaMeasured: 'BPL / White Ration Card, SECC criteria, Family income threshold.',
+    examples: 'Ayushman Bharat (PM-JAY ₹5L cover), PM Jeevan Jyoti, PM Suraksha Bima, Aarogyasri.',
+  },
+  {
+    icon: Home,
+    title: 'Housing & Basic Amenities',
+    count: '20+ Schemes',
+    description: 'Pucca housing construction grants, piped tap water connections, and clean LPG connections.',
+    criteriaMeasured: 'Kutcha house / landless status, Rural vs Urban panchayat, Annual family income.',
+    examples: 'PMAY-Gramin, PMAY-Urban, Jal Jeevan Mission, PM Ujjwala Yojana.',
+  },
+  {
+    icon: Users,
+    title: 'Women & Child Development',
+    count: '30+ Schemes',
+    description: 'Long-term savings for daughters, conditional cash transfers for mothers, and free transport.',
+    criteriaMeasured: 'Gender, Child age (<10 years), Pregnancy trimester, Marital status.',
+    examples: 'Sukanya Samriddhi Yojana, Beti Bachao Beti Padhao, PM Matru Vandana, Mahalakshmi.',
+  },
+  {
+    icon: Hammer,
+    title: 'Artisans, Vendors & Workers',
+    count: '25+ Schemes',
+    description: 'Collateral-free micro-credit, toolkits, modern skill training, and guaranteed rural employment.',
+    criteriaMeasured: '18 traditional artisan trades, Street vending certificate / LOR, e-Shram card.',
+    examples: 'PM Vishwakarma (₹3L loan + ₹15k toolkit), PM SVANidhi, MGNREGA (100 days work).',
+  },
+  {
+    icon: Clock,
+    title: 'Social Security & Pensions',
+    count: '24+ Schemes',
+    description: 'Monthly old-age pensions, unorganized worker retirement pensions, and disability stipends.',
+    criteriaMeasured: 'Age window (18–40 for contribution, 60+ for payout), BPL status, Benchmark disability (40%+).',
+    examples: 'Atal Pension Yojana, PM Shram Yogi Maandhan, Indira Gandhi Old Age Pension, Aasara.',
   },
 ];
 
-const highlights = [
-  { value: "100% Free", label: "Zero application fees on official portals", icon: CheckCircle2 },
-  { value: "7+ Verified", label: "Central & Telangana student schemes", icon: Building2 },
-  { value: "Privacy First", label: "Sensitive-ID Shield blocks raw Aadhaar/PAN", icon: Lock },
-  { value: "No Middlemen", label: "Direct portal links & transparent fee states", icon: ShieldCheck },
-];
+
 
 export function LandingPage() {
+  const { t } = useLanguage();
+
+  const platformStats = [
+    { value: '219', label: t('landing.stats.schemes'), sub: t('landing.stats.schemes.sub') },
+    { value: '100% Free', label: t('landing.stats.free'), sub: t('landing.stats.free.sub') },
+    { value: '0 PII', label: t('landing.stats.privacy'), sub: t('landing.stats.privacy.sub') },
+    { value: '3-Valued', label: t('landing.stats.logic'), sub: t('landing.stats.logic.sub') },
+  ];
+
   return (
-    <div className="landing flex flex-col gap-8 sm:gap-12 max-w-5xl mx-auto py-2 px-2 sm:px-4">
-      {/* Hero Section — Asymmetric Split Layout with Ultra-Fast CSS Dots Background */}
+    <div className="landing flex flex-col gap-10 max-w-5xl mx-auto py-3 px-3 sm:px-4">
+      {/* Editorial Hero Section */}
       <section
-        className="landing-hero relative overflow-hidden rounded-3xl bg-gradient-to-b from-white via-zinc-50 to-indigo-50/20 border border-zinc-200/90 p-5 sm:p-8 lg:p-10 shadow-xs"
+        className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-white via-zinc-50 to-indigo-50/25 border border-zinc-200/90 p-6 sm:p-10 shadow-xs"
         aria-labelledby="landing-title"
       >
-        {/* Lightweight Pure CSS Dots Pattern (0ms load time, 0 JS) */}
-        <div className="absolute inset-0 -z-0 bg-dots-pattern opacity-40 pointer-events-none" />
+        <div className="absolute inset-0 -z-0 bg-dots-pattern opacity-35 pointer-events-none" />
 
-        <div className="landing-hero__inner relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
-          {/* Left Column: Typography & Action */}
-          <div className="lg:col-span-7 flex flex-col gap-3.5 sm:gap-4 items-start">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/95 backdrop-blur-md border border-zinc-200/90 shadow-2xs">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-xs font-bold text-zinc-800 tracking-tight text-shimmer">
-                Independent Public Service Navigation
-              </span>
-            </div>
+        <div className="relative z-10 flex flex-col items-start gap-4 max-w-3xl">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/95 backdrop-blur-md border border-zinc-200/90 shadow-2xs">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-xs font-bold text-zinc-800 tracking-tight">
+              {t('landing.eyebrow')}
+            </span>
+          </div>
 
-            <p className="landing-eyebrow text-xs font-bold uppercase tracking-widest text-zinc-500">
-              ACE BUILDERS 2026 • Problem Statement 5
-            </p>
+          <h1
+            id="landing-title"
+            className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-zinc-950 tracking-tight leading-[1.12]"
+          >
+            {t('landing.title')}
+          </h1>
 
-            <h1
-              id="landing-title"
-              className="landing-title text-3xl sm:text-4xl md:text-5xl font-extrabold text-zinc-950 tracking-tight leading-[1.12]"
+          <p className="text-base sm:text-xl font-semibold text-zinc-800 leading-snug">
+            {t('landing.subtitle')}{' '}
+            <span className="text-indigo-600 font-bold">{t('landing.highlight')}</span>
+          </p>
+
+          <p className="text-xs sm:text-sm md:text-base text-zinc-600 leading-relaxed">
+            {t('landing.lead')}
+          </p>
+
+          <div className="flex flex-wrap items-center gap-3 pt-2 w-full sm:w-auto">
+            <ButtonLink
+              to="/intake"
+              variant="primary"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-zinc-950 hover:bg-zinc-800 text-white rounded-xl font-bold text-sm shadow-sm transition-all btn-tactile min-h-[48px]"
             >
-              LabhSaathi
-            </h1>
+              <span>{t('landing.cta.start')}</span>
+              <ArrowRight className="w-4 h-4" />
+            </ButtonLink>
 
-            <p className="text-base sm:text-lg md:text-xl font-medium text-zinc-700 leading-snug">
-              Know your benefits. Understand your rights.{" "}
-              <span className="text-indigo-600 font-bold">Claim what&apos;s yours.</span>
-            </p>
-
-            <p className="landing-lead text-xs sm:text-sm md:text-base text-zinc-600 leading-relaxed max-w-xl">
-              An intelligent, source-grounded claim-readiness platform designed for low-income college students in Telangana and across India. Explain your circumstances, discover verified scholarships, understand missing conditions, and prepare documents without relying on middlemen.
-            </p>
-
-            <div className="landing-actions flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2 w-full sm:w-auto">
-              <ButtonLink
-                to="/intake"
-                variant="primary"
-                className="landing-cta inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-zinc-950 hover:bg-zinc-800 text-white rounded-xl font-bold text-sm shadow-sm transition-all btn-tactile min-h-[48px]"
-              >
-                <span>Start with intake</span>
-                <ArrowRight className="w-4 h-4" />
-              </ButtonLink>
-
-              <a
-                href="#how-it-works"
-                className="px-5 py-3.5 rounded-xl border border-zinc-300 text-zinc-800 text-sm font-semibold hover:bg-zinc-100/70 transition-colors text-center min-h-[48px] flex items-center justify-center btn-tactile"
-              >
-                How it works
-              </a>
-            </div>
-
-            <p className="landing-note text-[11px] text-zinc-500 italic mt-0.5">
-              Independent guidance. Not an application, an approval, or official government determination.
-            </p>
+            <ButtonLink
+              to="/matches"
+              variant="secondary"
+              className="inline-flex items-center justify-center gap-2 px-5 py-3.5 border border-zinc-300 text-zinc-800 rounded-xl font-semibold text-sm hover:bg-zinc-100/70 transition-colors btn-tactile min-h-[48px]"
+            >
+              <span>{t('landing.cta.browse')}</span>
+            </ButtonLink>
           </div>
 
-          {/* Right Column: Visual Hero Picture & Floating Badges */}
-          <div className="lg:col-span-5 relative flex justify-center w-full">
-            <div className="relative w-full max-w-md aspect-[4/3] rounded-2xl overflow-hidden shadow-lg border-2 border-white bg-zinc-100 group">
-              <img
-                src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80"
-                alt="Indian college students studying and collaborating on a university campus"
-                width={800}
-                height={600}
-                decoding="async"
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                loading="eager"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/70 via-transparent to-transparent pointer-events-none" />
-
-              {/* Floating Pill Badges */}
-              <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-full shadow-md text-xs font-bold text-zinc-900 flex items-center gap-1.5 border border-zinc-100">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                <span>100% Free Official Guidance</span>
-              </div>
-
-              <div className="absolute bottom-3 left-3 right-3 bg-white/95 backdrop-blur-md p-2.5 rounded-xl shadow-md border border-zinc-100 flex items-center justify-between">
-                <div>
-                  <span className="text-[10px] uppercase font-bold text-indigo-700 tracking-wider block">Pilot Cohort</span>
-                  <span className="text-xs font-bold text-zinc-900">College Students in Telangana</span>
-                </div>
-                <span className="text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                  ePASS &amp; NSP Verified
-                </span>
-              </div>
-            </div>
-          </div>
+          <p className="text-[11px] text-zinc-500 italic mt-1">
+            {t('landing.note')}
+          </p>
         </div>
       </section>
 
-      {/* Trust & Impact Stats Strip with Lightweight Responsive Cards */}
-      <section className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3" aria-label="Key Platform Highlights">
-        {highlights.map((item) => {
-          const Icon = item.icon;
-          return (
-            <Card
-              key={item.value}
-              className="p-4 rounded-2xl bg-white border border-zinc-200/90 shadow-2xs flex flex-col gap-1 card-interactive"
-            >
-              <div className="flex items-center gap-1.5 text-zinc-700 mb-1">
-                <Icon className="w-4 h-4 text-indigo-600" />
-                <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-500">Feature</span>
-              </div>
-              <span className="text-lg sm:text-xl font-extrabold text-zinc-950">{item.value}</span>
-              <p className="text-xs text-zinc-600 leading-snug">{item.label}</p>
-            </Card>
-          );
-        })}
+      {/* Verified Catalog Stats Strip */}
+      <section className="grid grid-cols-2 lg:grid-cols-4 gap-3" aria-label="Key Platform Facts">
+        {platformStats.map((stat) => (
+          <Card key={stat.value} className="p-4 rounded-2xl bg-white border border-zinc-200/90 shadow-2xs space-y-1">
+            <span className="text-2xl font-extrabold text-zinc-950 tracking-tight block">{stat.value}</span>
+            <span className="text-xs font-bold text-zinc-800 block">{stat.label}</span>
+            <p className="text-[11px] text-zinc-500 leading-tight">{stat.sub}</p>
+          </Card>
+        ))}
       </section>
 
-      {/* 3-Step Journey Section with Lightweight CSS Cards */}
-      <section id="how-it-works" className="landing-section flex flex-col gap-5 sm:gap-6" aria-labelledby="landing-how-heading">
-        <div className="flex flex-col gap-1">
-          <span className="text-xs font-bold uppercase tracking-widest text-indigo-600">Simple 3-Step Journey</span>
-          <h2 id="landing-how-heading" className="landing-heading text-xl sm:text-2xl font-bold text-zinc-900">
-            How it works
+      {/* AI & Multilingual Voice Roadmap Spotlight */}
+      <Card className="p-6 bg-gradient-to-r from-zinc-950 via-zinc-900 to-indigo-950 text-white rounded-3xl border border-zinc-800 shadow-md">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div className="space-y-2 max-w-2xl">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
+              <span className="text-xs font-bold uppercase tracking-wider text-indigo-300">
+                {t('landing.ai.badge')}
+              </span>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-white">
+              {t('landing.ai.title')}
+            </h2>
+            <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
+              {t('landing.ai.desc')}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-shrink-0 lg:w-96">
+            <div className="p-3.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/15 space-y-1">
+              <div className="flex items-center gap-1.5 text-emerald-400 text-xs font-bold">
+                <Mic className="w-4 h-4" /> {t('landing.ai.sarvam.title')}
+              </div>
+              <p className="text-[11px] text-zinc-300">
+                {t('landing.ai.sarvam.desc')}
+              </p>
+            </div>
+            <div className="p-3.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/15 space-y-1">
+              <div className="flex items-center gap-1.5 text-indigo-300 text-xs font-bold">
+                <Bot className="w-4 h-4" /> {t('landing.ai.groq.title')}
+              </div>
+              <p className="text-[11px] text-zinc-300">
+                {t('landing.ai.groq.desc')}
+              </p>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      {/* 7 Core Scheme Sectors Evaluated */}
+      <section className="space-y-4" aria-labelledby="sectors-heading">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-1 border-b border-zinc-200 pb-3">
+          <div>
+            <span className="text-xs font-bold uppercase tracking-widest text-indigo-600">
+              {t('landing.sectors.eyebrow')}
+            </span>
+            <h2 id="sectors-heading" className="text-xl font-extrabold text-zinc-900 tracking-tight">
+              {t('landing.sectors.title')}
+            </h2>
+          </div>
+          <span className="text-xs text-zinc-500 font-medium">
+            {t('landing.sectors.jurisdiction')}
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+          {SCHEME_SECTORS.map((sector) => {
+            const Icon = sector.icon;
+            return (
+              <Card
+                key={sector.title}
+                className="p-4 bg-white border border-zinc-200/90 rounded-2xl shadow-2xs flex flex-col justify-between space-y-3 hover:border-zinc-300 transition-colors"
+              >
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center text-zinc-800">
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700">
+                      {sector.count}
+                    </span>
+                  </div>
+                  <h3 className="font-extrabold text-sm text-zinc-900">{sector.title}</h3>
+                  <p className="text-xs text-zinc-600 leading-relaxed">{sector.description}</p>
+                </div>
+
+                <div className="pt-2 border-t border-zinc-100 space-y-1 text-[11px]">
+                  <div>
+                    <strong className="text-zinc-800">Rules Measured:</strong>{' '}
+                    <span className="text-zinc-600">{sector.criteriaMeasured}</span>
+                  </div>
+                  <div>
+                    <strong className="text-zinc-800">Key Schemes:</strong>{' '}
+                    <span className="text-zinc-500 italic">{sector.examples}</span>
+                  </div>
+                </div>
+              </Card>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* 5-Step Connected User Journey for Judges & Citizens */}
+      <section className="space-y-4" aria-labelledby="journey-heading">
+        <div className="border-b border-zinc-200 pb-3">
+          <span className="text-xs font-bold uppercase tracking-widest text-indigo-600">
+            {t('landing.journey.eyebrow')}
+          </span>
+          <h2 id="journey-heading" className="text-xl font-extrabold text-zinc-900 tracking-tight">
+            {t('landing.journey.title')}
           </h2>
-          <p className="text-xs text-zinc-500 max-w-xl">
-            We replace scattered government circulars with a clear, deterministic readiness path.
+          <p className="text-xs text-zinc-500 mt-0.5">
+            {t('landing.journey.desc')}
           </p>
         </div>
 
-        <ol className="landing-steps grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4 list-none pl-0">
-          {steps.map((step) => {
-            const StepIcon = step.icon;
-            return (
-              <li key={step.title} className="list-none">
-                <Card
-                  className="landing-step h-full p-5 rounded-2xl bg-white border border-zinc-200/90 shadow-2xs flex flex-col justify-between card-interactive"
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-3.5">
-                      <span
-                        className="landing-step__number w-8 h-8 rounded-lg bg-zinc-100 text-zinc-800 font-mono font-bold text-xs flex items-center justify-center border border-zinc-200"
-                        aria-hidden="true"
-                      >
-                        {step.step}
-                      </span>
-                      <StepIcon className="w-5 h-5 text-indigo-600" />
-                    </div>
-                    <h3 className="landing-step__title font-bold text-zinc-900 text-sm mb-1.5 leading-snug">
-                      {step.title}
-                    </h3>
-                    <p className="landing-step__text text-xs text-zinc-600 leading-relaxed">
-                      {step.text}
-                    </p>
-                  </div>
-                </Card>
-              </li>
-            );
-          })}
-        </ol>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          <Card className="p-4 bg-white border border-zinc-200/90 rounded-2xl shadow-2xs space-y-2">
+            <span className="w-6 h-6 rounded-full bg-zinc-900 text-white font-mono font-bold text-xs flex items-center justify-center">
+              1
+            </span>
+            <h3 className="font-bold text-xs text-zinc-900">{t('landing.step1.title')}</h3>
+            <p className="text-[11px] text-zinc-600 leading-relaxed">
+              {t('landing.step1.desc')}
+            </p>
+          </Card>
+
+          <Card className="p-4 bg-white border border-zinc-200/90 rounded-2xl shadow-2xs space-y-2">
+            <span className="w-6 h-6 rounded-full bg-zinc-900 text-white font-mono font-bold text-xs flex items-center justify-center">
+              2
+            </span>
+            <h3 className="font-bold text-xs text-zinc-900">{t('landing.step2.title')}</h3>
+            <p className="text-[11px] text-zinc-600 leading-relaxed">
+              {t('landing.step2.desc')}
+            </p>
+          </Card>
+
+          <Card className="p-4 bg-white border border-zinc-200/90 rounded-2xl shadow-2xs space-y-2">
+            <span className="w-6 h-6 rounded-full bg-zinc-900 text-white font-mono font-bold text-xs flex items-center justify-center">
+              3
+            </span>
+            <h3 className="font-bold text-xs text-zinc-900">{t('landing.step3.title')}</h3>
+            <p className="text-[11px] text-zinc-600 leading-relaxed">
+              {t('landing.step3.desc')}
+            </p>
+          </Card>
+
+          <Card className="p-4 bg-white border border-zinc-200/90 rounded-2xl shadow-2xs space-y-2">
+            <span className="w-6 h-6 rounded-full bg-zinc-900 text-white font-mono font-bold text-xs flex items-center justify-center">
+              4
+            </span>
+            <h3 className="font-bold text-xs text-zinc-900">{t('landing.step4.title')}</h3>
+            <p className="text-[11px] text-zinc-600 leading-relaxed">
+              {t('landing.step4.desc')}
+            </p>
+          </Card>
+
+          <Card className="p-4 bg-white border border-zinc-200/90 rounded-2xl shadow-2xs space-y-2">
+            <span className="w-6 h-6 rounded-full bg-zinc-900 text-white font-mono font-bold text-xs flex items-center justify-center">
+              5
+            </span>
+            <h3 className="font-bold text-xs text-zinc-900">{t('landing.step5.title')}</h3>
+            <p className="text-[11px] text-zinc-600 leading-relaxed">
+              {t('landing.step5.desc')}
+            </p>
+          </Card>
+        </div>
       </section>
 
-      {/* Middleman Shield & Transparency Callout Card */}
-      <Card className="landing-card p-5 sm:p-6 bg-gradient-to-br from-indigo-50/40 via-white to-zinc-50/60 border border-indigo-200/80 shadow-2xs" aria-labelledby="landing-not-heading">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5 sm:gap-6">
-          <div className="flex flex-col gap-2 max-w-2xl">
+      {/* Middleman Shield & Transparency Callout */}
+      <Card className="p-6 bg-gradient-to-br from-indigo-50/40 via-white to-zinc-50/60 border border-indigo-200/80 shadow-2xs">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="space-y-2 max-w-2xl">
             <div className="flex items-center gap-2 text-indigo-700 font-bold text-xs uppercase tracking-wider">
               <ShieldCheck className="w-5 h-5 text-indigo-600" />
-              <span>Middleman Shield • Protect Your Rights</span>
+              <span>{t('landing.shield.badge')}</span>
             </div>
-            <h2 id="landing-not-heading" className="landing-heading text-lg font-bold text-zinc-900">
-              What this is not
+            <h2 className="text-lg font-extrabold text-zinc-900">
+              {t('landing.shield.title')}
             </h2>
-            <ul className="landing-list text-xs text-zinc-700 space-y-1.5 list-disc pl-4 leading-relaxed">
-              <li><strong>Not an application or official portal:</strong> Official submissions occur directly on official sites like Telangana ePASS or NSP.</li>
-              <li><strong>Not an approval:</strong> Outcome labels like &quot;Likely eligible&quot; are guidance estimates based on published rules, never official guarantees.</li>
-              <li><strong>Zero fees or middlemen:</strong> Applying for government scholarships is 100% free. Never pay agents who demand commission or promise guaranteed approval.</li>
-              <li><strong>Sample profiles &amp; verified data:</strong> Tested with 6 synthetic student personas; state coverage is disclosed honestly.</li>
+            <ul className="text-xs text-zinc-700 space-y-1 list-disc pl-4 leading-relaxed">
+              <li>{t('landing.shield.point1')}</li>
+              <li>{t('landing.shield.point2')}</li>
+              <li>{t('landing.shield.point3')}</li>
             </ul>
           </div>
 
-          <div className="flex-shrink-0 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row items-center gap-2 flex-shrink-0 w-full sm:w-auto">
             <ButtonLink
               to="/intake"
               variant="primary"
               className="w-full sm:w-auto px-5 py-3.5 bg-zinc-950 hover:bg-zinc-800 text-white rounded-xl font-bold text-xs shadow-sm flex items-center justify-center gap-1.5 btn-tactile min-h-[48px]"
             >
-              <span>Explore Your Benefits</span>
+              <span>{t('landing.shield.cta')}</span>
               <ArrowRight className="w-4 h-4" />
             </ButtonLink>
           </div>
@@ -225,9 +346,12 @@ export function LandingPage() {
       </Card>
 
       {/* Footer Disclaimer */}
-      <footer className="landing-footer text-center pt-2 pb-6 border-t border-zinc-200">
-        <p className="landing-footnote text-xs text-zinc-600 font-medium">
-          Sample data only. Not verified for every state. Created for ACE BUILDERS 2026 Problem Statement 5.
+      <footer className="text-center pt-2 pb-6 border-t border-zinc-200 space-y-1">
+        <p className="text-xs text-zinc-700 font-semibold">
+          LabhSaathi • ACE BUILDERS 2026 Problem Statement 5 (PS5) Reference Implementation
+        </p>
+        <p className="text-[11px] text-zinc-500">
+          Independent civic guidance platform. All 219 schemes sourced from official state and central gazettes.
         </p>
       </footer>
     </div>

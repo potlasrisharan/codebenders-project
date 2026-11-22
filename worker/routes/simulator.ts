@@ -2,8 +2,10 @@ import { Hono } from 'hono';
 import { defaultSchemeRepository } from '../../src/core/data/repository';
 import { defaultWhatIfService } from '../../src/core/simulator/what-if-service';
 import { CitizenProfile } from '../../src/core/profile/citizen-profile';
+import { mapDbRowToScheme } from './schemes';
+import type { Env, SchemeDbRow } from '../types';
 
-export const simulatorRouter = new Hono();
+export const simulatorRouter = new Hono<{ Bindings: Env }>();
 
 // POST /api/v1/simulator/what-if
 simulatorRouter.post('/what-if', async (c) => {
@@ -24,7 +26,21 @@ simulatorRouter.post('/what-if', async (c) => {
     );
   }
 
-  const scheme = defaultSchemeRepository.getById(schemeId) || defaultSchemeRepository.getBySlug(schemeId);
+  let scheme = defaultSchemeRepository.getById(schemeId) || defaultSchemeRepository.getBySlug(schemeId);
+
+  if (!scheme && c.env?.DB) {
+    try {
+      const row = await c.env.DB.prepare(
+        'SELECT * FROM schemes WHERE id = ? OR slug = ? LIMIT 1'
+      ).bind(schemeId, schemeId).first<SchemeDbRow>();
+      if (row) {
+        scheme = mapDbRowToScheme(row) as unknown as typeof scheme;
+      }
+    } catch {
+      // safe fallback
+    }
+  }
+
   if (!scheme) {
     return c.json({ error: 'SCHEME_NOT_FOUND', message: `No verified scheme found with ID "${schemeId}".` }, 404);
   }

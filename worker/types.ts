@@ -32,6 +32,9 @@ export interface D1Database {
 export interface Env {
   DB?: D1Database;
   ASSETS?: { fetch: (req: Request) => Promise<Response> };
+  SARVAM_API_KEY?: string;
+  GROQ_API_KEY?: string;
+  GROQ_MODEL?: string;
 }
 
 /**

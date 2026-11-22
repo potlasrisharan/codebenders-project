@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import type { SchemeRecord } from '../core/data/schema';
 import {
   FileText,
   Bookmark,
@@ -21,19 +22,40 @@ import { defaultWhatIfService, WhatIfSimulationResult } from '../core/simulator/
 import { StatusChip } from '../components/ui/StatusChip';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
+import { useLanguage } from '../core/i18n/LanguageContext';
 import { MiddlemanShieldCard } from '../components/scheme/MiddlemanShieldCard';
+import { SchemeChatDrawer } from '../components/scheme/SchemeChatDrawer';
 import { UnifiedActionGraph } from '../components/graph/UnifiedActionGraph';
 import { WhatsAppShareModal } from '../components/share/WhatsAppShareModal';
 
 export function SchemeDetailPage() {
   const { schemeId } = useParams<{ schemeId: string }>();
   const { profile } = useCitizenProfile();
+  const { t } = useLanguage();
 
-  // Find scheme from repository or fallback to first scheme for demo
-  const scheme =
+  const localScheme =
     defaultSchemeRepository.getById(schemeId || '') ||
-    defaultSchemeRepository.getBySlug(schemeId || '') ||
-    defaultSchemeRepository.getAll()[0];
+    defaultSchemeRepository.getBySlug(schemeId || '');
+
+  const [remoteScheme, setRemoteScheme] = useState<SchemeRecord | null>(null);
+
+  useEffect(() => {
+    if (!localScheme && schemeId) {
+      fetch(`/api/v1/schemes/${encodeURIComponent(schemeId)}`)
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          const item = data?.data || data?.scheme;
+          if (item) {
+            defaultSchemeRepository.addSchemes([item]);
+            setRemoteScheme(item);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [localScheme, schemeId]);
+
+  // Find scheme from repository or remote fetch, or fallback to first scheme for demo
+  const scheme = remoteScheme || localScheme || defaultSchemeRepository.getAll()[0];
 
   const eligibility = evaluateSchemeEligibility(scheme, profile);
 
@@ -52,6 +74,14 @@ export function SchemeDetailPage() {
   const [whatIfIncome, setWhatIfIncome] = useState<number>(profile.familyIncome || 150000);
   const [whatIfAttendance, setWhatIfAttendance] = useState<number>(profile.attendancePercentage || 75);
   const [simulationResult, setSimulationResult] = useState<WhatIfSimulationResult | null>(null);
+
+  useEffect(() => {
+    setIsSaved(defaultClaimTrackerService.isSaved(scheme.id));
+    setCompletedDocIds(defaultClaimTrackerService.getClaim(scheme.id)?.completedDocumentIds || []);
+    setWhatIfIncome(profile.familyIncome || 150000);
+    setWhatIfAttendance(profile.attendancePercentage || 75);
+    setSimulationResult(null);
+  }, [scheme.id, profile.familyIncome, profile.attendancePercentage]);
 
   const handleToggleSave = () => {
     if (isSaved) {
@@ -90,18 +120,18 @@ export function SchemeDetailPage() {
           to="/matches"
           className="text-xs text-zinc-500 hover:text-zinc-900 inline-flex items-center gap-1 font-medium transition-colors"
         >
-          <ChevronLeft className="w-3.5 h-3.5" /> Back to Matches
+          <ChevronLeft className="w-3.5 h-3.5" /> {t('detail.back')}
         </Link>
 
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-zinc-100 text-zinc-700">
-                {scheme.jurisdiction === 'central' ? 'Central Scheme' : `${scheme.state} State Benefit`}
+                {scheme.jurisdiction === 'central' ? t('detail.central') : `${scheme.state} ${t('detail.state')}`}
               </span>
               <span className="text-[11px] text-zinc-500 flex items-center gap-1">
                 <Building2 className="w-3.5 h-3.5 text-zinc-400" />
-                {scheme.sources[0]?.department}
+                {scheme.sources?.[0]?.department || scheme.department || 'Govt Department'}
               </span>
               <span className="text-zinc-300">•</span>
               <span className="text-[11px] text-zinc-400 font-mono">
@@ -131,15 +161,15 @@ export function SchemeDetailPage() {
               }`}
             >
               {isSaved ? <BookmarkCheck className="w-4 h-4 text-emerald-600" /> : <Bookmark className="w-4 h-4" />}
-              {isSaved ? 'Saved in Tracker' : 'Save Scheme'}
+              {isSaved ? t('detail.saved') : t('detail.save')}
             </Button>
 
             <button
               type="button"
               onClick={() => setIsShareModalOpen(true)}
               className="p-2 border border-zinc-300 rounded-lg hover:bg-zinc-50 text-zinc-700 transition-colors btn-tactile"
-              title="Share checklist on WhatsApp"
-              aria-label="Share checklist on WhatsApp"
+              title={t('detail.share')}
+              aria-label={t('detail.share')}
             >
               <MessageSquare className="w-4 h-4 text-emerald-600" />
             </button>
@@ -152,8 +182,8 @@ export function SchemeDetailPage() {
         feeStatus={scheme.feeStatus}
         feeDetails={scheme.feeDetails}
         scamWarning={scheme.scamWarning}
-        officialPortalUrl={scheme.sources[0]?.portalUrl || ''}
-        departmentName={scheme.sources[0]?.department || ''}
+        officialPortalUrl={scheme.sources?.[0]?.portalUrl || scheme.portalUrl || ''}
+        departmentName={scheme.sources?.[0]?.department || scheme.department || ''}
         lastVerifiedDate={scheme.lastVerifiedDate}
       />
 
@@ -165,6 +195,45 @@ export function SchemeDetailPage() {
         completedDocIds={completedDocIds}
       />
 
+      {/* Groq-Powered Scheme Q&A Assistant */}
+      <SchemeChatDrawer
+        schemeId={scheme.id}
+        schemeName={scheme.name}
+        portalUrl={scheme.sources?.[0]?.portalUrl}
+      />
+
+      {/* Telangana ePASS Dual-Benefit Allocation (RTF vs MTF) */}
+      {scheme.id.includes('epass') && (
+        <Card className="p-5 bg-gradient-to-br from-indigo-50/40 via-white to-zinc-50 border-indigo-200/80 shadow-xs space-y-3">
+          <div className="flex items-center gap-2 border-b border-indigo-100 pb-2">
+            <span className="w-2 h-2 rounded-full bg-indigo-600" />
+            <h3 className="font-bold text-zinc-900 text-sm">
+              ePASS Dual-Benefit Allocation (RTF vs MTF)
+            </h3>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div className="p-3 bg-white rounded-xl border border-zinc-200/80 space-y-1">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-700 block">
+                Component 1: RTF (Tuition Fee)
+              </span>
+              <strong className="text-zinc-900 text-sm block">100% Sanctioned College Tuition</strong>
+              <p className="text-zinc-600 text-[11px] leading-relaxed">
+                Reimbursed directly into your college treasury account. Zero out-of-pocket tuition expense for convenor quota admissions.
+              </p>
+            </div>
+            <div className="p-3 bg-white rounded-xl border border-zinc-200/80 space-y-1">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 block">
+                Component 2: MTF (Maintenance / Mess)
+              </span>
+              <strong className="text-zinc-900 text-sm block">Monthly Direct Benefit Transfer (DBT)</strong>
+              <p className="text-zinc-600 text-[11px] leading-relaxed">
+                Disbursed straight to student&apos;s Aadhaar-seeded bank account for hostel and mess expenses. Requires 75% monthly biometric attendance.
+              </p>
+            </div>
+          </div>
+        </Card>
+      )}
+
       {/* Personalised Sourced Document Checklist (P7) */}
       <Card className="p-5 bg-white border-zinc-200/90 shadow-xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-100 pb-3 gap-2">
@@ -172,10 +241,10 @@ export function SchemeDetailPage() {
             <FileText className="w-5 h-5 text-zinc-800" />
             <div>
               <h3 className="font-bold text-zinc-900 text-sm">
-                Personalised Document Readiness Checklist
+                {t('detail.checklist.title')}
               </h3>
               <p className="text-[11px] text-zinc-500">
-                Track and check off certificates as you obtain them from government portals or college administration.
+                {t('detail.checklist.sub')}
               </p>
             </div>
           </div>
@@ -293,9 +362,9 @@ export function SchemeDetailPage() {
         <div className="flex items-center gap-2 border-b border-zinc-200/70 pb-3">
           <Sparkles className="w-5 h-5 text-zinc-800" />
           <div>
-            <h3 className="font-bold text-zinc-900 text-sm">What-If Eligibility Simulation</h3>
+            <h3 className="font-bold text-zinc-900 text-sm">{t('detail.whatif.title')}</h3>
             <p className="text-[11px] text-zinc-500">
-              Hypothetically adjust your income or attendance without changing your saved profile.
+              {t('detail.whatif.sub')}
             </p>
           </div>
         </div>
@@ -332,7 +401,7 @@ export function SchemeDetailPage() {
             onClick={handleRunWhatIf}
             className="text-xs px-4 py-2 btn-tactile bg-white border-zinc-300 hover:border-zinc-400 font-semibold text-zinc-800"
           >
-            Run What-If Simulation
+            {t('detail.whatif.btn')}
           </Button>
         </div>
 

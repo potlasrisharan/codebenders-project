@@ -77,7 +77,7 @@ export function AdminReviewPage() {
                 >
                   <td className="p-3">
                     <span className="font-bold text-zinc-900 block leading-tight">{s.name}</span>
-                    <span className="text-[11px] text-zinc-500">{s.sources[0]?.department}</span>
+                    <span className="text-[11px] text-zinc-500">{s.sources?.[0]?.department || s.department || 'Govt Department'}</span>
                   </td>
                   <td className="p-3 uppercase font-semibold text-zinc-600 text-[11px]">
                     {s.jurisdiction === 'central' ? 'Central' : s.state}
@@ -103,7 +103,7 @@ export function AdminReviewPage() {
                   <td className="p-3 text-zinc-600 font-mono text-[11px]">{s.lastVerifiedDate}</td>
                   <td className="p-3">
                     <a
-                      href={s.sources[0]?.portalUrl}
+                      href={s.sources?.[0]?.portalUrl || s.portalUrl || 'https://www.india.gov.in'}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-zinc-800 hover:text-zinc-950 hover:underline inline-flex items-center gap-1 font-semibold"

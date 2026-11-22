@@ -23,4 +23,6 @@ build/
 build/debug-info/
 .dart_tool/
 .lighthouseci/
+__pycache__/
+*.pyc
 

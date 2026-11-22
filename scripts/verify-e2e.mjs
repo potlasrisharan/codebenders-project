@@ -49,48 +49,76 @@ try {
     pageErrors.push(err.message);
   });
 
-  // Step 1: Landing Page
-  console.log('1. Testing Landing Page (/)');
+  // Step 1: Landing Page & Multilingual Verification
+  console.log('1. Testing Landing Page (/) & Multilingual Switching');
   const landingRes = await page.goto(`${BASE_URL}/`, { waitUntil: 'networkidle' });
   if (landingRes.status() !== 200) throw new Error(`Landing returned ${landingRes.status()}`);
   const landingHeading = await page.locator('h1').textContent();
   console.log(`   Heading: "${landingHeading.trim()}"`);
 
+  // Verify 219 Schemes stat is displayed
+  const statsVisible = await page.locator('text=219').first().isVisible();
+  console.log(`   Verified 219 Schemes Catalog Metric: ${statsVisible}`);
+
+  // Test Language Switcher: English -> Telugu
+  console.log('   Testing Language Switch to Telugu (తెలుగు)...');
+  const teluguBtn = page.locator('button:has-text("తెలుగు")').first();
+  await teluguBtn.click();
+  await page.waitForTimeout(200);
+  const docLangTe = await page.evaluate(() => document.documentElement.lang);
+  console.log(`   HTML Document lang attribute: "${docLangTe}"`);
+  if (docLangTe !== 'te') throw new Error(`Expected lang="te", got "${docLangTe}"`);
+
+  // Test Language Switcher: Telugu -> Hindi
+  console.log('   Testing Language Switch to Hindi (हिन्दी)...');
+  const hindiBtn = page.locator('button:has-text("हिन्दी")').first();
+  await hindiBtn.click();
+  await page.waitForTimeout(200);
+  const docLangHi = await page.evaluate(() => document.documentElement.lang);
+  console.log(`   HTML Document lang attribute: "${docLangHi}"`);
+  if (docLangHi !== 'hi') throw new Error(`Expected lang="hi", got "${docLangHi}"`);
+
+  // Switch back to English for predictable workflow test
+  console.log('   Switching back to English...');
+  const enBtn = page.locator('button:has-text("English")').first();
+  await enBtn.click();
+  await page.waitForTimeout(200);
+
   // Step 2: Navigate to Intake
   console.log('2. Navigating to Intake (/intake)');
-  await page.click('text=Start with intake');
+  await page.click('a[href="/intake"]');
   await page.waitForURL('**/intake');
   const intakeHeading = await page.locator('h1').textContent();
   console.log(`   Heading: "${intakeHeading.trim()}"`);
 
   // Step 3: Select Golden Persona (Priya)
   console.log('3. Selecting Priya Demo Persona');
-  await page.click('text=Priya');
+  await page.click('button:has-text("Priya")');
   await page.waitForTimeout(300);
 
   // Step 4: Click Find Likely Schemes -> Matches
   console.log('4. Submitting Intake to find Matches');
-  await page.click('text=Find Likely Schemes');
+  await page.click('button:has-text("Find Likely Schemes"), button:has-text("అర్హత ఉన్న పథకాలను కనుగొనండి")');
   await page.waitForURL('**/matches');
   const matchesHeading = await page.locator('h1').textContent();
   console.log(`   Heading: "${matchesHeading.trim()}"`);
 
-  // Verify matched scheme is displayed with status chip
+  // Verify matched schemes are displayed with status chips
   const epassText = await page.locator('text=Telangana ePASS Post-Matric Scholarship').first().textContent();
   console.log(`   Found match: "${epassText.trim()}"`);
 
   // Step 5: Open Scheme Details
   console.log('5. Opening Scheme Details');
-  await page.click('text=View Action Graph');
+  await page.click('a[href*="/scheme/"]:has-text("View"), a:has-text("View Action Graph"), a:has-text("పథకం వివరాలు")');
   await page.waitForURL('**/scheme/**');
   const detailHeading = await page.locator('h1').textContent();
   console.log(`   Heading: "${detailHeading.trim()}"`);
 
   // Verify Middleman Shield card and Action Graph are present
-  const shieldNotice = await page.locator('text=Middleman Shield & Fee Transparency').textContent();
+  const shieldNotice = await page.locator('text=Middleman Shield').first().textContent();
   console.log(`   Verified component: "${shieldNotice.trim()}"`);
 
-  const graphTitle = await page.locator('text=Unified Eligibility Action Graph').textContent();
+  const graphTitle = await page.locator('text=Unified Eligibility Action Graph').first().textContent();
   console.log(`   Verified component: "${graphTitle.trim()}"`);
 
   // Step 6: Checklist Page
@@ -156,7 +184,7 @@ try {
       await page.waitForTimeout(200);
 
       // Verify drawer nav links appear
-      const intakeMobileLink = page.locator('nav[aria-label="Mobile Navigation"] a:has-text("Intake")').first();
+      const intakeMobileLink = page.locator('nav[aria-label="Mobile Navigation"] a[href="/intake"]').first();
       await intakeMobileLink.click();
       await page.waitForURL('**/intake');
       console.log(`   Mobile hamburger menu navigation verified on ${vp.name}`);

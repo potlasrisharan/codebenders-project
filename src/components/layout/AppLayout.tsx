@@ -12,18 +12,21 @@ import {
   Activity,
   Shield,
   Home,
+  Languages,
 } from "lucide-react";
-
-const NAV_ITEMS = [
-  { to: "/intake", label: "Intake", icon: FileText },
-  { to: "/matches", label: "Matches", icon: Search },
-  { to: "/checklist", label: "Checklist", icon: ListChecks },
-  { to: "/tracker", label: "Tracker", icon: Activity },
-  { to: "/admin-review", label: "Admin review", icon: Shield },
-] as const;
+import { useLanguage } from "../../core/i18n/LanguageContext";
 
 export function AppLayout({ children }: { children: ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { language, setLanguage, languages, t } = useLanguage();
+
+  const navItems = [
+    { to: "/intake", label: t("nav.intake"), icon: FileText },
+    { to: "/matches", label: t("nav.matches"), icon: Search },
+    { to: "/checklist", label: t("nav.checklist"), icon: ListChecks },
+    { to: "/tracker", label: t("nav.tracker"), icon: Activity },
+    { to: "/admin-review", label: t("nav.admin"), icon: Shield },
+  ] as const;
 
   return (
     <div className="app-root min-h-[100dvh] flex flex-col bg-zinc-50/60 text-zinc-900 font-sans antialiased selection:bg-zinc-900 selection:text-white">
@@ -34,8 +37,8 @@ export function AppLayout({ children }: { children: ReactNode }) {
       {/* Top Banner Notice */}
       <div className="bg-zinc-950 text-white text-[11px] py-1.5 px-3 sm:px-4 text-center tracking-wide font-medium flex items-center justify-center gap-2">
         <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-        <span>ACE BUILDERS 2026 PS5 Pilot: Verified Government Schemes for College Students in Telangana &amp; India</span>
-        <span className="hidden md:inline text-zinc-400">• 100% Free Official Guidance</span>
+        <span>{t("banner.top")}</span>
+        <span className="hidden md:inline text-zinc-400">• {t("banner.free")}</span>
       </div>
 
       {/* Main Glassmorphic Header */}
@@ -51,36 +54,58 @@ export function AppLayout({ children }: { children: ReactNode }) {
             </div>
             <div className="flex flex-col">
               <span className="font-extrabold text-lg tracking-tight text-zinc-950 leading-none flex items-center gap-1">
-                LabhSaathi
+                {t("brand.name")}
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
               </span>
               <span className="text-[10px] text-zinc-500 tracking-wider uppercase font-bold mt-0.5">
-                Claim What&apos;s Yours
+                {t("brand.tagline")}
               </span>
             </div>
           </NavLink>
 
-          {/* Desktop Navigation Links */}
-          <nav aria-label="Primary" className="hidden md:block">
-            <ul className="app-nav__links flex items-center gap-1.5 list-none m-0 p-0">
-              {NAV_ITEMS.map((item) => (
-                <li key={item.to}>
-                  <NavLink
-                    to={item.to}
-                    className={({ isActive }) =>
-                      `px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
-                        isActive
-                          ? "bg-zinc-900 text-white shadow-xs"
-                          : "text-zinc-600 hover:text-zinc-950 hover:bg-zinc-100"
-                      }`
-                    }
-                  >
-                    {item.label}
-                  </NavLink>
-                </li>
+          {/* Desktop Navigation Links & Language Switcher */}
+          <div className="hidden md:flex items-center gap-4">
+            <nav aria-label="Primary">
+              <ul className="app-nav__links flex items-center gap-1.5 list-none m-0 p-0">
+                {navItems.map((item) => (
+                  <li key={item.to}>
+                    <NavLink
+                      to={item.to}
+                      className={({ isActive }) =>
+                        `px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
+                          isActive
+                            ? "bg-zinc-900 text-white shadow-xs"
+                            : "text-zinc-600 hover:text-zinc-950 hover:bg-zinc-100"
+                        }`
+                      }
+                    >
+                      {item.label}
+                    </NavLink>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
+            {/* Language Switcher Pill */}
+            <div className="flex items-center gap-1 bg-zinc-100 p-1 rounded-full border border-zinc-200">
+              <Languages className="w-3.5 h-3.5 text-zinc-500 ml-1.5 mr-0.5" />
+              {languages.map((l) => (
+                <button
+                  key={l.code}
+                  type="button"
+                  onClick={() => setLanguage(l.code)}
+                  className={`px-2.5 py-1 rounded-full text-[11px] font-bold transition-all ${
+                    language === l.code
+                      ? "bg-zinc-950 text-white shadow-xs"
+                      : "text-zinc-600 hover:text-zinc-950 hover:bg-zinc-200/60"
+                  }`}
+                  aria-label={`Switch language to ${l.label}`}
+                >
+                  {l.nativeName}
+                </button>
               ))}
-            </ul>
-          </nav>
+            </div>
+          </div>
 
           {/* Mobile Menu Hamburger Button */}
           <div className="flex items-center gap-2 md:hidden">
@@ -98,7 +123,30 @@ export function AppLayout({ children }: { children: ReactNode }) {
 
         {/* Mobile Dropdown Menu Drawer */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-zinc-200 bg-white px-4 py-3 shadow-lg animate-slide-down-fade">
+          <div className="md:hidden border-t border-zinc-200 bg-white px-4 py-3 shadow-lg animate-slide-down-fade space-y-3">
+            {/* Mobile Language Switcher */}
+            <div className="flex items-center gap-1.5 p-2 bg-zinc-50 rounded-xl border border-zinc-200/80">
+              <Languages className="w-4 h-4 text-zinc-500" />
+              <span className="text-xs font-bold text-zinc-700 mr-auto">Language:</span>
+              {languages.map((l) => (
+                <button
+                  key={l.code}
+                  type="button"
+                  onClick={() => {
+                    setLanguage(l.code);
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                    language === l.code
+                      ? "bg-zinc-950 text-white shadow-xs"
+                      : "bg-white text-zinc-700 border border-zinc-200"
+                  }`}
+                >
+                  {l.nativeName}
+                </button>
+              ))}
+            </div>
+
             <nav aria-label="Mobile Navigation">
               <ul className="flex flex-col gap-1 list-none p-0 m-0">
                 <li>
@@ -115,7 +163,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
                     <span>Home</span>
                   </NavLink>
                 </li>
-                {NAV_ITEMS.map((item) => {
+                {navItems.map((item) => {
                   const Icon = item.icon;
                   return (
                     <li key={item.to}>

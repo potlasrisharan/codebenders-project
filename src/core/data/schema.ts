@@ -80,14 +80,36 @@ export const RulePredicateSchema = z.object({
 });
 export type RulePredicate = z.infer<typeof RulePredicateSchema>;
 
+export const SchemeCategorySchema = z.union([
+  z.enum([
+    'scholarship',
+    'education_aid',
+    'fellowship',
+    'welfare',
+    'agriculture',
+    'healthcare',
+    'housing',
+    'women_child',
+    'employment',
+    'social_security',
+    'skills_msme',
+  ]),
+  z.string(),
+]);
+export type SchemeCategory = z.infer<typeof SchemeCategorySchema>;
+
 export const SchemeRecordSchema = z.object({
   id: z.string(),
   slug: z.string(),
   name: z.string(),
   shortDescription: z.string(),
-  category: z.enum(['scholarship', 'education_aid', 'fellowship', 'welfare']),
+  fullDescription: z.string().optional(),
+  category: SchemeCategorySchema,
   jurisdiction: JurisdictionTypeSchema,
   state: z.string(), // e.g. "Telangana", "All India", "Assam"
+  department: z.string().optional(),
+  ministry: z.string().optional(),
+  portalUrl: z.string().optional(),
   version: z.string(),
   verificationStatus: VerificationStatusSchema,
   lastVerifiedDate: z.string(),

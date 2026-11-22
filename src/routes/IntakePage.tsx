@@ -11,6 +11,7 @@ import {
   CheckCircle,
   RefreshCw,
   Languages,
+  Mic,
 } from 'lucide-react';
 import { useCitizenProfile } from '../core/profile/ProfileContext';
 import {
@@ -21,10 +22,12 @@ import {
 } from '../core/profile/citizen-profile';
 import { inspectSensitiveIds } from '../core/privacy/sensitive-id-shield';
 import { SensitiveIdShieldNotice } from '../components/privacy/SensitiveIdShieldNotice';
+import { VoiceIntakeModal } from '../components/voice/VoiceIntakeModal';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
+import { useLanguage } from '../core/i18n/LanguageContext';
 
-// Authentic student persona avatar assets
+// Authentic citizen & student persona avatar assets
 const PERSONA_AVATARS: Record<string, { image: string; tag: string; college: string }> = {
   Priya: {
     image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&h=200&q=80',
@@ -35,6 +38,21 @@ const PERSONA_AVATARS: Record<string, { image: string; tag: string; college: str
     image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&h=200&q=80',
     tag: 'B.Sc 1st Year Merit (SC)',
     college: 'Kakatiya University, Warangal',
+  },
+  Ramesh: {
+    image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&h=200&q=80',
+    tag: 'Small Farmer (2 Acres)',
+    college: 'Nalgonda, Telangana',
+  },
+  Lakshmi: {
+    image: 'https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&w=200&h=200&q=80',
+    tag: 'Street Vendor (PM SVANidhi)',
+    college: 'Warangal Urban',
+  },
+  Koteshwar: {
+    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&h=200&q=80',
+    tag: 'Senior Citizen (65 yrs)',
+    college: 'Khammam Rural',
   },
   Ananya: {
     image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&h=200&q=80',
@@ -60,8 +78,12 @@ const PERSONA_AVATARS: Record<string, { image: string; tag: string; college: str
 
 const SAMPLE_PROMPTS = [
   {
+    lang: 'TE',
+    text: 'నేను నల్లగొండలో చిన్న రైతుని, నాకు 2 ఎకరాల పొలం ఉంది, తెల్ల రేషన్ కార్డు ఉంది. కుటుంబ ఆదాయం 1.1 లక్ష.',
+  },
+  {
     lang: 'EN',
-    text: 'I am a 2nd year B.Tech student in Hyderabad, Telangana. My category is BC-B, college attendance is 80%, and family income is around 1.2 Lakhs.',
+    text: 'Street vendor in Warangal running a fruit cart. Family income ₹90,000 with White Ration Card. Need micro-credit support.',
   },
   {
     lang: 'TE',
@@ -69,18 +91,27 @@ const SAMPLE_PROMPTS = [
   },
   {
     lang: 'EN',
-    text: '1st year B.Sc student from Warangal, SC category with 85th percentile in Class 12 and 78% attendance.',
+    text: '65-year-old rural resident from Khammam, SC category, income ₹60,000 looking for old age social assistance pension.',
   },
 ];
 
 export function IntakePage() {
   const navigate = useNavigate();
   const { profile, updateProfile, loadGoldenPersona, activePersonaName } = useCitizenProfile();
+  const { t } = useLanguage();
 
   const [descriptionInput, setDescriptionInput] = useState('');
   const [shieldViolation, setShieldViolation] = useState<string | null>(null);
   const [extractedNotice, setExtractedNotice] = useState<string | null>(null);
   const [expandedWhyId, setExpandedWhyId] = useState<string | null>(null);
+  const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
+
+  const handleVoiceSuccess = (transcript: string, extracted: Partial<CitizenProfile>, attrs: string[]) => {
+    setDescriptionInput(transcript);
+    setShieldViolation(null);
+    updateProfile(extracted);
+    setExtractedNotice(`Transcribed via Sarvam Voice: extracted ${attrs.length} attributes (${attrs.join(', ')}).`);
+  };
 
   const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const val = e.target.value;
@@ -125,19 +156,19 @@ export function IntakePage() {
         <div className="flex items-center gap-2 mb-1.5">
           <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wider uppercase bg-zinc-100 text-zinc-700">
             <GraduationCap className="w-3.5 h-3.5 text-zinc-700" />
-            Rule-Based Eligibility Intake
+            {t('intake.badge')}
           </span>
           <span className="text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1.5 shadow-2xs">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
-            Sensitive-ID Shield Active
+            {t('intake.shield')}
           </span>
         </div>
         <h1 className="text-3xl font-extrabold text-zinc-900 tracking-tight flex items-center gap-2.5">
           <FileText className="w-7 h-7 text-zinc-900" aria-hidden="true" />
-          Intake
+          {t('intake.title')}
         </h1>
         <p className="text-sm text-zinc-600 mt-1.5 max-w-2xl leading-relaxed">
-          Describe your academic background in plain English or Telugu, or select a pre-verified student cohort persona below. Zero Aadhaar or identity numbers collected.
+          {t('intake.lead')}
         </p>
       </div>
 
@@ -160,10 +191,10 @@ export function IntakePage() {
           <div className="flex items-center gap-2">
             <UserCheck className="w-4 h-4 text-zinc-700" />
             <h2 id="personas-heading" className="text-xs font-bold uppercase tracking-wider text-zinc-800">
-              1-Click Verified Student Cohorts
+              {t('intake.personas.heading')}
             </h2>
           </div>
-          <span className="text-[11px] text-zinc-500">Click to instantly populate realistic eligibility test cases</span>
+          <span className="text-[11px] text-zinc-500">{t('intake.personas.sub')}</span>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
@@ -239,9 +270,9 @@ export function IntakePage() {
         <div className="flex items-center justify-between">
           <label htmlFor="intake-description" className="font-bold text-zinc-900 text-sm flex items-center gap-2">
             <Languages className="w-4 h-4 text-zinc-600" />
-            <span>Tell us about your studies in your own words:</span>
+            <span>{t('intake.input.label')}</span>
           </label>
-          <span className="text-[11px] text-zinc-500">Supports English &amp; తెలుగు (Telugu script &amp; transliteration)</span>
+          <span className="text-[11px] text-zinc-500">{t('intake.input.sub')}</span>
         </div>
 
         <textarea
@@ -249,14 +280,14 @@ export function IntakePage() {
           rows={3}
           value={descriptionInput}
           onChange={handleDescriptionChange}
-          placeholder="e.g. I am a 2nd year B.Tech student in Hyderabad, Telangana. My category is BC-B, college attendance is 80%, and family income is around 1.2 Lakhs."
+          placeholder={t('intake.input.placeholder')}
           className="w-full text-sm p-3.5 border rounded-lg border-zinc-300 bg-zinc-50/50 focus:bg-white focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 focus:outline-none transition-all leading-relaxed"
         />
 
         {/* Quick prompt helpers */}
         <div className="space-y-1.5">
           <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider block">
-            Click a sample prompt to try:
+            {t('intake.sample.label')}
           </span>
           <div className="flex flex-wrap gap-1.5">
             {SAMPLE_PROMPTS.map((prompt, i) => (
@@ -273,19 +304,28 @@ export function IntakePage() {
           </div>
         </div>
 
-        <div className="pt-2 flex items-center justify-between border-t border-zinc-100">
+        <div className="pt-2 flex flex-wrap items-center justify-between gap-2 border-t border-zinc-100">
           <span className="text-[11px] text-zinc-500 italic flex items-center gap-1">
             <ShieldAlert className="w-3.5 h-3.5 text-zinc-400" />
-            Never type your Aadhaar number, PAN, or bank passwords.
+            {t('intake.shield.warning')}
           </span>
-          <Button
-            variant="secondary"
-            onClick={handleParseDescription}
-            disabled={!descriptionInput.trim() || !!shieldViolation}
-            className="flex items-center gap-1.5 text-xs py-1.5 btn-tactile"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-zinc-800" /> Extract Attributes
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="secondary"
+              onClick={() => setIsVoiceModalOpen(true)}
+              className="flex items-center gap-1.5 text-xs py-1.5 px-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-800 border-indigo-200 btn-tactile"
+            >
+              <Mic className="w-3.5 h-3.5 text-indigo-600" /> {t('intake.btn.voice')}
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={handleParseDescription}
+              disabled={!descriptionInput.trim() || !!shieldViolation}
+              className="flex items-center gap-1.5 text-xs py-1.5 btn-tactile"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-zinc-800" /> {t('intake.btn.extract')}
+            </Button>
+          </div>
         </div>
 
         {extractedNotice && (
@@ -301,10 +341,10 @@ export function IntakePage() {
         <div className="flex items-center justify-between">
           <div>
             <h2 id="questionnaire-heading" className="text-sm font-bold text-zinc-900">
-              Adaptive Questionnaire &amp; Profile Review
+              {t('intake.q.heading')}
             </h2>
             <p className="text-xs text-zinc-500 mt-0.5">
-              Answer only what you know. Unknown values will gracefully map to &quot;Need to confirm&quot; without failing your evaluation.
+              {t('intake.q.sub')}
             </p>
           </div>
           <button
@@ -312,7 +352,7 @@ export function IntakePage() {
             onClick={() => updateProfile({ ...profile, domicileState: 'Telangana' })}
             className="text-[11px] text-zinc-600 hover:text-zinc-900 inline-flex items-center gap-1"
           >
-            <RefreshCw className="w-3 h-3" /> Reset to Telangana
+            <RefreshCw className="w-3 h-3" /> {t('intake.reset')}
           </button>
         </div>
 
@@ -335,22 +375,53 @@ export function IntakePage() {
                   </p>
 
                   <div className="mt-2.5">
-                    {q.options ? (
+                    {q.type === 'number' ? (
+                      <div className="space-y-2">
+                        <input
+                          type="number"
+                          value={currentVal === null || currentVal === undefined ? '' : String(currentVal)}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            updateProfile({
+                              [q.id]: val === '' ? null : Number(val),
+                            } as Partial<CitizenProfile>);
+                          }}
+                          placeholder="Enter value (e.g. 150000)"
+                          className="w-full text-xs p-2.5 border border-zinc-300 rounded-md bg-zinc-50/70 focus:bg-white focus:ring-1 focus:ring-zinc-900 focus:outline-none transition-colors"
+                        />
+                        {q.options && (
+                          <div className="flex flex-wrap gap-1">
+                            {q.options.map((opt) => (
+                              <button
+                                key={String(opt.value)}
+                                type="button"
+                                onClick={() => updateProfile({ [q.id]: Number(opt.value) } as Partial<CitizenProfile>)}
+                                className={`text-[10px] px-2 py-0.5 rounded border transition-colors cursor-pointer ${
+                                  Number(currentVal) === Number(opt.value)
+                                    ? 'bg-zinc-900 text-white border-zinc-900 font-semibold'
+                                    : 'bg-zinc-100 text-zinc-700 border-zinc-200 hover:bg-zinc-200'
+                                }`}
+                              >
+                                {opt.label}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ) : q.options ? (
                       <select
                         value={currentVal === null ? 'UNKNOWN' : String(currentVal)}
                         onChange={(e) => {
                           const val = e.target.value;
                           if (val === 'UNKNOWN') {
                             updateProfile({ [q.id]: null } as Partial<CitizenProfile>);
-                          } else if (q.type === 'number') {
-                            updateProfile({ [q.id]: Number(val) } as Partial<CitizenProfile>);
                           } else if (q.type === 'boolean') {
                             updateProfile({ [q.id]: val === 'true' } as Partial<CitizenProfile>);
                           } else {
                             updateProfile({ [q.id]: val } as Partial<CitizenProfile>);
                           }
                         }}
-                        className="w-full text-xs p-2.5 border border-zinc-300 rounded-md bg-zinc-50/70 focus:bg-white focus:ring-1 focus:ring-zinc-900 focus:outline-none transition-colors"
+                        className="w-full text-xs p-2.5 border border-zinc-300 rounded-md bg-zinc-50/70 focus:bg-white focus:ring-1 focus:ring-zinc-900 focus:outline-none transition-colors cursor-pointer"
                       >
                         <option value="UNKNOWN">I don&apos;t know / Not sure</option>
                         {q.options.map((opt) => (
@@ -366,7 +437,7 @@ export function IntakePage() {
                         onChange={(e) => {
                           const val = e.target.value;
                           updateProfile({
-                            [q.id]: val === '' ? null : Number(val),
+                            [q.id]: val === '' ? null : val,
                           } as Partial<CitizenProfile>);
                         }}
                         placeholder="I don't know / Enter value"
@@ -406,18 +477,29 @@ export function IntakePage() {
           </span>
           <span className="text-zinc-300">•</span>
           <span>
+            Role:{' '}
+            <strong className="text-zinc-900 font-semibold capitalize">
+              {profile.occupation ? profile.occupation.replace('_', ' ') : 'General Citizen'}
+            </strong>
+          </span>
+          <span className="text-zinc-300">•</span>
+          <span>
             Income:{' '}
             <strong className="text-zinc-900 font-semibold">
               {profile.familyIncome ? `₹${profile.familyIncome.toLocaleString('en-IN')}` : 'Not set'}
             </strong>
           </span>
-          <span className="text-zinc-300">•</span>
-          <span>
-            Attendance:{' '}
-            <strong className="text-zinc-900 font-semibold">
-              {profile.attendancePercentage ? `${profile.attendancePercentage}%` : 'Not set'}
-            </strong>
-          </span>
+          {profile.attendancePercentage !== null && profile.attendancePercentage !== undefined && (
+            <>
+              <span className="text-zinc-300">•</span>
+              <span>
+                Attendance:{' '}
+                <strong className="text-zinc-900 font-semibold">
+                  {profile.attendancePercentage}%
+                </strong>
+              </span>
+            </>
+          )}
         </div>
 
         <Button
@@ -425,10 +507,17 @@ export function IntakePage() {
           onClick={() => navigate('/matches')}
           className="flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-bold shadow-sm btn-tactile bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg"
         >
-          <span>Find Likely Schemes</span>
+          <span>{t('intake.btn.find')}</span>
           <ArrowRight className="w-4 h-4" />
         </Button>
       </div>
+
+      {/* Sarvam AI Multilingual Voice Intake Modal */}
+      <VoiceIntakeModal
+        isOpen={isVoiceModalOpen}
+        onClose={() => setIsVoiceModalOpen(false)}
+        onTranscriptSuccess={handleVoiceSuccess}
+      />
     </div>
   );
 }

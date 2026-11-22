@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ListChecks,
@@ -15,20 +15,29 @@ import { defaultSchemeRepository } from '../core/data/repository';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { WhatsAppShareModal } from '../components/share/WhatsAppShareModal';
+import { useLanguage } from '../core/i18n/LanguageContext';
 
 export function ChecklistPage() {
+  const { t } = useLanguage();
   const [claims] = useState(() => defaultClaimTrackerService.getClaims());
   const allSchemes = defaultSchemeRepository.getAll();
 
+  const [selectedSchemeId, setSelectedSchemeId] = useState<string>(() => {
+    return claims.length > 0 ? claims[0].schemeId : allSchemes[0]?.id || 'ts-epass-rtf-2026';
+  });
+
   // If user hasn't saved a scheme yet, default to showing the pilot ePASS scheme checklist for demo readiness
   const activeScheme =
-    claims.length > 0
-      ? allSchemes.find((s) => s.id === claims[0].schemeId) || allSchemes[0]
-      : allSchemes[0];
+    allSchemes.find((s) => s.id === selectedSchemeId) ||
+    allSchemes[0];
 
   const [completedDocIds, setCompletedDocIds] = useState<string[]>(() => {
     return defaultClaimTrackerService.getClaim(activeScheme.id)?.completedDocumentIds || [];
   });
+
+  useEffect(() => {
+    setCompletedDocIds(defaultClaimTrackerService.getClaim(activeScheme.id)?.completedDocumentIds || []);
+  }, [activeScheme.id]);
 
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const sharePayload = defaultClaimTrackerService.generateWhatsAppShareUrl(activeScheme);
@@ -60,7 +69,7 @@ export function ChecklistPage() {
           </div>
           <h1 className="text-3xl font-extrabold text-zinc-900 tracking-tight flex items-center gap-2.5">
             <ListChecks className="w-7 h-7 text-zinc-900" aria-hidden="true" />
-            Checklist
+            {t('nav.checklist')}
           </h1>
           <p className="text-sm text-zinc-600 mt-1 max-w-xl">
             Personalised document readiness for <strong className="text-zinc-900 font-semibold">{activeScheme.name}</strong>. Check off documents as you gather them from MeeSeva, college, or bank.
@@ -85,6 +94,36 @@ export function ChecklistPage() {
           </Link>
         </div>
       </div>
+
+      {/* Multi-Scheme Selection Tabs (When multiple claims are tracked) */}
+      {claims.length > 1 && (
+        <div className="flex flex-wrap items-center gap-2 p-2.5 bg-zinc-50 rounded-xl border border-zinc-200">
+          <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider pl-1">
+            Tracked Schemes:
+          </span>
+          <div className="flex flex-wrap gap-1.5">
+            {claims.map((claim) => {
+              const s = allSchemes.find((item) => item.id === claim.schemeId);
+              const name = s ? s.name : claim.schemeName;
+              const isSelected = claim.schemeId === activeScheme.id;
+              return (
+                <button
+                  key={claim.schemeId}
+                  type="button"
+                  onClick={() => setSelectedSchemeId(claim.schemeId)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                    isSelected
+                      ? 'bg-zinc-900 text-white shadow-xs'
+                      : 'bg-white text-zinc-700 hover:bg-zinc-200 border border-zinc-200'
+                  }`}
+                >
+                  {name}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Readiness Progress Bar Card */}
       <Card className="p-5 bg-white border-zinc-200/90 shadow-xs space-y-3">

@@ -9,18 +9,24 @@ import {
   Copy,
   Trash2,
   FileCheck,
+  Download,
 } from 'lucide-react';
 import { defaultClaimTrackerService, ClaimStage } from '../core/tracker/claim-tracker';
 import { defaultSchemeRepository } from '../core/data/repository';
 import { defaultWhatIfService } from '../core/simulator/what-if-service';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
+import { useLanguage } from '../core/i18n/LanguageContext';
 
 export function TrackerPage() {
+  const { t } = useLanguage();
   const [claims, setClaims] = useState(() => {
     const list = defaultClaimTrackerService.getClaims();
-    if (list.length === 0) {
-      // Auto-save pilot scheme if empty so user experiences active tracker immediately
+    const isInitialized = typeof window !== 'undefined' && localStorage.getItem('labhsaathi_tracker_initialized');
+    if (!isInitialized && list.length === 0) {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('labhsaathi_tracker_initialized', 'true');
+      }
       const defaultScheme = defaultSchemeRepository.getById('ts-epass-rtf-2026');
       if (defaultScheme) {
         defaultClaimTrackerService.saveScheme(defaultScheme);
@@ -80,7 +86,7 @@ export function TrackerPage() {
           </div>
           <h1 className="text-3xl font-extrabold text-zinc-900 tracking-tight flex items-center gap-2.5">
             <Activity className="w-7 h-7 text-zinc-900" aria-hidden="true" />
-            Tracker
+            {t('nav.tracker')}
           </h1>
           <p className="text-sm text-zinc-600 mt-1 max-w-xl">
             Track application verification milestones, prevent missed deadlines, and monitor recurring academic renewal cycles.
@@ -122,10 +128,27 @@ export function TrackerPage() {
           <span className="text-[11px] text-zinc-500">Persistent across browser sessions</span>
         </div>
 
-        <div className="space-y-4">
-          {claims.map((claim) => {
-            const scheme = defaultSchemeRepository.getById(claim.schemeId);
-            return (
+        {claims.length === 0 ? (
+          <Card className="p-8 text-center bg-zinc-50 border-dashed border-zinc-300 space-y-3">
+            <Activity className="w-8 h-8 text-zinc-400 mx-auto" />
+            <h3 className="text-base font-bold text-zinc-800">No active claims tracked yet</h3>
+            <p className="text-xs text-zinc-500 max-w-sm mx-auto">
+              Save any eligible scholarship or benefit from the Matches page to monitor application deadlines, status milestones, and renewal alerts.
+            </p>
+            <div className="pt-2">
+              <Link
+                to="/matches"
+                className="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white font-semibold rounded-lg text-xs inline-flex items-center gap-1.5 btn-tactile shadow-xs"
+              >
+                Find Likely Schemes <ExternalLink className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </Card>
+        ) : (
+          <div className="space-y-4">
+            {claims.map((claim) => {
+              const scheme = defaultSchemeRepository.getById(claim.schemeId);
+              return (
               <Card
                 key={claim.id}
                 className="p-5 bg-white border-zinc-200/90 rounded-2xl shadow-xs hover:border-zinc-300 transition-all duration-200 space-y-4"
@@ -229,6 +252,9 @@ export function TrackerPage() {
                       variant="secondary"
                       onClick={() => {
                         defaultClaimTrackerService.removeClaim(claim.schemeId);
+                        if (typeof window !== 'undefined') {
+                          localStorage.setItem('labhsaathi_tracker_initialized', 'true');
+                        }
                         setClaims([...defaultClaimTrackerService.getClaims()]);
                       }}
                       className="text-xs px-3 py-2 text-rose-700 hover:bg-rose-50 border-rose-200 btn-tactile"
@@ -247,16 +273,57 @@ export function TrackerPage() {
               </Card>
             );
           })}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Academic-Year Renewal Calendar Section (P8) */}
       <div className="space-y-3 pt-3">
-        <div className="flex items-center gap-2">
-          <Calendar className="w-5 h-5 text-zinc-800" />
-          <h2 className="text-sm font-bold text-zinc-900">
-            Academic-Year Renewal Calendar
-          </h2>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <Calendar className="w-5 h-5 text-zinc-800" />
+            <h2 className="text-sm font-bold text-zinc-900">
+              Academic-Year Renewal Calendar
+            </h2>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              const icsContent = [
+                'BEGIN:VCALENDAR',
+                'VERSION:2.0',
+                'PRODID:-//LabhSaathi//Scholarship Renewal Calendar//EN',
+                'CALSCALE:GREGORIAN',
+                ...renewalEvents.flatMap((evt, idx) => [
+                  'BEGIN:VEVENT',
+                  `UID:labhsaathi-renewal-${evt.schemeId}-${idx}@labhsaathi.in`,
+                  `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z`,
+                  'DTSTART:20260801T090000Z',
+                  'DTEND:20261130T180000Z',
+                  `SUMMARY:${evt.schemeName} — Renewal Window`,
+                  `DESCRIPTION:${evt.windowDescription}. Apply at ${evt.officialSourceUrl}`,
+                  `URL:${evt.officialSourceUrl}`,
+                  'STATUS:CONFIRMED',
+                  'END:VEVENT',
+                ]),
+                'END:VCALENDAR',
+              ].join('\r\n');
+
+              const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'labhsaathi-scholarship-renewals.ics';
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              URL.revokeObjectURL(url);
+            }}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded-lg text-xs font-semibold transition-colors btn-tactile w-fit cursor-pointer"
+          >
+            <Download className="w-3.5 h-3.5 text-zinc-600" />
+            Export to Calendar (.ics)
+          </button>
         </div>
 
         <p className="text-xs text-zinc-500">

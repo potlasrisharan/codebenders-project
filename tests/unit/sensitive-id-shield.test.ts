@@ -77,4 +77,12 @@ describe('Sensitive-ID Shield (P2 Privacy Boundary)', () => {
     expect(payload).not.toContain('Aadhaar number');
     expect(payload).toContain('LabhSaathi (Independent Beneficiary Navigation Platform)');
   });
+
+  it('does not falsely flag 12-digit Indian mobile numbers with 91 country code as Aadhaar', () => {
+    const input = 'Call me at 919876543210 regarding college admission.';
+    const result = inspectSensitiveIds(input);
+    expect(result.isClean).toBe(true);
+    expect(result.violations).toHaveLength(0);
+    expect(result.safeText).toContain('919876543210');
+  });
 });
