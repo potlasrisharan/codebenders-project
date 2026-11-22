@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AppRoutes } from "../../src/routes/Routes";
 
 const cases: { path: string; heading: string }[] = [
+  { path: "/", heading: "LabhSaathi" },
   { path: "/intake", heading: "Intake" },
   { path: "/matches", heading: "Matches" },
   { path: "/scheme/test", heading: "Scheme detail" },

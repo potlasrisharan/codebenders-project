@@ -12,6 +12,9 @@ const NAV_ITEMS = [
 export function AppLayout({ children }: { children: ReactNode }) {
   return (
     <div className="app-root">
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
       <header className="app-header">
         <div className="container app-nav">
           <NavLink to="/" className="brand">
@@ -28,7 +31,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
           </nav>
         </div>
       </header>
-      <main id="main" tabIndex={-1} className="page-fade">
+      <main id="main-content" tabIndex={-1} className="page-fade">
         <div className="container section">{children}</div>
       </main>
       <footer className="app-footer">

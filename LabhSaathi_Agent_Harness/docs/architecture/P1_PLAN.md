@@ -14,7 +14,7 @@ Goal (from PHASE_CONTROL.md): a cohesive, accessible shell without eligibility l
 ## Tasks
 1. Shell with primary navigation and footer independence notice.
 2. Landing page explaining independent guidance and limitations (no claims of approval or guarantee).
-3. Route placeholders: /intake, /matches, /checklist, /tracker, /admin/review, plus landing and not-found.
+3. Route placeholders: /intake, /matches, /checklist, /tracker, /admin-review, plus landing and not-found.
 4. Reusable primitives only; no duplicated tokens.
 5. Mobile-first layout; collapse below 768px; keyboard focus visible; skip link target #main.
 

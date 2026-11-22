@@ -1,0 +1,1122 @@
+[
+  {
+    "route": "/",
+    "viewport": "mobile",
+    "checks": {
+      "htmlLang": {
+        "pass": true,
+        "detail": "lang=\"en\""
+      },
+      "singleH1": {
+        "pass": true,
+        "detail": "h1 count=1"
+      },
+      "skipTargetExists": {
+        "pass": true,
+        "detail": "#main-content exists=true, isMain=true"
+      },
+      "unlabelledControls": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "unnamedLinksOrButtons": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "landmarks": {
+        "pass": true,
+        "detail": "header=true, nav=true, main=true, footer=true",
+        "header": true,
+        "nav": true,
+        "main": true,
+        "footer": true
+      },
+      "skipLinkFirst": {
+        "pass": true,
+        "detail": "first focus A \"Skip to main content\" href=#main-content"
+      },
+      "skipWorks": {
+        "pass": true,
+        "detail": "focus inside main after Enter (MAIN)"
+      },
+      "focusVisible": {
+        "pass": true,
+        "detail": "outline-style=solid, outline-width=2px, box-shadow=none"
+      }
+    },
+    "tabOrderSample": [
+      {
+        "tagName": "A",
+        "text": "Skip to main content"
+      },
+      {
+        "tagName": "A",
+        "text": "LabhSaathi"
+      },
+      {
+        "tagName": "A",
+        "text": "Intake"
+      },
+      {
+        "tagName": "A",
+        "text": "Matches"
+      },
+      {
+        "tagName": "A",
+        "text": "Checklist"
+      },
+      {
+        "tagName": "A",
+        "text": "Tracker"
+      },
+      {
+        "tagName": "A",
+        "text": "Admin review"
+      },
+      {
+        "tagName": "A",
+        "text": "Start with intake"
+      }
+    ]
+  },
+  {
+    "route": "/",
+    "viewport": "desktop",
+    "checks": {
+      "htmlLang": {
+        "pass": true,
+        "detail": "lang=\"en\""
+      },
+      "singleH1": {
+        "pass": true,
+        "detail": "h1 count=1"
+      },
+      "skipTargetExists": {
+        "pass": true,
+        "detail": "#main-content exists=true, isMain=true"
+      },
+      "unlabelledControls": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "unnamedLinksOrButtons": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "landmarks": {
+        "pass": true,
+        "detail": "header=true, nav=true, main=true, footer=true",
+        "header": true,
+        "nav": true,
+        "main": true,
+        "footer": true
+      },
+      "skipLinkFirst": {
+        "pass": true,
+        "detail": "first focus A \"Skip to main content\" href=#main-content"
+      },
+      "skipWorks": {
+        "pass": true,
+        "detail": "focus inside main after Enter (MAIN)"
+      },
+      "focusVisible": {
+        "pass": true,
+        "detail": "outline-style=solid, outline-width=2px, box-shadow=none"
+      }
+    },
+    "tabOrderSample": [
+      {
+        "tagName": "A",
+        "text": "Skip to main content"
+      },
+      {
+        "tagName": "A",
+        "text": "LabhSaathi"
+      },
+      {
+        "tagName": "A",
+        "text": "Intake"
+      },
+      {
+        "tagName": "A",
+        "text": "Matches"
+      },
+      {
+        "tagName": "A",
+        "text": "Checklist"
+      },
+      {
+        "tagName": "A",
+        "text": "Tracker"
+      },
+      {
+        "tagName": "A",
+        "text": "Admin review"
+      },
+      {
+        "tagName": "A",
+        "text": "Start with intake"
+      }
+    ]
+  },
+  {
+    "route": "/intake",
+    "viewport": "mobile",
+    "checks": {
+      "htmlLang": {
+        "pass": true,
+        "detail": "lang=\"en\""
+      },
+      "singleH1": {
+        "pass": true,
+        "detail": "h1 count=1"
+      },
+      "skipTargetExists": {
+        "pass": true,
+        "detail": "#main-content exists=true, isMain=true"
+      },
+      "unlabelledControls": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "unnamedLinksOrButtons": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "landmarks": {
+        "pass": true,
+        "detail": "header=true, nav=true, main=true, footer=true",
+        "header": true,
+        "nav": true,
+        "main": true,
+        "footer": true
+      },
+      "skipLinkFirst": {
+        "pass": true,
+        "detail": "first focus A \"Skip to main content\" href=#main-content"
+      },
+      "skipWorks": {
+        "pass": true,
+        "detail": "focus inside main after Enter (MAIN)"
+      },
+      "focusVisible": {
+        "pass": true,
+        "detail": "outline-style=solid, outline-width=2px, box-shadow=none"
+      }
+    },
+    "tabOrderSample": [
+      {
+        "tagName": "A",
+        "text": "Skip to main content"
+      },
+      {
+        "tagName": "A",
+        "text": "LabhSaathi"
+      },
+      {
+        "tagName": "A",
+        "text": "Intake"
+      },
+      {
+        "tagName": "A",
+        "text": "Matches"
+      },
+      {
+        "tagName": "A",
+        "text": "Checklist"
+      },
+      {
+        "tagName": "A",
+        "text": "Tracker"
+      },
+      {
+        "tagName": "A",
+        "text": "Admin review"
+      },
+      {
+        "tagName": "A",
+        "text": "Back to start"
+      }
+    ]
+  },
+  {
+    "route": "/intake",
+    "viewport": "desktop",
+    "checks": {
+      "htmlLang": {
+        "pass": true,
+        "detail": "lang=\"en\""
+      },
+      "singleH1": {
+        "pass": true,
+        "detail": "h1 count=1"
+      },
+      "skipTargetExists": {
+        "pass": true,
+        "detail": "#main-content exists=true, isMain=true"
+      },
+      "unlabelledControls": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "unnamedLinksOrButtons": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "landmarks": {
+        "pass": true,
+        "detail": "header=true, nav=true, main=true, footer=true",
+        "header": true,
+        "nav": true,
+        "main": true,
+        "footer": true
+      },
+      "skipLinkFirst": {
+        "pass": true,
+        "detail": "first focus A \"Skip to main content\" href=#main-content"
+      },
+      "skipWorks": {
+        "pass": true,
+        "detail": "focus inside main after Enter (MAIN)"
+      },
+      "focusVisible": {
+        "pass": true,
+        "detail": "outline-style=solid, outline-width=2px, box-shadow=none"
+      }
+    },
+    "tabOrderSample": [
+      {
+        "tagName": "A",
+        "text": "Skip to main content"
+      },
+      {
+        "tagName": "A",
+        "text": "LabhSaathi"
+      },
+      {
+        "tagName": "A",
+        "text": "Intake"
+      },
+      {
+        "tagName": "A",
+        "text": "Matches"
+      },
+      {
+        "tagName": "A",
+        "text": "Checklist"
+      },
+      {
+        "tagName": "A",
+        "text": "Tracker"
+      },
+      {
+        "tagName": "A",
+        "text": "Admin review"
+      },
+      {
+        "tagName": "A",
+        "text": "Back to start"
+      }
+    ]
+  },
+  {
+    "route": "/matches",
+    "viewport": "mobile",
+    "checks": {
+      "htmlLang": {
+        "pass": true,
+        "detail": "lang=\"en\""
+      },
+      "singleH1": {
+        "pass": true,
+        "detail": "h1 count=1"
+      },
+      "skipTargetExists": {
+        "pass": true,
+        "detail": "#main-content exists=true, isMain=true"
+      },
+      "unlabelledControls": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "unnamedLinksOrButtons": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "landmarks": {
+        "pass": true,
+        "detail": "header=true, nav=true, main=true, footer=true",
+        "header": true,
+        "nav": true,
+        "main": true,
+        "footer": true
+      },
+      "skipLinkFirst": {
+        "pass": true,
+        "detail": "first focus A \"Skip to main content\" href=#main-content"
+      },
+      "skipWorks": {
+        "pass": true,
+        "detail": "focus inside main after Enter (MAIN)"
+      },
+      "focusVisible": {
+        "pass": true,
+        "detail": "outline-style=solid, outline-width=2px, box-shadow=none"
+      }
+    },
+    "tabOrderSample": [
+      {
+        "tagName": "A",
+        "text": "Skip to main content"
+      },
+      {
+        "tagName": "A",
+        "text": "LabhSaathi"
+      },
+      {
+        "tagName": "A",
+        "text": "Intake"
+      },
+      {
+        "tagName": "A",
+        "text": "Matches"
+      },
+      {
+        "tagName": "A",
+        "text": "Checklist"
+      },
+      {
+        "tagName": "A",
+        "text": "Tracker"
+      },
+      {
+        "tagName": "A",
+        "text": "Admin review"
+      },
+      {
+        "tagName": "A",
+        "text": "Back to start"
+      }
+    ]
+  },
+  {
+    "route": "/matches",
+    "viewport": "desktop",
+    "checks": {
+      "htmlLang": {
+        "pass": true,
+        "detail": "lang=\"en\""
+      },
+      "singleH1": {
+        "pass": true,
+        "detail": "h1 count=1"
+      },
+      "skipTargetExists": {
+        "pass": true,
+        "detail": "#main-content exists=true, isMain=true"
+      },
+      "unlabelledControls": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "unnamedLinksOrButtons": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "landmarks": {
+        "pass": true,
+        "detail": "header=true, nav=true, main=true, footer=true",
+        "header": true,
+        "nav": true,
+        "main": true,
+        "footer": true
+      },
+      "skipLinkFirst": {
+        "pass": true,
+        "detail": "first focus A \"Skip to main content\" href=#main-content"
+      },
+      "skipWorks": {
+        "pass": true,
+        "detail": "focus inside main after Enter (MAIN)"
+      },
+      "focusVisible": {
+        "pass": true,
+        "detail": "outline-style=solid, outline-width=2px, box-shadow=none"
+      }
+    },
+    "tabOrderSample": [
+      {
+        "tagName": "A",
+        "text": "Skip to main content"
+      },
+      {
+        "tagName": "A",
+        "text": "LabhSaathi"
+      },
+      {
+        "tagName": "A",
+        "text": "Intake"
+      },
+      {
+        "tagName": "A",
+        "text": "Matches"
+      },
+      {
+        "tagName": "A",
+        "text": "Checklist"
+      },
+      {
+        "tagName": "A",
+        "text": "Tracker"
+      },
+      {
+        "tagName": "A",
+        "text": "Admin review"
+      },
+      {
+        "tagName": "A",
+        "text": "Back to start"
+      }
+    ]
+  },
+  {
+    "route": "/scheme/test",
+    "viewport": "mobile",
+    "checks": {
+      "htmlLang": {
+        "pass": true,
+        "detail": "lang=\"en\""
+      },
+      "singleH1": {
+        "pass": true,
+        "detail": "h1 count=1"
+      },
+      "skipTargetExists": {
+        "pass": true,
+        "detail": "#main-content exists=true, isMain=true"
+      },
+      "unlabelledControls": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "unnamedLinksOrButtons": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "landmarks": {
+        "pass": true,
+        "detail": "header=true, nav=true, main=true, footer=true",
+        "header": true,
+        "nav": true,
+        "main": true,
+        "footer": true
+      },
+      "skipLinkFirst": {
+        "pass": true,
+        "detail": "first focus A \"Skip to main content\" href=#main-content"
+      },
+      "skipWorks": {
+        "pass": true,
+        "detail": "focus inside main after Enter (MAIN)"
+      },
+      "focusVisible": {
+        "pass": true,
+        "detail": "outline-style=solid, outline-width=2px, box-shadow=none"
+      }
+    },
+    "tabOrderSample": [
+      {
+        "tagName": "A",
+        "text": "Skip to main content"
+      },
+      {
+        "tagName": "A",
+        "text": "LabhSaathi"
+      },
+      {
+        "tagName": "A",
+        "text": "Intake"
+      },
+      {
+        "tagName": "A",
+        "text": "Matches"
+      },
+      {
+        "tagName": "A",
+        "text": "Checklist"
+      },
+      {
+        "tagName": "A",
+        "text": "Tracker"
+      },
+      {
+        "tagName": "A",
+        "text": "Admin review"
+      },
+      {
+        "tagName": "A",
+        "text": "Back to start"
+      }
+    ]
+  },
+  {
+    "route": "/scheme/test",
+    "viewport": "desktop",
+    "checks": {
+      "htmlLang": {
+        "pass": true,
+        "detail": "lang=\"en\""
+      },
+      "singleH1": {
+        "pass": true,
+        "detail": "h1 count=1"
+      },
+      "skipTargetExists": {
+        "pass": true,
+        "detail": "#main-content exists=true, isMain=true"
+      },
+      "unlabelledControls": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "unnamedLinksOrButtons": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "landmarks": {
+        "pass": true,
+        "detail": "header=true, nav=true, main=true, footer=true",
+        "header": true,
+        "nav": true,
+        "main": true,
+        "footer": true
+      },
+      "skipLinkFirst": {
+        "pass": true,
+        "detail": "first focus A \"Skip to main content\" href=#main-content"
+      },
+      "skipWorks": {
+        "pass": true,
+        "detail": "focus inside main after Enter (MAIN)"
+      },
+      "focusVisible": {
+        "pass": true,
+        "detail": "outline-style=solid, outline-width=2px, box-shadow=none"
+      }
+    },
+    "tabOrderSample": [
+      {
+        "tagName": "A",
+        "text": "Skip to main content"
+      },
+      {
+        "tagName": "A",
+        "text": "LabhSaathi"
+      },
+      {
+        "tagName": "A",
+        "text": "Intake"
+      },
+      {
+        "tagName": "A",
+        "text": "Matches"
+      },
+      {
+        "tagName": "A",
+        "text": "Checklist"
+      },
+      {
+        "tagName": "A",
+        "text": "Tracker"
+      },
+      {
+        "tagName": "A",
+        "text": "Admin review"
+      },
+      {
+        "tagName": "A",
+        "text": "Back to start"
+      }
+    ]
+  },
+  {
+    "route": "/checklist",
+    "viewport": "mobile",
+    "checks": {
+      "htmlLang": {
+        "pass": true,
+        "detail": "lang=\"en\""
+      },
+      "singleH1": {
+        "pass": true,
+        "detail": "h1 count=1"
+      },
+      "skipTargetExists": {
+        "pass": true,
+        "detail": "#main-content exists=true, isMain=true"
+      },
+      "unlabelledControls": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "unnamedLinksOrButtons": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "landmarks": {
+        "pass": true,
+        "detail": "header=true, nav=true, main=true, footer=true",
+        "header": true,
+        "nav": true,
+        "main": true,
+        "footer": true
+      },
+      "skipLinkFirst": {
+        "pass": true,
+        "detail": "first focus A \"Skip to main content\" href=#main-content"
+      },
+      "skipWorks": {
+        "pass": true,
+        "detail": "focus inside main after Enter (MAIN)"
+      },
+      "focusVisible": {
+        "pass": true,
+        "detail": "outline-style=solid, outline-width=2px, box-shadow=none"
+      }
+    },
+    "tabOrderSample": [
+      {
+        "tagName": "A",
+        "text": "Skip to main content"
+      },
+      {
+        "tagName": "A",
+        "text": "LabhSaathi"
+      },
+      {
+        "tagName": "A",
+        "text": "Intake"
+      },
+      {
+        "tagName": "A",
+        "text": "Matches"
+      },
+      {
+        "tagName": "A",
+        "text": "Checklist"
+      },
+      {
+        "tagName": "A",
+        "text": "Tracker"
+      },
+      {
+        "tagName": "A",
+        "text": "Admin review"
+      },
+      {
+        "tagName": "A",
+        "text": "Back to start"
+      }
+    ]
+  },
+  {
+    "route": "/checklist",
+    "viewport": "desktop",
+    "checks": {
+      "htmlLang": {
+        "pass": true,
+        "detail": "lang=\"en\""
+      },
+      "singleH1": {
+        "pass": true,
+        "detail": "h1 count=1"
+      },
+      "skipTargetExists": {
+        "pass": true,
+        "detail": "#main-content exists=true, isMain=true"
+      },
+      "unlabelledControls": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "unnamedLinksOrButtons": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "landmarks": {
+        "pass": true,
+        "detail": "header=true, nav=true, main=true, footer=true",
+        "header": true,
+        "nav": true,
+        "main": true,
+        "footer": true
+      },
+      "skipLinkFirst": {
+        "pass": true,
+        "detail": "first focus A \"Skip to main content\" href=#main-content"
+      },
+      "skipWorks": {
+        "pass": true,
+        "detail": "focus inside main after Enter (MAIN)"
+      },
+      "focusVisible": {
+        "pass": true,
+        "detail": "outline-style=solid, outline-width=2px, box-shadow=none"
+      }
+    },
+    "tabOrderSample": [
+      {
+        "tagName": "A",
+        "text": "Skip to main content"
+      },
+      {
+        "tagName": "A",
+        "text": "LabhSaathi"
+      },
+      {
+        "tagName": "A",
+        "text": "Intake"
+      },
+      {
+        "tagName": "A",
+        "text": "Matches"
+      },
+      {
+        "tagName": "A",
+        "text": "Checklist"
+      },
+      {
+        "tagName": "A",
+        "text": "Tracker"
+      },
+      {
+        "tagName": "A",
+        "text": "Admin review"
+      },
+      {
+        "tagName": "A",
+        "text": "Back to start"
+      }
+    ]
+  },
+  {
+    "route": "/tracker",
+    "viewport": "mobile",
+    "checks": {
+      "htmlLang": {
+        "pass": true,
+        "detail": "lang=\"en\""
+      },
+      "singleH1": {
+        "pass": true,
+        "detail": "h1 count=1"
+      },
+      "skipTargetExists": {
+        "pass": true,
+        "detail": "#main-content exists=true, isMain=true"
+      },
+      "unlabelledControls": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "unnamedLinksOrButtons": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "landmarks": {
+        "pass": true,
+        "detail": "header=true, nav=true, main=true, footer=true",
+        "header": true,
+        "nav": true,
+        "main": true,
+        "footer": true
+      },
+      "skipLinkFirst": {
+        "pass": true,
+        "detail": "first focus A \"Skip to main content\" href=#main-content"
+      },
+      "skipWorks": {
+        "pass": true,
+        "detail": "focus inside main after Enter (MAIN)"
+      },
+      "focusVisible": {
+        "pass": true,
+        "detail": "outline-style=solid, outline-width=2px, box-shadow=none"
+      }
+    },
+    "tabOrderSample": [
+      {
+        "tagName": "A",
+        "text": "Skip to main content"
+      },
+      {
+        "tagName": "A",
+        "text": "LabhSaathi"
+      },
+      {
+        "tagName": "A",
+        "text": "Intake"
+      },
+      {
+        "tagName": "A",
+        "text": "Matches"
+      },
+      {
+        "tagName": "A",
+        "text": "Checklist"
+      },
+      {
+        "tagName": "A",
+        "text": "Tracker"
+      },
+      {
+        "tagName": "A",
+        "text": "Admin review"
+      },
+      {
+        "tagName": "A",
+        "text": "Back to start"
+      }
+    ]
+  },
+  {
+    "route": "/tracker",
+    "viewport": "desktop",
+    "checks": {
+      "htmlLang": {
+        "pass": true,
+        "detail": "lang=\"en\""
+      },
+      "singleH1": {
+        "pass": true,
+        "detail": "h1 count=1"
+      },
+      "skipTargetExists": {
+        "pass": true,
+        "detail": "#main-content exists=true, isMain=true"
+      },
+      "unlabelledControls": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "unnamedLinksOrButtons": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "landmarks": {
+        "pass": true,
+        "detail": "header=true, nav=true, main=true, footer=true",
+        "header": true,
+        "nav": true,
+        "main": true,
+        "footer": true
+      },
+      "skipLinkFirst": {
+        "pass": true,
+        "detail": "first focus A \"Skip to main content\" href=#main-content"
+      },
+      "skipWorks": {
+        "pass": true,
+        "detail": "focus inside main after Enter (MAIN)"
+      },
+      "focusVisible": {
+        "pass": true,
+        "detail": "outline-style=solid, outline-width=2px, box-shadow=none"
+      }
+    },
+    "tabOrderSample": [
+      {
+        "tagName": "A",
+        "text": "Skip to main content"
+      },
+      {
+        "tagName": "A",
+        "text": "LabhSaathi"
+      },
+      {
+        "tagName": "A",
+        "text": "Intake"
+      },
+      {
+        "tagName": "A",
+        "text": "Matches"
+      },
+      {
+        "tagName": "A",
+        "text": "Checklist"
+      },
+      {
+        "tagName": "A",
+        "text": "Tracker"
+      },
+      {
+        "tagName": "A",
+        "text": "Admin review"
+      },
+      {
+        "tagName": "A",
+        "text": "Back to start"
+      }
+    ]
+  },
+  {
+    "route": "/admin-review",
+    "viewport": "mobile",
+    "checks": {
+      "htmlLang": {
+        "pass": true,
+        "detail": "lang=\"en\""
+      },
+      "singleH1": {
+        "pass": true,
+        "detail": "h1 count=1"
+      },
+      "skipTargetExists": {
+        "pass": true,
+        "detail": "#main-content exists=true, isMain=true"
+      },
+      "unlabelledControls": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "unnamedLinksOrButtons": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "landmarks": {
+        "pass": true,
+        "detail": "header=true, nav=true, main=true, footer=true",
+        "header": true,
+        "nav": true,
+        "main": true,
+        "footer": true
+      },
+      "skipLinkFirst": {
+        "pass": true,
+        "detail": "first focus A \"Skip to main content\" href=#main-content"
+      },
+      "skipWorks": {
+        "pass": true,
+        "detail": "focus inside main after Enter (MAIN)"
+      },
+      "focusVisible": {
+        "pass": true,
+        "detail": "outline-style=solid, outline-width=2px, box-shadow=none"
+      }
+    },
+    "tabOrderSample": [
+      {
+        "tagName": "A",
+        "text": "Skip to main content"
+      },
+      {
+        "tagName": "A",
+        "text": "LabhSaathi"
+      },
+      {
+        "tagName": "A",
+        "text": "Intake"
+      },
+      {
+        "tagName": "A",
+        "text": "Matches"
+      },
+      {
+        "tagName": "A",
+        "text": "Checklist"
+      },
+      {
+        "tagName": "A",
+        "text": "Tracker"
+      },
+      {
+        "tagName": "A",
+        "text": "Admin review"
+      },
+      {
+        "tagName": "A",
+        "text": "Back to start"
+      }
+    ]
+  },
+  {
+    "route": "/admin-review",
+    "viewport": "desktop",
+    "checks": {
+      "htmlLang": {
+        "pass": true,
+        "detail": "lang=\"en\""
+      },
+      "singleH1": {
+        "pass": true,
+        "detail": "h1 count=1"
+      },
+      "skipTargetExists": {
+        "pass": true,
+        "detail": "#main-content exists=true, isMain=true"
+      },
+      "unlabelledControls": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "unnamedLinksOrButtons": {
+        "pass": true,
+        "detail": "count=0"
+      },
+      "landmarks": {
+        "pass": true,
+        "detail": "header=true, nav=true, main=true, footer=true",
+        "header": true,
+        "nav": true,
+        "main": true,
+        "footer": true
+      },
+      "skipLinkFirst": {
+        "pass": true,
+        "detail": "first focus A \"Skip to main content\" href=#main-content"
+      },
+      "skipWorks": {
+        "pass": true,
+        "detail": "focus inside main after Enter (MAIN)"
+      },
+      "focusVisible": {
+        "pass": true,
+        "detail": "outline-style=solid, outline-width=2px, box-shadow=none"
+      }
+    },
+    "tabOrderSample": [
+      {
+        "tagName": "A",
+        "text": "Skip to main content"
+      },
+      {
+        "tagName": "A",
+        "text": "LabhSaathi"
+      },
+      {
+        "tagName": "A",
+        "text": "Intake"
+      },
+      {
+        "tagName": "A",
+        "text": "Matches"
+      },
+      {
+        "tagName": "A",
+        "text": "Checklist"
+      },
+      {
+        "tagName": "A",
+        "text": "Tracker"
+      },
+      {
+        "tagName": "A",
+        "text": "Admin review"
+      },
+      {
+        "tagName": "A",
+        "text": "Back to start"
+      }
+    ]
+  }
+]
