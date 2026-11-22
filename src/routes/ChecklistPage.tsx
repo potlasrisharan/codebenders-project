@@ -99,10 +99,11 @@ export function ChecklistPage() {
 
             <Link
               to={`/scheme/${activeScheme.id}`}
-              className="text-xs px-3.5 py-2 bg-zinc-900 hover:bg-zinc-800 text-white !text-white font-semibold rounded-lg shadow-xs inline-flex items-center gap-1.5 btn-tactile transition-colors"
+              className="btn btn--primary text-xs px-3.5 py-2 bg-zinc-900 hover:bg-zinc-800 text-white !text-white font-semibold rounded-lg shadow-xs inline-flex items-center gap-1.5 btn-tactile transition-colors"
+              style={{ color: '#ffffff' }}
             >
-              <span className="!text-white">View Scheme Details</span>
-              <ArrowRight className="w-3.5 h-3.5 text-white" />
+              <span className="!text-white text-white font-semibold" style={{ color: '#ffffff' }}>View Scheme Details</span>
+              <ArrowRight className="w-3.5 h-3.5 text-white" style={{ color: '#ffffff' }} />
             </Link>
           </div>
         )}
@@ -123,10 +124,11 @@ export function ChecklistPage() {
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
             <Link
               to="/intake"
-              className="text-xs font-bold px-4 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white !text-white rounded-xl shadow-xs btn-tactile inline-flex items-center gap-1.5"
+              className="btn btn--primary text-xs font-bold px-4 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white !text-white rounded-xl shadow-xs btn-tactile inline-flex items-center gap-1.5"
+              style={{ color: '#ffffff' }}
             >
-              <span className="!text-white">Start Citizen Intake</span>
-              <ArrowRight className="w-3.5 h-3.5 text-white" />
+              <span className="!text-white text-white font-bold" style={{ color: '#ffffff' }}>Start Citizen Intake</span>
+              <ArrowRight className="w-3.5 h-3.5 text-white" style={{ color: '#ffffff' }} />
             </Link>
             <Link
               to="/matches"

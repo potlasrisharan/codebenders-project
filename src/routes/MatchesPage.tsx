@@ -420,10 +420,13 @@ export function MatchesPage() {
 
                       <Link
                         to={`/scheme/${scheme.id}`}
-                        className="text-xs px-3.5 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-white !text-white font-semibold inline-flex items-center gap-1.5 transition-colors shadow-xs btn-tactile"
+                        className="btn btn--primary text-xs px-3.5 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-white !text-white font-semibold inline-flex items-center gap-1.5 transition-colors shadow-xs btn-tactile"
+                        style={{ color: '#ffffff' }}
                       >
-                        <T id="matches.card.view" inline primaryClassName="!text-white" secondaryClassName="text-zinc-300" />
-                        <ArrowRight className="w-3.5 h-3.5 text-white" />
+                        <span className="!text-white text-white font-semibold" style={{ color: '#ffffff' }}>
+                          <T id="matches.card.view" inline className="!text-white text-white" primaryClassName="!text-white text-white" secondaryClassName="text-zinc-300" />
+                        </span>
+                        <ArrowRight className="w-3.5 h-3.5 text-white" style={{ color: '#ffffff' }} />
                       </Link>
                     </div>
                   </div>

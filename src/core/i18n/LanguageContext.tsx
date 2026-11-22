@@ -113,9 +113,10 @@ export function T({
   const { language, t } = useLanguage();
   const primary = t(id, fallback);
   const english = TRANSLATIONS.en[id] || fallback || id;
+  const combinedPrimaryClass = [className, primaryClassName].filter(Boolean).join(' ');
 
   if (language === 'en' || primary === english) {
-    return <Component className={className}>{primary}</Component>;
+    return <Component className={combinedPrimaryClass}>{primary}</Component>;
   }
 
   if (inline) {

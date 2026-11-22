@@ -37,6 +37,20 @@
     color: var(--color-accent);
   }
 
+  a.text-white,
+  a.\!text-white,
+  a[class*="text-white"],
+  a.btn--primary {
+    color: #ffffff !important;
+  }
+
+  a.text-white *,
+  a.\!text-white *,
+  a[class*="text-white"] *,
+  a.btn--primary * {
+    color: inherit;
+  }
+
   :focus-visible {
     outline: 2px solid var(--color-focus);
     outline-offset: 2px;

@@ -80,9 +80,10 @@ export function TrackerPage() {
 
         <Link
           to="/matches"
-          className="text-xs px-3.5 py-2 bg-zinc-900 hover:bg-zinc-800 text-white !text-white font-semibold rounded-lg shadow-xs inline-flex items-center gap-1.5 btn-tactile transition-colors"
+          className="btn btn--primary text-xs px-3.5 py-2 bg-zinc-900 hover:bg-zinc-800 text-white !text-white font-semibold rounded-lg shadow-xs inline-flex items-center gap-1.5 btn-tactile transition-colors"
+          style={{ color: '#ffffff' }}
         >
-          <Plus className="w-3.5 h-3.5 text-white" /> <span className="!text-white">Track Another Scheme</span>
+          <Plus className="w-3.5 h-3.5 text-white" style={{ color: '#ffffff' }} /> <span className="!text-white text-white font-semibold" style={{ color: '#ffffff' }}>Track Another Scheme</span>
         </Link>
       </div>
 
@@ -123,9 +124,10 @@ export function TrackerPage() {
             <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
               <Link
                 to="/intake"
-                className="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white !text-white font-semibold rounded-lg text-xs inline-flex items-center gap-1.5 btn-tactile shadow-xs"
+                className="btn btn--primary px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white !text-white font-semibold rounded-lg text-xs inline-flex items-center gap-1.5 btn-tactile shadow-xs"
+                style={{ color: '#ffffff' }}
               >
-                <span className="!text-white">Start Citizen Intake</span> <ExternalLink className="w-3.5 h-3.5 text-white" />
+                <span className="!text-white text-white font-semibold" style={{ color: '#ffffff' }}>Start Citizen Intake</span> <ExternalLink className="w-3.5 h-3.5 text-white" style={{ color: '#ffffff' }} />
               </Link>
               <Link
                 to="/matches"
