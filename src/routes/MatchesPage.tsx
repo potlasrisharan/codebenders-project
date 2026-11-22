@@ -81,11 +81,11 @@ export function MatchesPage() {
   const needConfirmCount = discoveryResult.items.filter((i) => i.eligibility.overallLabel === 'Need to confirm').length;
 
   return (
-    <div className="stack matches-page max-w-4xl mx-auto py-6 px-3 sm:px-4 space-y-6">
+    <div className="stack matches-page max-w-4xl mx-auto py-6 px-3 sm:px-4 space-y-6 min-w-0 max-w-full">
       {/* Editorial Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-200 pb-4 gap-3">
-        <div>
-          <div className="flex items-center gap-2 mb-1.5">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2 mb-1.5">
             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wider uppercase bg-zinc-100 text-zinc-700">
               <GraduationCap className="w-3.5 h-3.5 text-zinc-700" />
               {hasCompletedIntake ? <T id="matches.badge" /> : 'Public Welfare Catalog'}
@@ -94,9 +94,9 @@ export function MatchesPage() {
               {hasCompletedIntake ? <T id="matches.logic" /> : '219 Public Schemes'}
             </span>
           </div>
-          <h1 className="text-3xl font-extrabold text-zinc-900 tracking-tight flex items-center gap-2.5">
-            <Search className="w-7 h-7 text-zinc-900" aria-hidden="true" />
-            <T id="matches.title" />
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-zinc-900 tracking-tight flex items-center gap-2.5">
+            <Search className="w-7 h-7 text-zinc-900 flex-shrink-0" aria-hidden="true" />
+            <span className="break-words"><T id="matches.title" /></span>
           </h1>
           <div className="text-sm text-zinc-600 mt-1 max-w-xl">
             {hasCompletedIntake
@@ -121,11 +121,12 @@ export function MatchesPage() {
             <Button
               variant="primary"
               onClick={() => navigate('/intake')}
-              className="text-xs px-3.5 py-2 btn-tactile flex items-center gap-1.5 bg-zinc-900 text-white rounded-lg shadow-xs"
+              className="text-xs px-3.5 py-2 btn-tactile flex items-center gap-1.5 bg-zinc-900 text-white !text-white rounded-lg shadow-xs"
+              style={{ color: '#ffffff' }}
             >
-              <FileText className="w-3.5 h-3.5" />
-              <span>Start Citizen Intake</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <FileText className="w-3.5 h-3.5 text-white" style={{ color: '#ffffff' }} />
+              <span className="text-white !text-white font-semibold" style={{ color: '#ffffff' }}>Start Citizen Intake</span>
+              <ArrowRight className="w-3.5 h-3.5 text-white" style={{ color: '#ffffff' }} />
             </Button>
           )}
         </div>
@@ -148,10 +149,11 @@ export function MatchesPage() {
           <Button
             variant="primary"
             onClick={() => navigate('/intake')}
-            className="text-xs font-bold px-4 py-2.5 bg-indigo-950 hover:bg-indigo-900 text-white rounded-xl shadow-xs btn-tactile whitespace-nowrap flex items-center gap-1.5 flex-shrink-0"
+            className="text-xs font-bold px-4 py-2.5 bg-indigo-950 hover:bg-indigo-900 text-white !text-white rounded-xl shadow-xs btn-tactile whitespace-nowrap flex items-center gap-1.5 flex-shrink-0"
+            style={{ color: '#ffffff' }}
           >
-            <span>Take Citizen Intake</span>
-            <ArrowRight className="w-4 h-4" />
+            <span className="text-white !text-white font-bold" style={{ color: '#ffffff' }}>Take Citizen Intake</span>
+            <ArrowRight className="w-4 h-4 text-white" style={{ color: '#ffffff' }} />
           </Button>
         </Card>
       )}

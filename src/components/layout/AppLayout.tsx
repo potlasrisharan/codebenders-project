@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { ReactNode } from "react";
 import { NavLink } from "react-router-dom";
 import {
@@ -12,6 +12,7 @@ import {
   Shield,
   Home,
   Languages,
+  WifiOff,
 } from "lucide-react";
 import { useLanguage } from "../../core/i18n/LanguageContext";
 import { TRANSLATIONS } from "../../core/i18n/translations";
@@ -19,8 +20,20 @@ import { useCitizenProfile } from "../../core/profile/ProfileContext";
 
 export function AppLayout({ children }: { children: ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isOffline, setIsOffline] = useState(() => typeof navigator !== 'undefined' ? !navigator.onLine : false);
   const { language, setLanguage, languages, t } = useLanguage();
   const { hasCompletedIntake, activePersonaName, profile } = useCitizenProfile();
+
+  useEffect(() => {
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   const navItems = [
     { to: "/intake", key: "nav.intake", icon: FileText },
@@ -36,44 +49,46 @@ export function AppLayout({ children }: { children: ReactNode }) {
       </a>
 
       {/* Top Banner Notice */}
-      <div className="bg-zinc-950 text-white text-[11px] py-1.5 px-3 sm:px-4 text-center tracking-wide font-medium flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2">
-        <div className="flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span>{t("banner.top")}</span>
+      <div className="bg-zinc-950 text-white text-[11px] py-1.5 px-3 sm:px-4 text-center tracking-wide font-medium flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 overflow-hidden">
+        <div className="flex flex-wrap items-center justify-center gap-1.5 min-w-0 max-w-full text-center">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
+          <span className="break-words leading-tight">{t("banner.top")}</span>
           <span className="hidden md:inline text-zinc-400">• {t("banner.free")}</span>
         </div>
         {language !== 'en' && (
-          <div className="text-[10px] text-zinc-400 font-normal sm:border-l sm:border-zinc-800 sm:pl-2">
+          <div className="text-[10px] text-zinc-400 font-normal sm:border-l sm:border-zinc-800 sm:pl-2 truncate max-w-full">
             {TRANSLATIONS.en["banner.top"]}
           </div>
         )}
       </div>
 
+      {/* Offline Connectivity Banner */}
+      {isOffline && (
+        <div className="bg-amber-600 text-white text-xs py-1.5 px-3 sm:px-4 text-center font-medium flex items-center justify-center gap-2 shadow-xs transition-all animate-slide-down-fade">
+          <WifiOff className="w-3.5 h-3.5 flex-shrink-0" />
+          <span>Working Offline — All cached government schemes, document checklists, and local eligibility checks remain active.</span>
+        </div>
+      )}
+
       {/* Main Glassmorphic Header */}
       <header className="app-header sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-zinc-200/90 transition-all">
-        <div className="container app-nav max-w-6xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between">
+        <div className="container app-nav max-w-6xl mx-auto px-3 sm:px-4 py-2 sm:py-3 flex items-center justify-between min-w-0">
           <NavLink
             to="/"
-            className="brand flex items-center gap-2.5 group"
+            className="brand flex items-center gap-2 group min-w-0 max-w-[calc(100%-54px)] md:max-w-none"
             onClick={() => setMobileMenuOpen(false)}
           >
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
-              <img src="/logo.png" alt="LabhSaathi logo" className="w-8 h-8 object-contain" />
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform flex-shrink-0">
+              <img src="/logo.png" alt="LabhSaathi logo" width={32} height={32} className="w-8 h-8 object-contain" />
             </div>
-            <div className="flex flex-col">
-              <span className="font-extrabold text-lg tracking-tight text-zinc-950 leading-none flex items-center gap-1">
+            <div className="flex flex-col min-w-0">
+              <span className="font-extrabold text-base sm:text-lg tracking-tight text-zinc-950 leading-none flex items-center gap-1 truncate">
                 {t("brand.name")}
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0" />
               </span>
-              {language !== 'en' && (
-                <span className="text-[10px] text-zinc-500 font-medium leading-tight">LabhSaathi</span>
-              )}
-              <span className="text-[10px] text-zinc-500 tracking-wider uppercase font-bold mt-0.5">
+              <span className="text-[10px] text-zinc-500 tracking-wider uppercase font-bold mt-0.5 truncate">
                 {t("brand.tagline")}
               </span>
-              {language !== 'en' && (
-                <span className="text-[9px] text-zinc-400 font-normal leading-tight">Claim What's Yours</span>
-              )}
             </div>
           </NavLink>
 
@@ -92,10 +107,11 @@ export function AppLayout({ children }: { children: ReactNode }) {
                             : "text-zinc-600 hover:text-zinc-950 hover:bg-zinc-100"
                         }`
                       }
+                      style={({ isActive }) => (isActive ? { color: '#ffffff' } : undefined)}
                     >
-                      <span className="leading-tight">{t(item.key)}</span>
+                      <span className="leading-tight text-inherit">{t(item.key)}</span>
                       {language !== 'en' && (
-                        <span className="text-[9px] font-normal opacity-75 mt-0.5 leading-tight">
+                        <span className="text-[9px] font-normal opacity-75 mt-0.5 leading-tight text-inherit">
                           {TRANSLATIONS.en[item.key]}
                         </span>
                       )}
@@ -187,9 +203,10 @@ export function AppLayout({ children }: { children: ReactNode }) {
                         isActive ? "bg-zinc-900 !text-white text-white" : "text-zinc-700 hover:bg-zinc-100"
                       }`
                     }
+                    style={({ isActive }) => (isActive ? { color: '#ffffff' } : undefined)}
                   >
-                    <Home className="w-4 h-4" />
-                    <span>Home</span>
+                    <Home className="w-4 h-4 text-inherit" />
+                    <span className="text-inherit">Home</span>
                   </NavLink>
                 </li>
                 {navItems.map((item) => {
@@ -204,12 +221,13 @@ export function AppLayout({ children }: { children: ReactNode }) {
                             isActive ? "bg-zinc-900 !text-white text-white" : "text-zinc-700 hover:bg-zinc-100"
                           }`
                         }
+                        style={({ isActive }) => (isActive ? { color: '#ffffff' } : undefined)}
                       >
-                        <Icon className="w-4 h-4 flex-shrink-0" />
-                        <div className="flex flex-col">
-                          <span>{t(item.key)}</span>
+                        <Icon className="w-4 h-4 flex-shrink-0 text-inherit" />
+                        <div className="flex flex-col text-inherit">
+                          <span className="text-inherit">{t(item.key)}</span>
                           {language !== 'en' && (
-                            <span className="text-[10px] font-normal text-zinc-400">
+                            <span className="text-[10px] font-normal opacity-80 text-inherit">
                               {TRANSLATIONS.en[item.key]}
                             </span>
                           )}
@@ -234,7 +252,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
         <div className="max-w-6xl mx-auto px-4 py-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="flex flex-col gap-1.5 max-w-md">
             <div className="flex items-center gap-2">
-              <img src="/logo.png" alt="LabhSaathi logo" className="w-5 h-5 object-contain" />
+              <img src="/logo.png" alt="LabhSaathi logo" width={20} height={20} className="w-5 h-5 object-contain" />
               <span className="font-bold text-zinc-900 text-sm">LabhSaathi</span>
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600 font-mono">
                 v1.0.0 (PS5 Pilot)

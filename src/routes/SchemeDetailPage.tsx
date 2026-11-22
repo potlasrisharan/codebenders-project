@@ -113,7 +113,7 @@ export function SchemeDetailPage() {
   };
 
   return (
-    <div className="stack scheme-detail-page max-w-4xl mx-auto py-6 px-3 sm:px-4 space-y-6">
+    <div className="stack scheme-detail-page max-w-4xl mx-auto py-6 px-3 sm:px-4 space-y-6 min-w-0 max-w-full">
       {/* Top Breadcrumb & Heading */}
       <div className="border-b border-zinc-200 pb-4 space-y-3">
         <Link
@@ -157,11 +157,18 @@ export function SchemeDetailPage() {
               variant={isSaved ? 'secondary' : 'primary'}
               onClick={handleToggleSave}
               className={`text-xs px-3.5 py-2 flex items-center gap-1.5 btn-tactile ${
-                isSaved ? 'border-emerald-300 text-emerald-800 bg-emerald-50' : 'bg-zinc-900 text-white'
+                isSaved ? 'border-emerald-300 text-emerald-800 bg-emerald-50' : 'bg-zinc-900 text-white !text-white'
               }`}
+              style={!isSaved ? { color: '#ffffff' } : undefined}
             >
-              {isSaved ? <BookmarkCheck className="w-4 h-4 text-emerald-600" /> : <Bookmark className="w-4 h-4" />}
-              <T id={isSaved ? 'detail.saved' : 'detail.save'} />
+              {isSaved ? (
+                <BookmarkCheck className="w-4 h-4 text-emerald-600" />
+              ) : (
+                <Bookmark className="w-4 h-4 text-white" style={{ color: '#ffffff' }} />
+              )}
+              <span className={!isSaved ? 'text-white !text-white font-semibold' : ''} style={!isSaved ? { color: '#ffffff' } : undefined}>
+                <T id={isSaved ? 'detail.saved' : 'detail.save'} />
+              </span>
             </Button>
 
             <button

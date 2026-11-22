@@ -276,10 +276,15 @@ export function SchemeChatDrawer({ schemeId, schemeName, portalUrl }: SchemeChat
               type="submit"
               variant="primary"
               disabled={!inputMessage.trim() || isLoading}
-              className="flex items-center gap-1 text-xs py-2 px-3.5 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg btn-tactile"
+              className="flex items-center gap-1 text-xs py-2 px-3.5 bg-zinc-900 hover:bg-zinc-800 text-white !text-white font-semibold rounded-lg btn-tactile"
+              style={{ color: '#ffffff' }}
             >
-              {isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
-              <span>Ask</span>
+              {isLoading ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-white" style={{ color: '#ffffff' }} />
+              ) : (
+                <Send className="w-3.5 h-3.5 text-white" style={{ color: '#ffffff' }} />
+              )}
+              <span className="text-white !text-white font-semibold" style={{ color: '#ffffff' }}>Ask</span>
             </Button>
           </form>
         </div>

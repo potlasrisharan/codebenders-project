@@ -233,9 +233,10 @@ export function VoiceIntakeModal({ isOpen, onClose, onTranscriptSuccess }: Voice
                 onClick={() => setSelectedLanguage(lang.code)}
                 className={`text-xs px-2.5 py-1.5 rounded-lg border font-medium text-left truncate transition-colors ${
                   selectedLanguage === lang.code
-                    ? 'bg-zinc-900 text-white border-zinc-900 shadow-xs'
+                    ? 'bg-zinc-900 text-white !text-white border-zinc-900 font-bold shadow-xs'
                     : 'bg-zinc-50 hover:bg-zinc-100 text-zinc-700 border-zinc-200'
                 }`}
+                style={selectedLanguage === lang.code ? { color: '#ffffff' } : undefined}
               >
                 {lang.label}
               </button>
@@ -267,7 +268,8 @@ export function VoiceIntakeModal({ isOpen, onClose, onTranscriptSuccess }: Voice
             <button
               type="button"
               onClick={startRecording}
-              className="w-16 h-16 rounded-full bg-zinc-900 text-white flex items-center justify-center shadow-md hover:bg-zinc-800 hover:scale-105 transition-all group"
+              className="w-16 h-16 rounded-full bg-zinc-900 text-white !text-white flex items-center justify-center shadow-md hover:bg-zinc-800 hover:scale-105 transition-all group"
+              style={{ color: '#ffffff' }}
               aria-label="Start recording"
             >
               <Mic className="w-7 h-7 text-emerald-400 group-hover:scale-110 transition-transform" />

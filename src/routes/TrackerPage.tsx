@@ -56,11 +56,11 @@ export function TrackerPage() {
   ] as const;
 
   return (
-    <div className="stack tracker-page max-w-4xl mx-auto py-6 px-3 sm:px-4 space-y-6">
+    <div className="stack tracker-page max-w-4xl mx-auto py-6 px-3 sm:px-4 space-y-6 min-w-0 max-w-full">
       {/* Editorial Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-200 pb-4 gap-3">
-        <div>
-          <div className="flex items-center gap-2 mb-1.5">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2 mb-1.5">
             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wider uppercase bg-zinc-100 text-zinc-700">
               <Activity className="w-3.5 h-3.5 text-zinc-700" />
               Benefit Lifecycle Management
@@ -69,9 +69,9 @@ export function TrackerPage() {
               Academic Year 2026-27
             </span>
           </div>
-          <h1 className="text-3xl font-extrabold text-zinc-900 tracking-tight flex items-center gap-2.5">
-            <Activity className="w-7 h-7 text-zinc-900" aria-hidden="true" />
-            <T id="tracker.title" />
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-zinc-900 tracking-tight flex items-center gap-2.5">
+            <Activity className="w-7 h-7 text-zinc-900 flex-shrink-0" aria-hidden="true" />
+            <span className="break-words"><T id="tracker.title" /></span>
           </h1>
           <div className="text-sm text-zinc-600 mt-1 max-w-xl">
             <T id="tracker.sub" />
@@ -187,14 +187,14 @@ export function TrackerPage() {
                           onClick={() => handleStageChange(claim.schemeId, key)}
                           className={`p-2.5 rounded-xl border text-center transition-all duration-200 btn-tactile flex flex-col items-center justify-center gap-1 ${
                             isActive
-                              ? 'bg-zinc-900 text-white border-zinc-900 font-bold shadow-xs'
+                              ? 'bg-zinc-900 text-white !text-white border-zinc-900 font-bold shadow-xs'
                               : 'bg-zinc-50/70 text-zinc-700 border-zinc-200 hover:bg-zinc-100'
                           }`}
                         >
-                          <span className="text-[10px] opacity-80 uppercase tracking-wider">
+                          <span className={`text-[10px] uppercase tracking-wider ${isActive ? 'text-zinc-200' : 'opacity-80'}`}>
                             {key === 'disbursed' ? 'Goal' : 'Stage'}
                           </span>
-                          <span className="text-xs">{label}</span>
+                          <span className={`text-xs ${isActive ? 'text-white font-bold' : ''}`}>{label}</span>
                         </button>
                       );
                     })}

@@ -297,10 +297,10 @@ export function IntakePage() {
   };
 
   return (
-    <div className="stack intake-page max-w-4xl mx-auto py-6 px-3 sm:px-4 space-y-6">
+    <div className="stack intake-page max-w-4xl mx-auto py-6 px-3 sm:px-4 space-y-6 min-w-0 max-w-full">
       {/* Editorial Header */}
       <div className="border-b border-zinc-200 pb-4">
-        <div className="flex items-center gap-2 mb-1.5">
+        <div className="flex flex-wrap items-center gap-2 mb-1.5">
           <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wider uppercase bg-zinc-100 text-zinc-700">
             <GraduationCap className="w-3.5 h-3.5 text-zinc-700" />
             <span>{t('intake.badge')}</span>
@@ -316,12 +316,12 @@ export function IntakePage() {
             )}
           </span>
         </div>
-        <h1 className="text-3xl font-extrabold text-zinc-900 tracking-tight flex items-center gap-2.5">
-          <FileText className="w-7 h-7 text-zinc-900" aria-hidden="true" />
-          <div>
-            <span>{t('intake.title')}</span>
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-zinc-900 tracking-tight flex items-center gap-2.5">
+          <FileText className="w-7 h-7 text-zinc-900 flex-shrink-0" aria-hidden="true" />
+          <div className="min-w-0">
+            <span className="break-words">{t('intake.title')}</span>
             {language !== 'en' && (
-              <span className="block text-sm font-normal text-zinc-500 tracking-normal mt-0.5">
+              <span className="block text-sm font-normal text-zinc-500 tracking-normal mt-0.5 break-words">
                 {TRANSLATIONS.en['intake.title']}
               </span>
             )}
@@ -642,12 +642,12 @@ export function IntakePage() {
                             onClick={() => handleSelectOption('domicileState', state)}
                             className={`text-xs px-3.5 py-2 rounded-xl border transition-all btn-tactile cursor-pointer flex items-center gap-1.5 ${
                               isSelected
-                                ? 'bg-zinc-900 text-white border-zinc-900 font-bold shadow-xs'
+                                ? 'bg-zinc-900 text-white !text-white border-zinc-900 font-bold shadow-xs'
                                 : 'bg-white text-zinc-800 border-zinc-200 hover:bg-zinc-50 hover:border-zinc-300'
                             }`}
                           >
                             {isSelected && <Check className="w-3.5 h-3.5 text-emerald-400" />}
-                            <span>
+                            <span className={isSelected ? 'text-white !text-white font-bold' : ''}>
                               {language === 'te' && stateOpt?.teluguLabel
                                 ? `${stateOpt.teluguLabel} (${state})`
                                 : language === 'hi' && stateOpt?.hindiLabel
@@ -743,12 +743,12 @@ export function IntakePage() {
                               onClick={() => handleSelectOption(currentQ.id, Number(opt.value))}
                               className={`text-xs px-3.5 py-2 rounded-xl border transition-all cursor-pointer btn-tactile flex items-center gap-1.5 ${
                                 isSelected
-                                  ? 'bg-zinc-900 text-white border-zinc-900 font-bold shadow-xs'
+                                  ? 'bg-zinc-900 text-white !text-white border-zinc-900 font-bold shadow-xs'
                                   : 'bg-zinc-50 text-zinc-800 border-zinc-200 hover:bg-zinc-100 hover:border-zinc-300'
                               }`}
                             >
                               {isSelected && <Check className="w-3.5 h-3.5 text-emerald-400" />}
-                              <span>
+                              <span className={isSelected ? 'text-white !text-white font-bold' : ''}>
                                 {language === 'te' && opt.teluguLabel
                                   ? `${opt.teluguLabel} (${opt.label})`
                                   : language === 'hi' && opt.hindiLabel
@@ -788,11 +788,11 @@ export function IntakePage() {
                         }}
                         className={`p-4 rounded-xl border text-left flex items-center justify-between gap-3 transition-all duration-150 btn-tactile cursor-pointer ${
                           isSelected
-                            ? 'bg-zinc-900 text-white border-zinc-900 shadow-md ring-2 ring-zinc-900/10'
+                            ? 'bg-zinc-900 text-white !text-white border-zinc-900 shadow-md ring-2 ring-zinc-900/10'
                             : 'bg-white hover:bg-zinc-50 border-zinc-200 text-zinc-800 hover:border-zinc-300'
                         }`}
                       >
-                        <span className={`text-xs sm:text-sm font-semibold leading-snug ${isSelected ? 'text-white' : 'text-zinc-900'}`}>
+                        <span className={`text-xs sm:text-sm font-semibold leading-snug ${isSelected ? 'text-white !text-white' : 'text-zinc-900'}`}>
                           {language === 'te' && opt.teluguLabel ? (
                             <>
                               <span className="block">{opt.teluguLabel}</span>
@@ -863,10 +863,13 @@ export function IntakePage() {
                       setViewMode('review');
                     }
                   }}
-                  className="flex items-center gap-2 text-xs py-2 px-4 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg shadow-xs btn-tactile"
+                  className="flex items-center gap-2 text-xs py-2 px-4 bg-zinc-900 hover:bg-zinc-800 text-white !text-white font-semibold rounded-lg shadow-xs btn-tactile"
+                  style={{ color: '#ffffff' }}
                 >
-                  <span>{safeStepIndex === activeQuestions.length - 1 ? 'Review Profile' : 'Continue'}</span>
-                  <ChevronRight className="w-4 h-4" />
+                  <span className="text-white !text-white font-semibold" style={{ color: '#ffffff' }}>
+                    {safeStepIndex === activeQuestions.length - 1 ? 'Review Profile' : 'Continue'}
+                  </span>
+                  <ChevronRight className="w-4 h-4 text-white" style={{ color: '#ffffff' }} />
                 </Button>
               </div>
             </div>
@@ -893,10 +896,11 @@ export function IntakePage() {
               <Button
                 variant="primary"
                 onClick={() => navigate('/matches')}
-                className="flex items-center gap-2 px-5 py-2.5 text-xs font-bold bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl shadow-sm btn-tactile"
+                className="flex items-center gap-2 px-5 py-2.5 text-xs font-bold bg-zinc-900 hover:bg-zinc-800 text-white !text-white rounded-xl shadow-sm btn-tactile"
+                style={{ color: '#ffffff' }}
               >
-                <span>{t('intake.btn.find')}</span>
-                <ArrowRight className="w-4 h-4" />
+                <span className="text-white !text-white font-bold" style={{ color: '#ffffff' }}>{t('intake.btn.find')}</span>
+                <ArrowRight className="w-4 h-4 text-white" style={{ color: '#ffffff' }} />
               </Button>
             </div>
 
@@ -968,10 +972,11 @@ export function IntakePage() {
               <Button
                 variant="primary"
                 onClick={() => navigate('/matches')}
-                className="flex items-center gap-2 px-6 py-2.5 text-xs font-bold bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl shadow-sm btn-tactile"
+                className="flex items-center gap-2 px-6 py-2.5 text-xs font-bold bg-zinc-900 hover:bg-zinc-800 text-white !text-white rounded-xl shadow-sm btn-tactile"
+                style={{ color: '#ffffff' }}
               >
-                <span>{t('intake.btn.find')}</span>
-                <ArrowRight className="w-4 h-4" />
+                <span className="text-white !text-white font-bold" style={{ color: '#ffffff' }}>{t('intake.btn.find')}</span>
+                <ArrowRight className="w-4 h-4 text-white" style={{ color: '#ffffff' }} />
               </Button>
             </div>
           </Card>
@@ -1014,10 +1019,11 @@ export function IntakePage() {
         <Button
           variant="primary"
           onClick={() => navigate('/matches')}
-          className="flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-bold shadow-sm btn-tactile bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg"
+          className="flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-bold shadow-sm btn-tactile bg-zinc-900 hover:bg-zinc-800 text-white !text-white rounded-lg"
+          style={{ color: '#ffffff' }}
         >
-          <span>{t('intake.btn.find')}</span>
-          <ArrowRight className="w-4 h-4" />
+          <span className="text-white !text-white font-bold" style={{ color: '#ffffff' }}>{t('intake.btn.find')}</span>
+          <ArrowRight className="w-4 h-4 text-white" style={{ color: '#ffffff' }} />
         </Button>
       </div>
 

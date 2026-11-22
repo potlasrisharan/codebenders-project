@@ -95,7 +95,7 @@ export function LandingPage() {
 
         <div className="relative z-10 flex flex-col items-start gap-4 max-w-3xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/95 backdrop-blur-md border border-zinc-200/90 shadow-2xs">
-            <img src="/logo.png" alt="LabhSaathi logo" className="w-4 h-4 object-contain" />
+            <img src="/logo.png" alt="LabhSaathi logo" width={16} height={16} className="w-4 h-4 object-contain" />
             <T id="landing.eyebrow" className="text-xs font-bold text-zinc-800 tracking-tight" />
           </div>
 
@@ -119,10 +119,13 @@ export function LandingPage() {
             <ButtonLink
               to="/intake?fresh=1"
               variant="primary"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-zinc-950 hover:bg-zinc-800 text-white rounded-xl font-bold text-sm shadow-sm transition-all btn-tactile min-h-[48px]"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-zinc-950 hover:bg-zinc-800 text-white !text-white rounded-xl font-bold text-sm shadow-sm transition-all btn-tactile min-h-[48px]"
+              style={{ color: '#ffffff' }}
             >
-              <T id="landing.cta.start" />
-              <ArrowRight className="w-4 h-4" />
+              <span className="text-white !text-white font-bold inline-flex items-center gap-1.5" style={{ color: '#ffffff' }}>
+                <T id="landing.cta.start" />
+              </span>
+              <ArrowRight className="w-4 h-4 text-white" style={{ color: '#ffffff' }} />
             </ButtonLink>
 
             <ButtonLink
@@ -332,10 +335,13 @@ export function LandingPage() {
             <ButtonLink
               to="/intake?fresh=1"
               variant="primary"
-              className="w-full sm:w-auto px-5 py-3.5 bg-zinc-950 hover:bg-zinc-800 text-white rounded-xl font-bold text-xs shadow-sm flex items-center justify-center gap-1.5 btn-tactile min-h-[48px]"
+              className="w-full sm:w-auto px-5 py-3.5 bg-zinc-950 hover:bg-zinc-800 text-white !text-white rounded-xl font-bold text-xs shadow-sm flex items-center justify-center gap-1.5 btn-tactile min-h-[48px]"
+              style={{ color: '#ffffff' }}
             >
-              <T id="landing.shield.cta" />
-              <ArrowRight className="w-4 h-4" />
+              <span className="text-white !text-white font-bold inline-flex items-center gap-1.5" style={{ color: '#ffffff' }}>
+                <T id="landing.shield.cta" />
+              </span>
+              <ArrowRight className="w-4 h-4 text-white" style={{ color: '#ffffff' }} />
             </ButtonLink>
           </div>
         </div>

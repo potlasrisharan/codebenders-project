@@ -14,8 +14,10 @@ export function EmptyState({ icon: Icon, title, description, action }: EmptyStat
       <Icon aria-hidden="true" size={32} />
       <h2>{title}</h2>
       <p>{description}</p>
-      <ButtonLink to={action.to} variant="primary">
-        {action.label}
+      <ButtonLink to={action.to} variant="primary" style={{ color: '#ffffff' }}>
+        <span className="text-white !text-white font-semibold" style={{ color: '#ffffff' }}>
+          {action.label}
+        </span>
       </ButtonLink>
     </div>
   );

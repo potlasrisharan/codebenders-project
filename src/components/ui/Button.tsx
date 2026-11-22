@@ -4,7 +4,12 @@ import { Link, type LinkProps } from "react-router-dom";
 export type ButtonVariant = "primary" | "secondary";
 
 function classes(variant: ButtonVariant, extra?: string): string {
-  return ["btn", variant === "primary" ? "btn--primary" : "btn--secondary", extra].filter(Boolean).join(" ");
+  const isPrimary = variant === "primary";
+  return [
+    "btn",
+    isPrimary ? "btn--primary text-white !text-white" : "btn--secondary",
+    extra
+  ].filter(Boolean).join(" ");
 }
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {

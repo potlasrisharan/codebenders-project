@@ -59,11 +59,11 @@ export function ChecklistPage() {
   const progressPercent = totalDocs > 0 ? Math.round((readyDocs / totalDocs) * 100) : 0;
 
   return (
-    <div className="stack checklist-page max-w-4xl mx-auto py-6 px-3 sm:px-4 space-y-6">
+    <div className="stack checklist-page max-w-4xl mx-auto py-6 px-3 sm:px-4 space-y-6 min-w-0 max-w-full">
       {/* Editorial Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-200 pb-4 gap-3">
-        <div>
-          <div className="flex items-center gap-2 mb-1.5">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2 mb-1.5">
             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wider uppercase bg-zinc-100 text-zinc-700">
               <FileCheck2 className="w-3.5 h-3.5 text-zinc-700" />
               Document Readiness Cockpit
@@ -72,9 +72,9 @@ export function ChecklistPage() {
               Official Issuing Authorities
             </span>
           </div>
-          <h1 className="text-3xl font-extrabold text-zinc-900 tracking-tight flex items-center gap-2.5">
-            <ListChecks className="w-7 h-7 text-zinc-900" aria-hidden="true" />
-            <T id="checklist.title" />
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-zinc-900 tracking-tight flex items-center gap-2.5">
+            <ListChecks className="w-7 h-7 text-zinc-900 flex-shrink-0" aria-hidden="true" />
+            <span className="break-words"><T id="checklist.title" /></span>
           </h1>
           <div className="text-sm text-zinc-600 mt-1 max-w-xl">
             {activeScheme ? (
