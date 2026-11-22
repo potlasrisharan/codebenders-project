@@ -152,41 +152,47 @@ export function LandingPage() {
       </section>
 
       {/* AI & Multilingual Voice Roadmap Spotlight */}
-      <Card className="p-6 bg-gradient-to-r from-zinc-950 via-zinc-900 to-indigo-950 text-white rounded-3xl border border-zinc-800 shadow-md">
+      <section
+        className="p-6 sm:p-8 rounded-3xl border border-zinc-800 shadow-xl !text-white text-white relative overflow-hidden"
+        style={{
+          background: 'linear-gradient(135deg, #09090b 0%, #18181b 50%, #1e1b4b 100%)',
+          color: '#ffffff',
+        }}
+      >
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
-              <T id="landing.ai.badge" className="text-xs font-bold uppercase tracking-wider text-indigo-300" />
+              <T id="landing.ai.badge" className="text-xs font-bold uppercase tracking-wider text-indigo-300" primaryClassName="text-indigo-300" />
             </div>
-            <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-white">
-              <T id="landing.ai.title" secondaryClassName="text-zinc-400" />
+            <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight !text-white text-white">
+              <T id="landing.ai.title" className="!text-white text-white" primaryClassName="!text-white text-white" secondaryClassName="text-zinc-300" />
             </h2>
-            <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
-              <T id="landing.ai.desc" secondaryClassName="text-zinc-400" />
+            <p className="text-xs sm:text-sm text-zinc-200 leading-relaxed">
+              <T id="landing.ai.desc" className="text-zinc-200" primaryClassName="text-zinc-200" secondaryClassName="text-zinc-400" />
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-shrink-0 lg:w-96">
-            <div className="p-3.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/15 space-y-1">
-              <div className="flex items-center gap-1.5 text-emerald-400 text-xs font-bold">
-                <Mic className="w-4 h-4" /> <T id="landing.ai.sarvam.title" />
+            <div className="p-3.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 space-y-1">
+              <div className="flex items-center gap-1.5 text-emerald-300 text-xs font-bold">
+                <Mic className="w-4 h-4 text-emerald-400" /> <T id="landing.ai.sarvam.title" className="text-emerald-300 font-bold" primaryClassName="text-emerald-300 font-bold" />
               </div>
-              <p className="text-[11px] text-zinc-300">
-                <T id="landing.ai.sarvam.desc" secondaryClassName="text-zinc-400" />
+              <p className="text-[11px] text-zinc-200">
+                <T id="landing.ai.sarvam.desc" className="text-zinc-200" primaryClassName="text-zinc-200" secondaryClassName="text-zinc-400" />
               </p>
             </div>
-            <div className="p-3.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/15 space-y-1">
-              <div className="flex items-center gap-1.5 text-indigo-300 text-xs font-bold">
-                <Bot className="w-4 h-4" /> <T id="landing.ai.groq.title" />
+            <div className="p-3.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 space-y-1">
+              <div className="flex items-center gap-1.5 text-indigo-200 text-xs font-bold">
+                <Bot className="w-4 h-4 text-indigo-300" /> <T id="landing.ai.groq.title" className="text-indigo-200 font-bold" primaryClassName="text-indigo-200 font-bold" />
               </div>
-              <p className="text-[11px] text-zinc-300">
-                <T id="landing.ai.groq.desc" secondaryClassName="text-zinc-400" />
+              <p className="text-[11px] text-zinc-200">
+                <T id="landing.ai.groq.desc" className="text-zinc-200" primaryClassName="text-zinc-200" secondaryClassName="text-zinc-400" />
               </p>
             </div>
           </div>
         </div>
-      </Card>
+      </section>
 
       {/* 7 Core Scheme Sectors Evaluated */}
       <section className="space-y-4" aria-labelledby="sectors-heading">
