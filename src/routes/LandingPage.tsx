@@ -85,7 +85,7 @@ export function LandingPage() {
   ];
 
   return (
-    <div className="landing flex flex-col gap-10 max-w-5xl mx-auto py-3 px-3 sm:px-4">
+    <div className="landing flex flex-col gap-10 max-w-5xl mx-auto pt-1 pb-6 px-3 sm:px-4">
       {/* Editorial Hero Section */}
       <section
         className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-white via-zinc-50 to-indigo-50/25 border border-zinc-200/90 p-6 sm:p-10 shadow-xs"

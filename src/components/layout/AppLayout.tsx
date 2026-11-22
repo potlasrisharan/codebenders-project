@@ -226,7 +226,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
 
       {/* Main Content Area with Smooth Page Transition */}
       <main id="main-content" tabIndex={-1} className="page-fade flex-1 focus:outline-none">
-        <div className="container section max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6">{children}</div>
+        <div className="container max-w-6xl mx-auto px-3 sm:px-4 pt-2 sm:pt-4 pb-8 sm:pb-12">{children}</div>
       </main>
 
       {/* High-Craft Minimal Footer */}
