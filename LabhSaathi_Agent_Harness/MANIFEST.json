@@ -1,0 +1,263 @@
+{
+  "project": "LabhSaathi",
+  "version": "1.0",
+  "skill_count": 29,
+  "pdf_pages": 18,
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "size_bytes": 5127,
+      "sha256": "d8b37cfbfbc98150f345a64a47d2fade5f1c2d7ad7ae2d13a46f629966bfabaa"
+    },
+    {
+      "path": "FEATURE_BACKLOG.md",
+      "size_bytes": 2139,
+      "sha256": "afb1b0a145240c1616ebbd559a5804f1060bb4cdebb0f0ca65bad2b3960aa458"
+    },
+    {
+      "path": "LabhSaathi_Phase_Control.pdf",
+      "size_bytes": 84897,
+      "sha256": "097921ddde80fa99feffa3c7928d86b6fc61130407f20b6d9959378f37b3e454"
+    },
+    {
+      "path": "PHASE_CONTROL.md",
+      "size_bytes": 23860,
+      "sha256": "f85fffc30aecbbede2a2f6ae1ae7ac304b525e973bf2cd516fc49223b2d84279"
+    },
+    {
+      "path": "PRD_LabhSaathi.md",
+      "size_bytes": 35833,
+      "sha256": "753a498df37ed2fdd534313096e0cf03e0ac472570980370baccc9e363f82d3d"
+    },
+    {
+      "path": "PS5_REQUIREMENTS.md",
+      "size_bytes": 3766,
+      "sha256": "004713b83844c5ada68cd48bf3a97acc4d3328b4e4ff5a720d174ebfd69a2630"
+    },
+    {
+      "path": "README.md",
+      "size_bytes": 2117,
+      "sha256": "3852f9610ad36fa2c12c1851296a8ca031df5f4a7303731a68a4c1096fea3dd4"
+    },
+    {
+      "path": "agent/BOOTSTRAP_PROMPT.md",
+      "size_bytes": 1208,
+      "sha256": "245a17b919135c7d58c673fc7edcfa67fd140b7e1a5e4e91d42df7b50ef8248e"
+    },
+    {
+      "path": "agent/DECISIONS.md",
+      "size_bytes": 2331,
+      "sha256": "c28f533bfb3dbea7fb3ec7400ec3f439224d70d9b5978215253e4973456f6c91"
+    },
+    {
+      "path": "agent/INSTALLING_IN_NEXEN.md",
+      "size_bytes": 4171,
+      "sha256": "0421c7c0eade7100dd414dc8234a81f72b695770cab215c49fc1c469c69cb6fd"
+    },
+    {
+      "path": "agent/NEXEN_AGENT_CONFIG.md",
+      "size_bytes": 1530,
+      "sha256": "9ae4c2ba6a125b27f2812a08f6969a8800d864bfc730c6ba489cb7e124589c74"
+    },
+    {
+      "path": "agent/NEXEN_SYSTEM_PROMPT.md",
+      "size_bytes": 4525,
+      "sha256": "09ba583c193b9575397f005b0b933b9b4b99f4ba4b7984fc1e706224244e3ff9"
+    },
+    {
+      "path": "agent/PHASE_LEDGER_TEMPLATE.md",
+      "size_bytes": 997,
+      "sha256": "d000df634c889a1d7169d316e31def1e474d95a10463cad2eb34467a4dfa6778"
+    },
+    {
+      "path": "agent/SKILL_REGISTRY.md",
+      "size_bytes": 3055,
+      "sha256": "460cea500830b4defbd9295bfec1be0523f24e389f481452b6e2ca393777f29f"
+    },
+    {
+      "path": "docs/SKILL_SOURCES.md",
+      "size_bytes": 2012,
+      "sha256": "eb2496c28a5f4a32e2e2d74e7d296cf4a6f644561d8835f6da530a6f8c0f564a"
+    },
+    {
+      "path": "docs/UPSTREAM_SKILL_CATALOG.md",
+      "size_bytes": 2549,
+      "sha256": "3be3ea2c5c9fc3d10f3a4eef3845383525db0537131f923fcefb156a0451a34f"
+    },
+    {
+      "path": "evals/README.md",
+      "size_bytes": 705,
+      "sha256": "0d5e43287653be752c14ec958ed0e27447f030fee87003cb612dcbf67a1f989a"
+    },
+    {
+      "path": "evals/skill-evals.json",
+      "size_bytes": 29116,
+      "sha256": "ba5efbfdbe1bb21f00393e3ac10c58fc38ed534bf069fac7d064001910a4ebde"
+    },
+    {
+      "path": "skills/README.md",
+      "size_bytes": 909,
+      "sha256": "d53af43d711642125b26eca083b272fccbcead6b5414c7564de7ad9c2d5b2f03"
+    },
+    {
+      "path": "skills/academic-renewal-calendar/SKILL.md",
+      "size_bytes": 1911,
+      "sha256": "1939b00a73eb4d0dc5348a2c205b845b015019831b217220184873d835d1f3d8"
+    },
+    {
+      "path": "skills/citizen-experience-design/SKILL.md",
+      "size_bytes": 1964,
+      "sha256": "e9afa7fb917ef534a9c1ce2d96adfe31ba5b4357cddda07536f677b82d802510"
+    },
+    {
+      "path": "skills/cloudflare-migration-readiness/SKILL.md",
+      "size_bytes": 2333,
+      "sha256": "ea8fa50b9aa855b5499e6bcc7c0656aa8bd951fc3799389620db11d40b96278f"
+    },
+    {
+      "path": "skills/code-review/SKILL.md",
+      "size_bytes": 1832,
+      "sha256": "fcc6e8bee6a7b044a7bf9c96907ac7d09a6f6bac1f07ecc400d3e3440fb7618b"
+    },
+    {
+      "path": "skills/conversational-intake-accessibility/SKILL.md",
+      "size_bytes": 2190,
+      "sha256": "e78b69cec3ce44c749e3593ebd37b5485b6088114b135ca84ad7cb0e42f9bc44"
+    },
+    {
+      "path": "skills/credit-aware-execution/SKILL.md",
+      "size_bytes": 2075,
+      "sha256": "2bdbc9dc3e7292c646262ecd00a7610e22f93cb8bc2927b4b11f1b6750cc5335"
+    },
+    {
+      "path": "skills/data-modeling-migrations/SKILL.md",
+      "size_bytes": 2238,
+      "sha256": "270534a4b7a034c0038f7ad6381c1f8c460286d1117f19ee7e493f5a2809dff9"
+    },
+    {
+      "path": "skills/demo-readiness/SKILL.md",
+      "size_bytes": 2331,
+      "sha256": "833fb324ecc03262f7e3659f2e448ca04d8fe5dfdfbc2c62f81ec834950fae1f"
+    },
+    {
+      "path": "skills/document-readiness-application-workflow/SKILL.md",
+      "size_bytes": 1979,
+      "sha256": "a7be97878731a8780bd447fabc1793e23a0434366440d19b5becd89a756c2db1"
+    },
+    {
+      "path": "skills/eligibility-engine/SKILL.md",
+      "size_bytes": 2998,
+      "sha256": "92cd0e4f62a58425c64b3d2d90a99259d3ffe0dee77627e051fe228779ca5d1a"
+    },
+    {
+      "path": "skills/implementation-planning/SKILL.md",
+      "size_bytes": 2197,
+      "sha256": "6da80fb71a7694602db8a789f044710f7616ae06bdea92a79b0382072c43e0e3"
+    },
+    {
+      "path": "skills/local-first-architecture/SKILL.md",
+      "size_bytes": 2382,
+      "sha256": "931d960aeb4cd2839ce9a28c10799fc6e5d4961799cd8b7e36406a33f9db5204"
+    },
+    {
+      "path": "skills/middleman-shield-fee-transparency/SKILL.md",
+      "size_bytes": 2040,
+      "sha256": "3ddcf8ad22d9930fe1ed189b0865ecb23dd8e46c32c3ade0b3b0bd6227555a41"
+    },
+    {
+      "path": "skills/phase-gate-controller/SKILL.md",
+      "size_bytes": 2190,
+      "sha256": "27df09fccfb73380b9182a7155211c280afd2e2509a48d9d701d1b6a7c519f65"
+    },
+    {
+      "path": "skills/privacy-and-public-service-safety/SKILL.md",
+      "size_bytes": 2144,
+      "sha256": "26ee3e88be47d78d479b7f3d4f9cbae429ee5620cdbd4e951c28471c35f79bdd"
+    },
+    {
+      "path": "skills/product-discovery/SKILL.md",
+      "size_bytes": 2622,
+      "sha256": "397eae7150a03a976efd4afd0ad0b823c2618d14137812369a469d73997d1784"
+    },
+    {
+      "path": "skills/ps5-requirements-guardian/SKILL.md",
+      "size_bytes": 2427,
+      "sha256": "34304f1ae502dd5a5bee3f8b2baa936ccd4f1269e58ee9fd0dba8c5eef0db287"
+    },
+    {
+      "path": "skills/scheme-change-radar/SKILL.md",
+      "size_bytes": 1763,
+      "sha256": "a46b1c9976e45b2b9fdd8b234e24e98f9c2fcba3be720e42d3daab68eb29edd8"
+    },
+    {
+      "path": "skills/scheme-data-curation/SKILL.md",
+      "size_bytes": 2494,
+      "sha256": "4f14eaab83147c4a858077dd59bb366d653419f70299996cb28f98525623b9af"
+    },
+    {
+      "path": "skills/scheme-discovery-search/SKILL.md",
+      "size_bytes": 2118,
+      "sha256": "ece53e9a6f26961774606b4f765f990de7fa3a97824278420315baafca2b8206"
+    },
+    {
+      "path": "skills/sensitive-id-shield/SKILL.md",
+      "size_bytes": 3126,
+      "sha256": "2b3783fc3d037e861ce76b80dcd00d107fc1ee458c5270c64815ebfdfd8ec849"
+    },
+    {
+      "path": "skills/skill-authoring-and-evaluation/SKILL.md",
+      "size_bytes": 4104,
+      "sha256": "a81516fa414ef84138ba9e820678c232870b41380c30486e93f97522a19ee534"
+    },
+    {
+      "path": "skills/source-verification-versioning/SKILL.md",
+      "size_bytes": 2207,
+      "sha256": "768b8c00f1bddf2d72634288a9020795cfa83b6bede123b81c87c288b09c97c4"
+    },
+    {
+      "path": "skills/synthetic-personas-golden-tests/SKILL.md",
+      "size_bytes": 2254,
+      "sha256": "0330a8895b9f42113b7c47f55a4000174642022de4157efec9e41e6a3b88d699"
+    },
+    {
+      "path": "skills/systematic-debugging/SKILL.md",
+      "size_bytes": 1980,
+      "sha256": "03134e1f037f5e8ff1d359ca1e73d13dcf4f1dc227d609b34663ef8c98fb0f1c"
+    },
+    {
+      "path": "skills/test-driven-development/SKILL.md",
+      "size_bytes": 2197,
+      "sha256": "667ddac9727b003866a95e08f1ab6eb1cebf97773a041f1eb79a48615b686601"
+    },
+    {
+      "path": "skills/unified-eligibility-action-graph/SKILL.md",
+      "size_bytes": 2120,
+      "sha256": "108518a8e28818dcc9626a345cefb609fcda56ffdce71d8f96645e7a9f38901d"
+    },
+    {
+      "path": "skills/verification-before-completion/SKILL.md",
+      "size_bytes": 2068,
+      "sha256": "9470f8b5b3757c498b0d8050d96d5d8f63a03b5941df8d02710d8c24431ac2bf"
+    },
+    {
+      "path": "skills/whatsapp-checklist-sharing/SKILL.md",
+      "size_bytes": 1688,
+      "sha256": "1bf2027e850cf5a508d054b43d64ab17792e73f741bfec197ad2b5aa92162d00"
+    },
+    {
+      "path": "tools/build_skills.py",
+      "size_bytes": 58378,
+      "sha256": "28eb788e2411c60aa1b2329e1955411502e4dcfaba2acf48f8a0cf00e956e28f"
+    },
+    {
+      "path": "tools/create_phase_pdf.py",
+      "size_bytes": 26071,
+      "sha256": "2b4a5deef7e01be88d70157862de55e31273b62b591f881231b5501c6bf26a89"
+    },
+    {
+      "path": "tools/validate_harness.py",
+      "size_bytes": 3455,
+      "sha256": "d15790b4973d8fbe3e4b0286995fdcb96380a561e56e0b5611ae911a46bc3c51"
+    }
+  ]
+}
