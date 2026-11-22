@@ -10,6 +10,9 @@ import {
   BookmarkCheck,
   Shield,
   ExternalLink,
+  GraduationCap,
+  SlidersHorizontal,
+  Building2,
 } from 'lucide-react';
 import { useCitizenProfile } from '../core/profile/ProfileContext';
 import { defaultDiscoveryService } from '../core/discovery/discovery-service';
@@ -54,132 +57,191 @@ export function MatchesPage() {
     }
   };
 
+  const likelyCount = discoveryResult.items.filter((i) => i.eligibility.overallLabel === 'Likely eligible').length;
+  const needConfirmCount = discoveryResult.items.filter((i) => i.eligibility.overallLabel === 'Need to confirm').length;
+
   return (
-    <div className="stack matches-page max-w-4xl mx-auto py-4 px-2">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b pb-3 gap-2">
+    <div className="stack matches-page max-w-4xl mx-auto py-6 px-3 sm:px-4 space-y-6">
+      {/* Editorial Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-200 pb-4 gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-            <Search className="w-6 h-6 text-indigo-600" aria-hidden="true" />
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wider uppercase bg-zinc-100 text-zinc-700">
+              <GraduationCap className="w-3.5 h-3.5 text-zinc-700" />
+              Verified Schemes Catalog
+            </span>
+            <span className="text-[11px] font-medium text-zinc-500">
+              Deterministic 3-Valued Logic
+            </span>
+          </div>
+          <h1 className="text-3xl font-extrabold text-zinc-900 tracking-tight flex items-center gap-2.5">
+            <Search className="w-7 h-7 text-zinc-900" aria-hidden="true" />
             Matches
           </h1>
-          <p className="text-sm text-slate-600 mt-1">
-            Evaluating {discoveryResult.totalSchemesConsidered} public schemes with transparent rule-based logic.
+          <p className="text-sm text-zinc-600 mt-1 max-w-xl">
+            Evaluating {discoveryResult.totalSchemesConsidered} public schemes against your active profile. Zero AI hallucinations — only published official government criteria.
           </p>
         </div>
 
-        <Button variant="secondary" onClick={() => navigate('/intake')} className="text-xs">
-          Edit Profile
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="secondary"
+            onClick={() => navigate('/intake')}
+            className="text-xs px-3 py-2 btn-tactile flex items-center gap-1.5 border-zinc-300 hover:border-zinc-400"
+          >
+            <SlidersHorizontal className="w-3.5 h-3.5" />
+            Edit Profile
+          </Button>
+        </div>
+      </div>
+
+      {/* Real-time Match Metrics Strip */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+        <div className="p-3 bg-white border border-zinc-200 rounded-xl shadow-xs">
+          <span className="text-[11px] text-zinc-500 font-medium block">Total Evaluated</span>
+          <span className="text-xl font-extrabold text-zinc-900">{discoveryResult.totalSchemesConsidered}</span>
+        </div>
+        <div className="p-3 bg-emerald-50/70 border border-emerald-200 rounded-xl shadow-xs">
+          <span className="text-[11px] text-emerald-700 font-medium block">Likely Eligible</span>
+          <span className="text-xl font-extrabold text-emerald-800">{likelyCount}</span>
+        </div>
+        <div className="p-3 bg-amber-50/70 border border-amber-200 rounded-xl shadow-xs">
+          <span className="text-[11px] text-amber-700 font-medium block">Need to Confirm</span>
+          <span className="text-xl font-extrabold text-amber-800">{needConfirmCount}</span>
+        </div>
+        <div className="p-3 bg-zinc-50 border border-zinc-200 rounded-xl shadow-xs">
+          <span className="text-[11px] text-zinc-500 font-medium block">Saved in Tracker</span>
+          <span className="text-xl font-extrabold text-zinc-900">{savedSchemeIds.length}</span>
+        </div>
       </div>
 
       {/* Coverage Disclosure Notice (FR-DATA-11) */}
       {discoveryResult.coverageNotice && (
-        <div className="p-3 bg-amber-50 border border-amber-200 rounded text-xs text-amber-900 flex items-start gap-2">
+        <div className="p-3 bg-amber-50/90 border border-amber-200 rounded-xl text-xs text-amber-900 flex items-start gap-2.5 animate-slide-down-fade">
           <Shield className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
-          <div>
-            <strong>Jurisdiction Data Disclosure:</strong> {discoveryResult.coverageNotice}
+          <div className="leading-relaxed">
+            <strong className="font-bold">Jurisdiction Data Disclosure:</strong> {discoveryResult.coverageNotice}
           </div>
         </div>
       )}
 
       {/* Filter and Search Bar */}
-      <Card className="p-3 bg-white border-slate-200">
+      <Card className="p-4 bg-white border-zinc-200/90 shadow-xs space-y-3">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
           <div>
-            <label className="font-semibold text-slate-700 block mb-1">State / Jurisdiction:</label>
+            <label className="font-bold text-zinc-800 block mb-1">State / Jurisdiction:</label>
             <select
               value={selectedState}
               onChange={(e) => setSelectedState(e.target.value)}
-              className="w-full p-2 border border-slate-300 rounded bg-slate-50"
+              className="w-full p-2.5 border border-zinc-300 rounded-lg bg-zinc-50/70 focus:bg-white focus:ring-1 focus:ring-zinc-900 focus:outline-none"
             >
               {NATIONAL_STATE_COVERAGE.map((st) => (
                 <option key={st.stateCode} value={st.stateName}>
-                  {st.stateName} ({st.coverageStatus === 'covered' ? 'Verified' : 'Partial / Pending'})
+                  {st.stateName} ({st.coverageStatus === 'covered' ? 'Verified Catalog' : 'Partial / Pending'})
                 </option>
               ))}
             </select>
           </div>
 
           <div>
-            <label className="font-semibold text-slate-700 block mb-1">Category:</label>
+            <label className="font-bold text-zinc-800 block mb-1">Category Filter:</label>
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full p-2 border border-slate-300 rounded bg-slate-50"
+              className="w-full p-2.5 border border-zinc-300 rounded-lg bg-zinc-50/70 focus:bg-white focus:ring-1 focus:ring-zinc-900 focus:outline-none"
             >
               <option value="">All Categories</option>
-              <option value="scholarship">Scholarships & Education Aid</option>
-              <option value="fellowship">Fellowships & Higher Studies</option>
-              <option value="welfare">Welfare Support</option>
+              <option value="scholarship">Scholarships &amp; Fee Reimbursement</option>
+              <option value="fellowship">Fellowships &amp; Higher Studies</option>
+              <option value="welfare">Welfare &amp; Financial Support</option>
             </select>
           </div>
 
           <div>
-            <label className="font-semibold text-slate-700 block mb-1">Search Keywords:</label>
+            <label className="font-bold text-zinc-800 block mb-1">Search Keywords:</label>
             <div className="relative">
               <input
                 type="text"
                 value={searchKeyword}
                 onChange={(e) => setSearchKeyword(e.target.value)}
-                placeholder="Search scheme name, portal..."
-                className="w-full p-2 border border-slate-300 rounded pl-7"
+                placeholder="Search scheme name, portal, or department..."
+                className="w-full p-2.5 border border-zinc-300 rounded-lg pl-8 bg-zinc-50/70 focus:bg-white focus:ring-1 focus:ring-zinc-900 focus:outline-none"
               />
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2 top-2.5" />
+              <Search className="w-4 h-4 text-zinc-400 absolute left-2.5 top-3" />
             </div>
           </div>
         </div>
 
-        <div className="mt-2.5 pt-2 border-t flex items-center justify-between text-xs text-slate-500">
-          <label className="flex items-center gap-1.5 cursor-pointer">
+        <div className="pt-2.5 border-t border-zinc-100 flex items-center justify-between text-xs text-zinc-600">
+          <label className="flex items-center gap-2 cursor-pointer select-none">
             <input
               type="checkbox"
               checked={includeUnlikely}
               onChange={(e) => setIncludeUnlikely(e.target.checked)}
-              className="rounded text-indigo-600"
+              className="rounded text-zinc-900 focus:ring-zinc-900 w-4 h-4"
             />
-            <span>Show Unlikely schemes (useful to see why criteria failed)</span>
+            <span className="text-zinc-700">Show Unlikely schemes (helpful to understand why specific criteria were missed)</span>
           </label>
 
-          <span>Showing {discoveryResult.items.length} candidate schemes</span>
+          <span className="text-zinc-500 font-mono text-[11px]">
+            {discoveryResult.items.length} matching candidate schemes
+          </span>
         </div>
       </Card>
 
       {/* Discovered Schemes List */}
-      <div className="flex flex-col gap-4">
+      <div className="space-y-4">
         {discoveryResult.items.length === 0 ? (
-          <div className="p-8 text-center bg-white rounded border text-slate-500 text-sm">
-            <Filter className="w-8 h-8 text-slate-400 mx-auto mb-2" />
-            <p className="font-semibold">No schemes found matching this filter.</p>
-            <p className="text-xs text-slate-400 mt-1">Try clearing the search keyword or selecting a different category.</p>
+          <div className="p-10 text-center bg-white rounded-xl border border-zinc-200 text-zinc-500 text-sm space-y-2">
+            <Filter className="w-10 h-10 text-zinc-400 mx-auto mb-2" />
+            <p className="font-bold text-zinc-800 text-base">No schemes found matching this filter.</p>
+            <p className="text-xs text-zinc-500 max-w-sm mx-auto">
+              Try changing the state, clearing the search query, or selecting &quot;All Categories&quot;.
+            </p>
           </div>
         ) : (
           discoveryResult.items.map(({ scheme, eligibility, nearMatch }) => {
             const isSaved = savedSchemeIds.includes(scheme.id);
+            const satisfiedCount = eligibility.predicateTraces.filter((t) => t.result === 'true').length;
+            const totalCount = eligibility.predicateTraces.length;
+
+            const isLikely = eligibility.overallLabel === 'Likely eligible';
+            const isNeedConfirm = eligibility.overallLabel === 'Need to confirm';
+
             return (
               <Card
                 key={scheme.id}
-                className={`p-4 bg-white border transition-all hover:shadow-sm ${
-                  eligibility.overallLabel === 'Likely eligible'
-                    ? 'border-emerald-200'
-                    : eligibility.overallLabel === 'Need to confirm'
-                    ? 'border-amber-200'
-                    : 'border-slate-200'
+                className={`p-5 bg-white rounded-2xl border transition-all duration-200 card-interactive ${
+                  isLikely
+                    ? 'border-emerald-200 ring-1 ring-emerald-500/10'
+                    : isNeedConfirm
+                    ? 'border-amber-200 ring-1 ring-amber-500/10'
+                    : 'border-zinc-200'
                 }`}
               >
-                <div className="flex flex-col gap-3">
-                  {/* Top Bar: Jurisdiction & Status Chip */}
-                  <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-700">
+                <div className="flex flex-col gap-3.5">
+                  {/* Top Bar: Jurisdiction Pill, Department & Status Chip */}
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2.5">
+                    <div className="space-y-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700">
                           {scheme.jurisdiction === 'central' ? 'Central (All India)' : `${scheme.state} State`}
                         </span>
-                        <span className="text-[11px] text-slate-400">
-                          Version: {scheme.version} • Verified {scheme.lastVerifiedDate}
+                        <span className="text-[11px] text-zinc-500 flex items-center gap-1">
+                          <Building2 className="w-3 h-3 text-zinc-400" />
+                          {scheme.sources[0]?.department || 'Govt Department'}
+                        </span>
+                        <span className="text-zinc-300">•</span>
+                        <span className="text-[11px] text-zinc-400 font-mono">
+                          Verified {scheme.lastVerifiedDate} (v{scheme.version})
                         </span>
                       </div>
-                      <h2 className="text-base font-bold text-slate-900 leading-snug">
-                        <Link to={`/scheme/${scheme.id}`} className="hover:text-indigo-600">
+
+                      <h2 className="text-lg font-bold text-zinc-900 leading-snug">
+                        <Link
+                          to={`/scheme/${scheme.id}`}
+                          className="hover:text-zinc-600 transition-colors inline-flex items-center gap-1.5"
+                        >
                           {scheme.name}
                         </Link>
                       </h2>
@@ -190,48 +252,57 @@ export function MatchesPage() {
                     </div>
                   </div>
 
-                  <p className="text-xs text-slate-600 line-clamp-2">{scheme.shortDescription}</p>
+                  <p className="text-xs text-zinc-600 leading-relaxed line-clamp-2">
+                    {scheme.shortDescription}
+                  </p>
 
                   {/* Near Match Insight Banner if 1-condition miss */}
                   {nearMatch.isNearMatch && (
-                    <div className="p-2.5 rounded bg-indigo-50/70 border border-indigo-200 text-xs text-indigo-950 flex items-start gap-2">
-                      <Sparkles className="w-4 h-4 text-indigo-600 flex-shrink-0 mt-0.5" />
-                      <div>
-                        <strong>Near-Match Discovery:</strong> {nearMatch.advice}
+                    <div className="p-3 rounded-xl bg-amber-50/80 border border-amber-200 text-xs text-amber-950 flex items-start gap-2.5 animate-scale-in">
+                      <Sparkles className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                      <div className="leading-relaxed">
+                        <strong className="font-bold text-amber-900">Near-Match Discovery:</strong> {nearMatch.advice}
                       </div>
                     </div>
                   )}
 
-                  {/* Summary of Evaluation */}
-                  <div className="p-2.5 bg-slate-50 rounded border border-slate-100 text-xs flex flex-col gap-1">
-                    <p className="text-slate-800 font-medium">{eligibility.summaryExplanation}</p>
-                    <div className="flex flex-wrap gap-2 text-[11px] text-slate-500 mt-1">
-                      <span>Conditions satisfied: <strong>{eligibility.predicateTraces.filter((t) => t.result === 'true').length} / {eligibility.predicateTraces.length}</strong></span>
+                  {/* Rule Evaluation Summary Card */}
+                  <div className="p-3 bg-zinc-50/80 rounded-xl border border-zinc-100 text-xs space-y-1.5">
+                    <p className="text-zinc-800 font-medium leading-relaxed">
+                      {eligibility.summaryExplanation}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-2 text-[11px] text-zinc-500 pt-1 border-t border-zinc-100/80">
+                      <span className="inline-flex items-center gap-1 font-semibold text-zinc-800">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                        Rules satisfied: {satisfiedCount} of {totalCount}
+                      </span>
                       {eligibility.missingAttributes.length > 0 && (
-                        <span className="text-amber-700">
-                          • Needs confirmation: {eligibility.missingAttributes.join(', ')}
+                        <span className="text-amber-800 font-medium">
+                          • Pending info: {eligibility.missingAttributes.join(', ')}
                         </span>
                       )}
                       {eligibility.failedAttributes.length > 0 && (
-                        <span className="text-rose-700">
-                          • Unmet: {eligibility.failedAttributes.join(', ')}
+                        <span className="text-rose-700 font-medium">
+                          • Unmet criteria: {eligibility.failedAttributes.join(', ')}
                         </span>
                       )}
                     </div>
                   </div>
 
                   {/* Footer Action Bar */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-2 border-t border-slate-100 gap-2">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-3 border-t border-zinc-100 gap-3">
                     <div className="flex items-center gap-3 text-xs">
-                      <span className="font-semibold text-emerald-700 flex items-center gap-1">
-                        <CheckCircle2 className="w-3.5 h-3.5" />
-                        {scheme.feeStatus === 'free_verified' ? '100% Free Official Application' : scheme.feeDetails}
+                      <span className="font-semibold text-emerald-700 flex items-center gap-1.5">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                        {scheme.feeStatus === 'free_verified'
+                          ? 'Official Application is 100% Free'
+                          : scheme.feeDetails}
                       </span>
                       <a
                         href={scheme.sources[0]?.portalUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-slate-500 hover:text-slate-800 inline-flex items-center gap-1"
+                        className="text-zinc-500 hover:text-zinc-900 inline-flex items-center gap-1 transition-colors text-[11px]"
                       >
                         Official Portal <ExternalLink className="w-3 h-3" />
                       </a>
@@ -241,19 +312,23 @@ export function MatchesPage() {
                       <button
                         type="button"
                         onClick={() => handleToggleSave(scheme.id)}
-                        className={`text-xs px-3 py-1.5 rounded border flex items-center gap-1.5 transition-colors ${
+                        className={`text-xs px-3.5 py-1.5 rounded-lg border flex items-center gap-1.5 font-medium transition-all btn-tactile ${
                           isSaved
-                            ? 'bg-emerald-50 text-emerald-800 border-emerald-300 font-semibold'
-                            : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50'
+                            ? 'bg-emerald-50 text-emerald-800 border-emerald-300 font-bold'
+                            : 'bg-white text-zinc-700 border-zinc-300 hover:bg-zinc-50'
                         }`}
                       >
-                        {isSaved ? <BookmarkCheck className="w-3.5 h-3.5" /> : <Bookmark className="w-3.5 h-3.5" />}
+                        {isSaved ? (
+                          <BookmarkCheck className="w-3.5 h-3.5 text-emerald-600" />
+                        ) : (
+                          <Bookmark className="w-3.5 h-3.5 text-zinc-500" />
+                        )}
                         {isSaved ? 'Saved in Tracker' : 'Save'}
                       </button>
 
                       <Link
                         to={`/scheme/${scheme.id}`}
-                        className="text-xs px-3 py-1.5 rounded bg-indigo-600 hover:bg-indigo-700 text-white font-medium inline-flex items-center gap-1 transition-colors"
+                        className="text-xs px-3.5 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-white font-semibold inline-flex items-center gap-1.5 transition-colors shadow-xs btn-tactile"
                       >
                         <span>View Action Graph</span>
                         <ArrowRight className="w-3.5 h-3.5" />
