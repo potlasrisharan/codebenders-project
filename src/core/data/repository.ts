@@ -76,7 +76,18 @@ export class SchemeRepository {
   }
 
   getAll(): SchemeRecord[] {
-    return this.schemes.filter((s) => s.verificationStatus === 'verified');
+    return this.schemes.filter((s) => s.verificationStatus === 'verified' || !s.verificationStatus);
+  }
+
+  addSchemes(newSchemes: SchemeRecord[]): void {
+    const existingIds = new Set(this.schemes.map((s) => s.id));
+    for (const s of newSchemes) {
+      if (!existingIds.has(s.id)) {
+        s.verificationStatus = s.verificationStatus || 'verified';
+        this.schemes.push(s);
+        existingIds.add(s.id);
+      }
+    }
   }
 
   getAllIncludingDrafts(): SchemeRecord[] {
@@ -92,9 +103,18 @@ export class SchemeRepository {
   }
 
   getByState(state: string): SchemeRecord[] {
+    if (
+      !state ||
+      state === 'All India' ||
+      state === 'All' ||
+      state.toLowerCase() === 'all states' ||
+      state.toLowerCase().includes('all india')
+    ) {
+      return this.getAll();
+    }
     return this.schemes.filter(
       (s) =>
-        s.verificationStatus === 'verified' &&
+        (s.verificationStatus === 'verified' || !s.verificationStatus) &&
         (s.state.toLowerCase() === state.toLowerCase() ||
           s.jurisdiction === 'central' ||
           s.state === 'All India')

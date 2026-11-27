@@ -191,9 +191,9 @@ export const UnifiedActionGraph: React.FC<UnifiedActionGraphProps> = ({
                       title: 'Official Portal Registration',
                       category: 'Application',
                       status: 'pending',
-                      source: scheme.sources[0]?.name,
-                      portalUrl: scheme.sources[0]?.portalUrl,
-                      explanation: `Apply directly on ${scheme.sources[0]?.portalUrl}. Step 1 is online submission followed by college biometric verification.`,
+                      source: scheme.sources?.[0]?.name || scheme.department || 'Official Portal',
+                      portalUrl: scheme.sources?.[0]?.portalUrl || scheme.portalUrl,
+                      explanation: `Apply directly on ${scheme.sources?.[0]?.portalUrl || scheme.portalUrl || 'official portal'}. Step 1 is online submission followed by college biometric verification.`,
                     })
                   }
                   className="text-left p-2.5 rounded border border-blue-200 bg-blue-50 text-blue-950 hover:bg-blue-100 text-xs shadow-sm flex items-center justify-between gap-2"
@@ -213,7 +213,7 @@ export const UnifiedActionGraph: React.FC<UnifiedActionGraphProps> = ({
                         title: 'Academic-Year Renewal Cycle',
                         category: 'Follow-up',
                         status: 'pending',
-                        source: scheme.sources[0]?.name,
+                        source: scheme.sources?.[0]?.name || scheme.department || 'Official Portal',
                         explanation: `Renew annually between ${scheme.renewalWindow || 'August and November'}. Ensure 75% quarterly attendance is maintained.`,
                       })
                     }

@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://codebenders-project.potlasrisharanchowdary.workers.dev/sitemap.xml

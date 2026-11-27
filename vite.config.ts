@@ -1,6 +1,7 @@
 /// <reference types="vitest/config" />
 import { defineConfig, Plugin } from "vite";
 import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { app } from "./worker/index";
 
@@ -66,7 +67,7 @@ function honoDevPlugin(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [react(), honoDevPlugin()],
+  plugins: [tailwindcss(), react(), honoDevPlugin()],
   test: {
     environment: "jsdom",
     globals: true,

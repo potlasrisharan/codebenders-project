@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { app } from '../../worker/index';
 import { GOLDEN_PERSONAS } from '../../src/core/profile/citizen-profile';
+import type { D1Database } from '../../worker/types';
 
 describe('Hono API Backend (/api/v1)', () => {
   it('GET /api/v1/health returns status ok', async () => {
@@ -122,5 +123,156 @@ describe('Hono API Backend (/api/v1)', () => {
     expect(data.diffs.length).toBeGreaterThan(0);
     expect(data.diffs[0].newVersion).toBe('2025-26.v1');
     expect(data.diffs[0].changeSummary).toContain('Income ceiling');
+  });
+
+  describe('D1-powered Scheme Search & Metadata Endpoints', () => {
+    it('GET /api/v1/schemes/search returns filtered results from fallback repository', async () => {
+      const res = await app.request('/api/v1/schemes/search?q=scholarship&state=Telangana');
+      expect(res.status).toBe(200);
+
+      const data = await res.json();
+      expect(data.count).toBeGreaterThan(0);
+      expect(data.data.some((s: { id: string }) => s.id === 'ts-epass-rtf-2026')).toBe(true);
+      expect(data.source).toBe('in_memory');
+    });
+
+    it('POST /api/v1/schemes/search supports JSON discovery request', async () => {
+      const res = await app.request('/api/v1/schemes/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          q: 'fee reimbursement',
+          state: 'Telangana',
+          limit: 5,
+        }),
+      });
+      expect(res.status).toBe(200);
+
+      const data = await res.json();
+      expect(data.count).toBeGreaterThan(0);
+      expect(data.data[0].id).toBe('ts-epass-rtf-2026');
+    });
+
+    it('GET /api/v1/schemes/categories returns category statistics', async () => {
+      const res = await app.request('/api/v1/schemes/categories');
+      expect(res.status).toBe(200);
+
+      const data = await res.json();
+      expect(Array.isArray(data.data)).toBe(true);
+      expect(data.data.some((c: { category: string; count: number }) => c.category === 'scholarship')).toBe(true);
+      expect(data.total).toBeGreaterThan(0);
+    });
+
+    it('GET /api/v1/schemes/states returns state distribution statistics', async () => {
+      const res = await app.request('/api/v1/schemes/states');
+      expect(res.status).toBe(200);
+
+      const data = await res.json();
+      expect(Array.isArray(data.data)).toBe(true);
+      expect(data.data.some((s: { state: string; count: number }) => s.state === 'Telangana')).toBe(true);
+      expect(data.total).toBeGreaterThan(0);
+    });
+
+    it('GET /api/v1/schemes/:id/sources returns verified provenance sources', async () => {
+      const res = await app.request('/api/v1/schemes/ts-epass-rtf-2026/sources');
+      expect(res.status).toBe(200);
+
+      const data = await res.json();
+      expect(data.schemeId).toBe('ts-epass-rtf-2026');
+      expect(data.sources.length).toBeGreaterThan(0);
+      expect(data.sources[0].portalUrl).toBe('https://telanganaepass.cgg.gov.in');
+    });
+
+    it('queries D1 database using FTS5 when DB binding is present', async () => {
+      const mockD1 = {
+        prepare: () => ({
+          bind: () => ({
+            all: async () => ({
+              results: [
+                {
+                  id: 'd1-mock-scheme-1',
+                  slug: 'd1-mock-scheme-1',
+                  name: 'D1 FTS5 Verified Scheme',
+                  short_description: 'Scholarship funded via D1 FTS5',
+                  category: 'scholarship',
+                  jurisdiction: 'central',
+                  state: 'All India',
+                  fee_status: 'free_verified',
+                  rules_json: JSON.stringify([{ parameter: 'income', operator: 'LESS_THAN_OR_EQUAL', expectedValue: 200000 }]),
+                  documents_json: JSON.stringify([{ id: 'd1', name: 'Income Certificate', requirementType: 'mandatory' }]),
+                  steps_json: JSON.stringify([{ stepNumber: 1, title: 'Apply on portal', channel: 'online_portal' }]),
+                  rank: -1.25,
+                },
+              ],
+              success: true,
+            }),
+            first: async () => ({ total: 1 }),
+          }),
+        }),
+      };
+
+      const res = await app.request('/api/v1/schemes/search?q=scholarship', undefined, { DB: mockD1 as unknown as D1Database });
+      expect(res.status).toBe(200);
+
+      const data = await res.json();
+      expect(data.source).toBe('d1_fts5');
+      expect(data.count).toBe(1);
+      expect(data.data[0].id).toBe('d1-mock-scheme-1');
+      expect(data.data[0].rules.length).toBe(1);
+      expect(data.data[0].documents.length).toBe(1);
+      expect(data.data[0].applicationSteps.length).toBe(1);
+    });
+
+    it('falls back to LIKE when D1 FTS5 query throws a syntax error', async () => {
+      let ftsAttempted = false;
+      const mockD1 = {
+        prepare: (query: string) => {
+          if (query.includes('schemes_fts MATCH')) {
+            ftsAttempted = true;
+            return {
+              bind: () => ({
+                all: async () => {
+                  throw new Error('fts5: syntax error near "-"');
+                },
+                first: async () => {
+                  throw new Error('fts5: syntax error near "-"');
+                },
+              }),
+            };
+          }
+          // LIKE query fallback
+          return {
+            bind: () => ({
+              all: async () => ({
+                results: [
+                  {
+                    id: 'd1-like-scheme-1',
+                    name: 'D1 Like Matched Scheme',
+                    short_description: 'Matched through safe LIKE fallback',
+                    category: 'welfare',
+                    jurisdiction: 'state',
+                    state: 'Telangana',
+                    rules_json: '[]',
+                    documents_json: '[]',
+                    steps_json: '[]',
+                  },
+                ],
+                success: true,
+              }),
+              first: async () => ({ total: 1 }),
+            }),
+          };
+        },
+      };
+
+      const res = await app.request('/api/v1/schemes/search?q=syntax-error-query', undefined, { DB: mockD1 as unknown as D1Database });
+      expect(res.status).toBe(200);
+
+      const data = await res.json();
+      expect(ftsAttempted).toBe(true);
+      expect(data.source).toBe('d1_like');
+      expect(data.count).toBe(1);
+      expect(data.data[0].id).toBe('d1-like-scheme-1');
+    });
   });
 });

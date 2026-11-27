@@ -8,12 +8,13 @@ interface ProfileContextType {
   loadGoldenPersona: (index: number) => void;
   resetProfile: () => void;
   activePersonaName?: string;
+  hasCompletedIntake: boolean;
 }
 
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
 export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Initialize with Priya (Telangana student pilot persona) by default for seamless demo
+  // Start with clean empty profile by default until citizen takes intake or loads demo persona
   const [profile, setProfileState] = useState<CitizenProfile>(() => {
     if (typeof window !== 'undefined' && window.localStorage) {
       try {
@@ -23,20 +24,35 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ child
         // fallback
       }
     }
-    return GOLDEN_PERSONAS[0].profile;
+    return EMPTY_CITIZEN_PROFILE;
   });
 
-  const [activePersonaName, setActivePersonaName] = useState<string | undefined>(GOLDEN_PERSONAS[0].name);
+  const [activePersonaName, setActivePersonaName] = useState<string | undefined>(() => {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      try {
+        const saved = window.localStorage.getItem('labhsaathi_active_persona_name');
+        if (saved) return saved;
+      } catch {
+        // fallback
+      }
+    }
+    return undefined;
+  });
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.localStorage) {
       try {
         window.localStorage.setItem('labhsaathi_active_profile_v1', JSON.stringify(profile));
+        if (activePersonaName) {
+          window.localStorage.setItem('labhsaathi_active_persona_name', activePersonaName);
+        } else {
+          window.localStorage.removeItem('labhsaathi_active_persona_name');
+        }
       } catch {
         // ignore
       }
     }
-  }, [profile]);
+  }, [profile, activePersonaName]);
 
   const setProfile = (newProfile: CitizenProfile) => {
     setProfileState(newProfile);
@@ -45,7 +61,6 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const updateProfile = (updates: Partial<CitizenProfile>) => {
     setProfileState((prev) => ({ ...prev, ...updates }));
-    setActivePersonaName(undefined);
   };
 
   const loadGoldenPersona = (index: number) => {
@@ -58,7 +73,17 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const resetProfile = () => {
     setProfileState({ ...EMPTY_CITIZEN_PROFILE });
     setActivePersonaName(undefined);
+    if (typeof window !== 'undefined' && window.localStorage) {
+      try {
+        window.localStorage.removeItem('labhsaathi_active_profile_v1');
+        window.localStorage.removeItem('labhsaathi_active_persona_name');
+      } catch {
+        // ignore
+      }
+    }
   };
+
+  const hasCompletedIntake = Boolean(profile.occupation || activePersonaName);
 
   return (
     <ProfileContext.Provider
@@ -69,6 +94,7 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ child
         loadGoldenPersona,
         resetProfile,
         activePersonaName,
+        hasCompletedIntake,
       }}
     >
       {children}

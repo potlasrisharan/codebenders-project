@@ -3,8 +3,10 @@ import { defaultSchemeRepository } from '../../src/core/data/repository';
 import { evaluateSchemeEligibility } from '../../src/core/engine/eligibility-engine';
 import { defaultDiscoveryService } from '../../src/core/discovery/discovery-service';
 import { CitizenProfile } from '../../src/core/profile/citizen-profile';
+import { mapDbRowToScheme } from './schemes';
+import type { Env, SchemeDbRow } from '../types';
 
-export const eligibilityRouter = new Hono();
+export const eligibilityRouter = new Hono<{ Bindings: Env }>();
 
 // POST /api/v1/eligibility/evaluate
 eligibilityRouter.post('/evaluate', async (c) => {
@@ -15,7 +17,21 @@ eligibilityRouter.post('/evaluate', async (c) => {
     return c.json({ error: 'INVALID_INPUT', message: 'Both "schemeId" and "profile" are required.' }, 400);
   }
 
-  const scheme = defaultSchemeRepository.getById(schemeId) || defaultSchemeRepository.getBySlug(schemeId);
+  let scheme = defaultSchemeRepository.getById(schemeId) || defaultSchemeRepository.getBySlug(schemeId);
+
+  if (!scheme && c.env?.DB) {
+    try {
+      const row = await c.env.DB.prepare(
+        'SELECT * FROM schemes WHERE id = ? OR slug = ? LIMIT 1'
+      ).bind(schemeId, schemeId).first<SchemeDbRow>();
+      if (row) {
+        scheme = mapDbRowToScheme(row) as unknown as typeof scheme;
+      }
+    } catch {
+      // safe fallback
+    }
+  }
+
   if (!scheme) {
     return c.json({ error: 'SCHEME_NOT_FOUND', message: `No verified scheme found with ID "${schemeId}".` }, 404);
   }

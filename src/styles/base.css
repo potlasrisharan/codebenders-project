@@ -1,44 +1,145 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-body {
-  margin: 0;
-  font-family: var(--font-sans);
-  font-size: 1rem;
-  line-height: 1.6;
-  color: var(--color-text);
-  background: var(--color-surface);
-}
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
 
-h1 {
-  font-size: 2.25rem;
-  font-weight: 700;
-  line-height: 1.15;
-  margin: 0 0 var(--space-3);
-}
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-text);
+    background: var(--color-surface);
+    overflow-x: hidden;
+    min-width: 0;
+    width: 100%;
+    max-width: 100vw;
+  }
 
-h2 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0 0 var(--space-2);
-}
+  h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1.15;
+    margin: 0 0 var(--space-3);
+  }
 
-img,
-svg {
-  max-width: 100%;
-  height: auto;
-}
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 var(--space-2);
+  }
 
-a {
-  color: var(--color-accent);
-}
+  img,
+  svg {
+    max-width: 100%;
+    height: auto;
+  }
 
-:focus-visible {
-  outline: 2px solid var(--color-focus);
-  outline-offset: 2px;
+  a:not(.btn):not([class*="btn"]):not([class*="bg-"]):not([class*="text-white"]):not([class*="!text-white"]) {
+    color: var(--color-accent);
+  }
+
+  /* Universal high-contrast visible text and icons for all primary and dark action buttons/links */
+  .btn--primary,
+  a.btn--primary,
+  button.btn--primary,
+  .btn-primary,
+  a.btn-primary,
+  button.btn-primary,
+  a[class*="bg-zinc-9"],
+  a[class*="bg-zinc-8"],
+  a[class*="bg-black"],
+  a[class*="bg-indigo-9"],
+  a[class*="bg-slate-9"],
+  button[class*="bg-zinc-9"],
+  button[class*="bg-zinc-8"],
+  button[class*="bg-black"],
+  button[class*="bg-indigo-9"],
+  button[class*="bg-slate-9"],
+  a.text-white,
+  a.\!text-white,
+  a[class*="text-white"],
+  button.text-white,
+  button.\!text-white,
+  button[class*="text-white"] {
+    color: #ffffff !important;
+  }
+
+  .btn--primary *,
+  a.btn--primary *,
+  button.btn--primary *,
+  .btn-primary *,
+  a.btn-primary *,
+  button.btn-primary *,
+  a[class*="bg-zinc-9"] *:not([class*="text-zinc-300"]):not([class*="text-zinc-400"]):not([class*="text-emerald-"]):not([class*="text-amber-"]):not([class*="text-rose-"]),
+  a[class*="bg-zinc-8"] *:not([class*="text-zinc-300"]):not([class*="text-zinc-400"]):not([class*="text-emerald-"]):not([class*="text-amber-"]):not([class*="text-rose-"]),
+  a[class*="bg-black"] *:not([class*="text-zinc-300"]):not([class*="text-zinc-400"]):not([class*="text-emerald-"]):not([class*="text-amber-"]):not([class*="text-rose-"]),
+  a[class*="bg-indigo-9"] *:not([class*="text-zinc-300"]):not([class*="text-zinc-400"]):not([class*="text-emerald-"]):not([class*="text-amber-"]):not([class*="text-rose-"]),
+  button[class*="bg-zinc-9"] *:not([class*="text-zinc-300"]):not([class*="text-zinc-400"]):not([class*="text-emerald-"]):not([class*="text-amber-"]):not([class*="text-rose-"]),
+  button[class*="bg-zinc-8"] *:not([class*="text-zinc-300"]):not([class*="text-zinc-400"]):not([class*="text-emerald-"]):not([class*="text-amber-"]):not([class*="text-rose-"]),
+  button[class*="bg-black"] *:not([class*="text-zinc-300"]):not([class*="text-zinc-400"]):not([class*="text-emerald-"]):not([class*="text-amber-"]):not([class*="text-rose-"]),
+  button[class*="bg-indigo-9"] *:not([class*="text-zinc-300"]):not([class*="text-zinc-400"]):not([class*="text-emerald-"]):not([class*="text-amber-"]):not([class*="text-rose-"]),
+  a.text-white *:not([class*="text-zinc-300"]):not([class*="text-zinc-400"]):not([class*="text-emerald-"]):not([class*="text-amber-"]):not([class*="text-rose-"]),
+  a.\!text-white *:not([class*="text-zinc-300"]):not([class*="text-zinc-400"]):not([class*="text-emerald-"]):not([class*="text-amber-"]):not([class*="text-rose-"]),
+  a[class*="text-white"] *:not([class*="text-zinc-300"]):not([class*="text-zinc-400"]):not([class*="text-emerald-"]):not([class*="text-amber-"]):not([class*="text-rose-"]),
+  button.text-white *:not([class*="text-zinc-300"]):not([class*="text-zinc-400"]):not([class*="text-emerald-"]):not([class*="text-amber-"]):not([class*="text-rose-"]),
+  button.\!text-white *:not([class*="text-zinc-300"]):not([class*="text-zinc-400"]):not([class*="text-emerald-"]):not([class*="text-amber-"]):not([class*="text-rose-"]),
+  button[class*="text-white"] *:not([class*="text-zinc-300"]):not([class*="text-zinc-400"]):not([class*="text-emerald-"]):not([class*="text-amber-"]):not([class*="text-rose-"]) {
+    color: inherit;
+  }
+
+  .btn--primary svg,
+  a.btn--primary svg,
+  button.btn--primary svg,
+  a[class*="bg-zinc-9"] svg:not([class*="text-emerald-"]):not([class*="text-amber-"]):not([class*="text-rose-"]),
+  a[class*="bg-zinc-8"] svg:not([class*="text-emerald-"]):not([class*="text-amber-"]):not([class*="text-rose-"]),
+  a[class*="bg-black"] svg:not([class*="text-emerald-"]):not([class*="text-amber-"]):not([class*="text-rose-"]),
+  button[class*="bg-zinc-9"] svg:not([class*="text-emerald-"]):not([class*="text-amber-"]):not([class*="text-rose-"]),
+  button[class*="bg-zinc-8"] svg:not([class*="text-emerald-"]):not([class*="text-amber-"]):not([class*="text-rose-"]),
+  button[class*="bg-black"] svg:not([class*="text-emerald-"]):not([class*="text-amber-"]):not([class*="text-rose-"]),
+  a.text-white svg:not([class*="text-emerald-"]):not([class*="text-amber-"]):not([class*="text-rose-"]),
+  button.text-white svg:not([class*="text-emerald-"]):not([class*="text-amber-"]):not([class*="text-rose-"]) {
+    color: #ffffff;
+    stroke: currentColor;
+  }
+
+  .btn--primary:hover,
+  .btn--primary:focus,
+  .btn--primary:active,
+  a.btn--primary:hover,
+  a.btn--primary:focus,
+  a.btn--primary:active,
+  button.btn--primary:hover,
+  button.btn--primary:focus,
+  button.btn--primary:active {
+    color: #ffffff !important;
+  }
+
+  .btn--primary:hover *,
+  .btn--primary:focus *,
+  .btn--primary:active *,
+  a.btn--primary:hover *,
+  a.btn--primary:focus *,
+  a.btn--primary:active *,
+  button.btn--primary:hover *,
+  button.btn--primary:focus *,
+  button.btn--primary:active * {
+    color: inherit;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
 }
 
 .sr-only {

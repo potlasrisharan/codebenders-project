@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   evaluateSchemeEligibility,
+  evaluatePredicate,
   kleeneAnd,
   kleeneOr,
   assertValidLikelihoodLabel,
@@ -144,6 +145,28 @@ describe('Three-Valued Eligibility Engine & Golden Tests (P5)', () => {
       expect(profile.domicileState).toBe('Telangana');
       expect(profile.educationLevel).toBe('undergraduate');
       expect(profile.familyIncome).toBe(200000);
+    });
+
+    it('evaluates BETWEEN operator for age ranges correctly', () => {
+      const studentWithAge = { ...GOLDEN_PERSONAS[0].profile, age: 19 };
+      const rule = {
+        id: 'rule-apy-age',
+        parameter: 'age',
+        operator: 'BETWEEN' as const,
+        expectedValue: [18, 40],
+        isMandatory: true,
+        conditionName: 'Age between 18 and 40',
+        sourceClause: 'PFRDA Act Clause 3.1',
+      };
+      const trace = evaluatePredicate(rule, studentWithAge);
+      expect(trace.result).toBe('true');
+      expect(trace.explanation).toContain('is within the required range');
+
+      // Test out of range
+      const olderProfile = { ...studentWithAge, age: 55 };
+      const failTrace = evaluatePredicate(rule, olderProfile);
+      expect(failTrace.result).toBe('false');
+      expect(failTrace.explanation).toContain('is outside the allowed range');
     });
   });
 });

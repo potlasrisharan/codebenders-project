@@ -50,6 +50,11 @@ export function inspectSensitiveIds(rawInput: string): ShieldInspectionResult {
   let match: RegExpExecArray | null;
   const aadhaarRegex = new RegExp(AADHAAR_REGEX);
   while ((match = aadhaarRegex.exec(rawInput)) !== null) {
+    const digitsOnly = match[0].replace(/[\s-]/g, '');
+    // Ignore if it's a 12-digit Indian mobile number with 91 country code prefix (91 + 10 digits starting with 6, 7, 8, or 9)
+    if (/^91[6-9]\d{9}$/.test(digitsOnly)) {
+      continue;
+    }
     violations.push({
       type: 'AADHAAR_PATTERN',
       description: 'Pattern resembles a 12-digit national identity number (Aadhaar).',
@@ -84,7 +89,11 @@ export function inspectSensitiveIds(rawInput: string): ShieldInspectionResult {
 
   // Redact matches from safeText
   let safeText = rawInput;
-  safeText = safeText.replace(AADHAAR_REGEX, '[REDACTED_AADHAAR_PATTERN]');
+  safeText = safeText.replace(AADHAAR_REGEX, (m) => {
+    const digitsOnly = m.replace(/[\s-]/g, '');
+    if (/^91[6-9]\d{9}$/.test(digitsOnly)) return m;
+    return '[REDACTED_AADHAAR_PATTERN]';
+  });
   safeText = safeText.replace(PAN_REGEX, '[REDACTED_PAN_PATTERN]');
   safeText = safeText.replace(VOTER_ID_REGEX, '[REDACTED_VOTER_ID_PATTERN]');
 

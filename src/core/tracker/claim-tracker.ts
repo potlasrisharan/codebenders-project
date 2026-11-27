@@ -88,7 +88,7 @@ export class ClaimTrackerService {
       id: `claim_${scheme.id}_${Date.now()}`,
       schemeId: scheme.id,
       schemeName: scheme.name,
-      officialPortalUrl: scheme.sources[0]?.portalUrl || '',
+      officialPortalUrl: scheme.sources?.[0]?.portalUrl || scheme.portalUrl || '',
       savedAt: new Date().toISOString(),
       stage: 'preparing',
       completedDocumentIds: [],
@@ -147,7 +147,7 @@ export class ClaimTrackerService {
           academicYear: '2026-27',
           windowDescription: scheme.renewalWindow,
           status: 'open_now',
-          officialSourceUrl: scheme.sources[0]?.portalUrl || '',
+          officialSourceUrl: scheme.sources?.[0]?.portalUrl || scheme.portalUrl || '',
           mandatoryRequirements: scheme.documents
             .filter((d) => d.requirementType === 'mandatory')
             .map((d) => d.name),
@@ -164,7 +164,7 @@ export class ClaimTrackerService {
   } {
     const sanitizedText = sanitizeSharePayload({
       schemeName: scheme.name,
-      officialPortalUrl: scheme.sources[0]?.portalUrl || '',
+      officialPortalUrl: scheme.sources?.[0]?.portalUrl || scheme.portalUrl || '',
       checklistItems: scheme.documents.map((d) => `${d.name} (${d.requirementType})`),
       notes: customNote,
     });

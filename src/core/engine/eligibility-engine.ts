@@ -63,11 +63,93 @@ export function kleeneOr(a: TriState, b: TriState): TriState {
   return 'false';
 }
 
+function formatNumericParam(param: string, val: number): string {
+  const lower = param.toLowerCase();
+  if (lower.includes('income') || lower.includes('fee') || lower.includes('turnover') || lower.includes('amount')) {
+    return `₹${val.toLocaleString('en-IN')}`;
+  }
+  if (lower.includes('attendance') || lower.includes('percent') || lower.includes('marks')) {
+    return `${val}%`;
+  }
+  if (lower.includes('age')) {
+    return `${val} years`;
+  }
+  return String(val);
+}
+
+/**
+ * Resolves a scheme rule parameter against citizen profile using canonical semantic aliases.
+ */
+export function resolveProfileParameter(parameter: string, profile: CitizenProfile): unknown {
+  const profileRecord = profile as unknown as Record<string, unknown>;
+  if (parameter in profileRecord && profileRecord[parameter] !== undefined && profileRecord[parameter] !== null) {
+    return profileRecord[parameter];
+  }
+
+  // Canonical semantic aliases across central and state schemes
+  switch (parameter) {
+    case 'annualFamilyIncome':
+    case 'annualIncome':
+    case 'incomeLimit':
+    case 'familyIncome':
+      return profile.familyIncome;
+    case 'monthlyIncome':
+    case 'monthlyFamilyIncome':
+      return profile.familyIncome !== null ? Math.round(profile.familyIncome / 12) : null;
+    case 'isFarmer':
+    case 'isLandholdingFarmer':
+      if (profile.occupation === null && profile.isAgriculturalLandholder === null) return null;
+      return profile.occupation === 'farmer' || profile.isAgriculturalLandholder === true;
+    case 'casteCategory':
+    case 'socialCategory':
+    case 'caste':
+      return profile.socialCategory;
+    case 'domicile':
+    case 'state':
+    case 'domicileState':
+      return profile.domicileState;
+    case 'minimumAttendancePercentage':
+    case 'attendancePercentage':
+      return profile.attendancePercentage;
+    case 'twelfthPercentile':
+    case 'minClass12Marks':
+      return profile.twelfthPercentile;
+    case 'bplStatus':
+    case 'isBPLFamily':
+    case 'isPoorHousehold':
+      return (
+        profile.rationCardType === 'white_bpl' ||
+        profile.rationCardType === 'antyodaya_aay' ||
+        (profile.familyIncome !== null && profile.familyIncome <= 150000)
+      );
+    case 'isRuralResident':
+      return profile.areaType !== null ? profile.areaType === 'rural' : null;
+    case 'isUrbanResident':
+      return profile.areaType !== null ? profile.areaType === 'urban' : null;
+    case 'isIncomeTaxPayee':
+    case 'isIncomeTaxPayer':
+      return profile.familyIncome !== null ? profile.familyIncome > 700000 : null;
+    case 'isResidentOfIndia':
+    case 'citizenship':
+      return 'Indian';
+    case 'hasAadhaarSeededBank':
+    case 'hasSavingsBankAccount':
+      return true;
+    case 'isPregnantOrLactatingMother':
+      return profile.isPregnantOrLactating;
+    case 'disabilityPercentage':
+      if (profile.hasDisability === null) return null;
+      return profile.hasDisability ? 40 : 0;
+    default:
+      return profileRecord[parameter] ?? null;
+  }
+}
+
 /**
  * Evaluates a single predicate against the citizen profile
  */
 export function evaluatePredicate(predicate: RulePredicate, profile: CitizenProfile): PredicateTrace {
-  const userVal = profile[predicate.parameter as keyof CitizenProfile];
+  const userVal = resolveProfileParameter(predicate.parameter, profile);
 
   // If user fact is missing/null, predicate is UNKNOWN (Unknown is not False!)
   if (userVal === null || userVal === undefined) {
@@ -119,9 +201,11 @@ export function evaluatePredicate(predicate: RulePredicate, profile: CitizenProf
       } else {
         const pass = numVal <= limit;
         result = pass ? 'true' : 'false';
+        const formattedVal = formatNumericParam(predicate.parameter, numVal);
+        const formattedLimit = formatNumericParam(predicate.parameter, limit);
         explanation = pass
-          ? `Condition met: ₹${numVal.toLocaleString('en-IN')} is within ceiling of ₹${limit.toLocaleString('en-IN')}.`
-          : `Income ceiling exceeded: ₹${numVal.toLocaleString('en-IN')} exceeds maximum limit of ₹${limit.toLocaleString('en-IN')}.`;
+          ? `Condition met: ${formattedVal} is within ceiling of ${formattedLimit}.`
+          : `Limit exceeded: ${formattedVal} exceeds maximum limit of ${formattedLimit}.`;
       }
       break;
     }
@@ -135,9 +219,34 @@ export function evaluatePredicate(predicate: RulePredicate, profile: CitizenProf
       } else {
         const pass = numVal >= minReq;
         result = pass ? 'true' : 'false';
+        const formattedVal = formatNumericParam(predicate.parameter, numVal);
+        const formattedMin = formatNumericParam(predicate.parameter, minReq);
         explanation = pass
-          ? `Requirement met: ${numVal}% is at or above minimum requirement of ${minReq}%.`
-          : `Below requirement: ${numVal}% is below minimum required ${minReq}%.`;
+          ? `Requirement met: ${formattedVal} is at or above minimum requirement of ${formattedMin}.`
+          : `Below requirement: ${formattedVal} is below minimum required ${formattedMin}.`;
+      }
+      break;
+    }
+
+    case 'BETWEEN': {
+      const numVal = Number(userVal);
+      if (isNaN(numVal)) {
+        result = 'unknown';
+        explanation = `Could not parse numerical value for ${predicate.parameter}.`;
+      } else if (Array.isArray(predicate.expectedValue) && predicate.expectedValue.length === 2) {
+        const min = Number(predicate.expectedValue[0]);
+        const max = Number(predicate.expectedValue[1]);
+        const pass = numVal >= min && numVal <= max;
+        result = pass ? 'true' : 'false';
+        const formattedVal = formatNumericParam(predicate.parameter, numVal);
+        const formattedMin = formatNumericParam(predicate.parameter, min);
+        const formattedMax = formatNumericParam(predicate.parameter, max);
+        explanation = pass
+          ? `Condition met: ${formattedVal} is within the required range of ${formattedMin} to ${formattedMax}.`
+          : `Requirement not met: ${formattedVal} is outside the allowed range of ${formattedMin} to ${formattedMax}.`;
+      } else {
+        result = 'unknown';
+        explanation = `Invalid range specified for ${predicate.parameter}.`;
       }
       break;
     }
@@ -189,7 +298,7 @@ export function evaluateSchemeEligibility(
       predicateTraces: [],
       missingAttributes: [],
       failedAttributes: [],
-      verifiedSourceUrl: scheme.sources[0]?.portalUrl || '',
+      verifiedSourceUrl: scheme.sources?.[0]?.portalUrl || scheme.portalUrl || '',
       lastVerifiedDate: scheme.lastVerifiedDate,
       feeStatus: scheme.feeStatus,
     };
@@ -228,7 +337,7 @@ export function evaluateSchemeEligibility(
     predicateTraces: traces,
     missingAttributes: unknownMandatory.map((t) => t.parameter),
     failedAttributes: failedMandatory.map((t) => t.parameter),
-    verifiedSourceUrl: scheme.sources[0]?.portalUrl || '',
+    verifiedSourceUrl: scheme.sources?.[0]?.portalUrl || scheme.portalUrl || '',
     lastVerifiedDate: scheme.lastVerifiedDate,
     feeStatus: scheme.feeStatus,
   };
